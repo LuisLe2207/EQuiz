@@ -1,0 +1,55 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    </style>
+
+    <!-- Cần thêm thuộc tính parent cho style của mình để tránh trường hợp thiết kế sai giao diện-->
+    <style name="EQuizTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:colorBackgroundFloating">@color/windowBackground</item>
+    </style>
+
+    <!-- Custom TextView -->
+    <style name="TextView_Custom">
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffff4444</item>
+
+    </style>
+
+    <!-- Custom EditText -->
+    <style name="EditText_Custom">
+
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FAFAF9</item>
+        <item name="android:textColorHint">#FAFAF9</item>
+        <item name="android:background">@drawable/edit_text_shape</item>
+
+    </style>
+
+    <!-- Custom Button -->
+    <style name="Button_Custom">
+
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FAFAF9</item>
+        <item name="android:background">@drawable/button_shape</item>
+
+    </style>
+
+</resources>

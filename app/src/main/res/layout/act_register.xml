@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/act_register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="20dp"
+    tools:context="com.example.luisle.equiz.Activity.RegisterAct">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- User Avatar -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imgRegAct_Avatar"
+            android:layout_height="100dp"
+            android:layout_width="100dp"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/ic_avatar"
+            app:riv_mutate_background="true"
+            app:riv_corner_radius="50dip"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            >
+
+            <!-- User Name -->
+            <TextView
+                style="@style/TextView_Custom"
+                android:text="@string/text_full_name"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/ic_account"
+                    android:scaleType="centerInside"
+                    android:background="#205963"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edtRegAct_FullName"
+                    style="@style/EditText_Custom"
+                    android:hint="John Le"
+                    android:inputType="text"
+                    android:paddingLeft="5dp"
+                    />
+            </LinearLayout>
+
+            <!-- User Email -->
+            <TextView
+                style="@style/TextView_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_email"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/ic_email"
+                    android:background="#205963"
+                    android:scaleType="centerInside"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edtRegAct_Email"
+                    style="@style/EditText_Custom"
+                    android:hint="abcd@axample.com"
+                    android:inputType="textEmailAddress"
+                    android:paddingLeft="5dp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+    <!-- -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        >
+
+        <TextView
+            style="@style/TextView_Custom"
+            android:text="@string/text_password"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_password"
+                android:background="#205963"
+                android:scaleType="centerInside"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/edtRegAct_Pass"
+                style="@style/EditText_Custom"
+                android:hint="********"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                />
+        </LinearLayout>
+
+
+        <TextView
+            style="@style/TextView_Custom"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_confirm_password"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_password"
+                android:background="#205963"
+                android:scaleType="centerInside"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/edtRegAct_CPass"
+                style="@style/EditText_Custom"
+                android:hint="********"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                />
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextView_Custom"
+            android:layout_marginTop="10dp"
+            android:text="Mobile No."
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_mobile"
+                android:background="#205963"
+                android:scaleType="centerInside"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/edtRegAct_Moblie"
+                style="@style/EditText_Custom"
+                android:hint="09XXXXXXXXX"
+                android:inputType="phone"
+                android:paddingLeft="5dp"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRegAct_Register"
+            style="@style/Button_Custom"
+            android:layout_marginTop="30dp"
+            android:text="@string/text_register"
+            android:textAlignment="center"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

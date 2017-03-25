@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">EQuiz</string>
+    <!--Layout Act String-->
+    <string name="text_full_name">Full name</string>
+    <string name="text_email">Email</string>
+    <string name="text_password">Password</string>
+    <string name="text_confirm_password">Confirm password</string>
+    <string name="text_login">Login</string>
+    <string name="text_forgotpass">Forgot password?</string>
+    <string name="text_register">Register</string>
+    <string name="text_category_grammar">Grammar</string>
+    <string name="text_category_volcabuary">Volcabuary</string>
+    <string name="text_category_communicate">Communication</string>
+    <string name="text_category_read">Read &amp; Understand</string>
+    <string name="text_category_exam">Synthetic</string>
+
+    <!--Layout Frag String-->
+    <string name="text_save">Save</string>
+    <string name="text_change_email">Change email</string>
+    <string name="text_change_password">Change password</string>
+
+    <!--Layout Dialog String-->
+    <string name="text_current_email">Current Email</string>
+    <string name="text_new_email">New Email</string>
+    <string name="text_current_password">Current password</string>
+    <string name="text_new_password">New password</string>
+    <string name="text_camera">Camera</string>
+    <string name="text_gallery">Gallery</string>
+    <string name="text_change">Change</string>
+    <string name="text_reset">Reset</string>
+    <string name="text_progress_login">Authenticating &#8230;</string>
+    <string name="text_progress_register">Creating &#8230;</string>
+    <string name="text_progress_change">Changing &#8230;</string>
+    <string name="text_progress_save">Saving &#8230;</string>
+    <string name="text_progress_reset">Resetting &#8230;</string>
+
+    <!--Error String-->
+    <string name="error_name_not_fill">Please fill in full name</string>
+    <string name="error_email_not_fill">Please fill in email!</string>
+    <string name="error_pass_not_fill">Please fill in password!</string>
+    <string name="error_cpass_not_fill">Please fill in confirm password!</string>
+    <string name="error_pass_cpass_not_equal">Password and Confirm Password is not equal!</string>
+    <string name="error_email_format">Wrong email format!</string>
+    <string name="error_pass_min_length">Password must be at least 6 character</string>
+    <string name="error_pass_max_length">Password max character is 15</string>
+
+    <!--Toast String-->
+    <string name="login_failed">Login Failed!\nPlease try again!</string>
+    <string name="login_success">Login Successfully</string>
+    <string name="change_email_failed">Change Email Failed!\nPleae try again!</string>
+    <string name="change_email_success">Change Email Successfully</string>
+    <string name="change_password_success">Change Password Successfully</string>
+    <string name="change_password_failed">Change Password Failed!\nPlease try again!</string>
+    <string name="register_success">Register Successfully</string>
+    <string name="register_failed">Register Failed!\nPlease try again!</string>
+    <string name="update_profile_success">Update user profile successfully</string>
+    <string name="reset_password_success">Reset password successfully./n Please check your email for reset password link!</string>
+    <string name="reset_password_failed">Reset password Failed!\nPlease try again!</string>
+
+    <!--Navigation String-->
+    <string name="nav_home">Home</string>
+    <string name="nav_ranking">Ranking</string>
+    <string name="nav_account">Account</string>
+
+    <!--Menu String-->
+    <string name="menu_about">About</string>
+    <string name="menu_logout">Log out</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

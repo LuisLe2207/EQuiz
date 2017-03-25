@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        style="@style/TextView_Custom"
+        android:layout_marginTop="10dp"
+        android:text="@string/text_current_email"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_email"
+            android:background="#205963"
+            android:scaleType="centerInside"
+            android:layout_marginTop="5dp"
+            />
+
+        <EditText
+            android:id="@+id/edtDialog_ChangeEmail_Email"
+            style="@style/EditText_Custom"
+            android:hint="abcd@axample.com"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="5dp"
+            />
+    </LinearLayout>
+
+    <TextView
+        style="@style/TextView_Custom"
+        android:text="@string/text_password"
+        android:layout_marginTop="10dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_password"
+            android:background="#205963"
+            android:scaleType="centerInside"
+            android:layout_marginTop="5dp"
+            />
+
+        <EditText
+            android:id="@+id/edtDialog_ChangeEmail_Pass"
+            style="@style/EditText_Custom"
+            android:hint="********"
+            android:inputType="textPassword"
+            android:paddingLeft="5dp"
+            />
+    </LinearLayout>
+
+    <TextView
+        style="@style/TextView_Custom"
+        android:layout_marginTop="10dp"
+        android:text="@string/text_new_email"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_password"
+            android:background="#205963"
+            android:scaleType="centerInside"
+            android:layout_marginTop="5dp"
+            />
+
+        <EditText
+            android:id="@+id/edtDialog_ChangeEmail_NewEmail"
+            style="@style/EditText_Custom"
+            android:hint="abcd@axample.com"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="5dp"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnDialog_ChangeEmail_Save"
+        style="@style/Button_Custom"
+        android:layout_marginTop="30dp"
+        android:text="@string/text_change"
+        android:textAlignment="center"
+        />
+
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EQuiz</string>
+    <string name="text_confirm_password">Xác nhận mật khẩu</string>
+    <string name="text_email">Email</string>
+    <string name="text_forgotpass">Quên mật khẩu?</string>
+    <string name="text_full_name">Họ tên</string>
+    <string name="text_login">Đăng nhập</string>
+    <string name="text_password">Mật khẩu</string>
+    <string name="text_register">Đăng ký</string>
+    <string name="login_successed">Đăng nhập thành công</string>
+    <string name="login_failed">Đăng nhập thất bại! Xin hãy thử lại</string>
+    <string name="error_pass_not_fill">Xin hãy điền password</string>
+    <string name="error_pass_cpass_not_equal">Password không khớp</string>
+    <string name="error_name_not_fill">Xin hãy điền tên</string>
+    <string name="error_email_not_fill">Xin hãy điền email</string>
+    <string name="error_cpass_not_fill">Xin hãy nhập lại password</string>
+    <string name="text_category_communicate">Giao tiếp</string>
+    <string name="text_category_exam">Tổng hợp</string>
+    <string name="text_category_grammar">Ngữ pháp</string>
+    <string name="text_category_read">Đọc &amp; Hiểu</string>
+    <string name="text_category_volcabuary">Từ vựng</string>
+    <string name="nav_account">Tài khoản</string>
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_ranking">Xếp hạng</string>
+    <string name="change_email_sucessed">Đổi Email thành công!</string>
+    <string name="change_password_sucessed">Đổi mật khẩu thành công!</string>
+    <string name="text_change_email">Đổi Email</string>
+    <string name="text_change_password">Đổi mật khẩu</string>
+    <string name="text_current_email">Email hiện tại</string>
+    <string name="text_current_password">Mật khẩu hiện tại</string>
+    <string name="text_new_email">Email mới</string>
+    <string name="text_new_password">Mật khẩu mới</string>
+    <string name="text_save">Lưu</string>
+</resources>
