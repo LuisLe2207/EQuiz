@@ -28,11 +28,20 @@
     <string name="text_gallery">Gallery</string>
     <string name="text_change">Change</string>
     <string name="text_reset">Reset</string>
+    <string name="text_question_title">Question title</string>
+    <string name="text_question_choice">Question choice</string>
+    <string name="text_exam_title">Exam title</string>
+    <string name="text_add">Add</string>
+    <string name="text_create">Create</string>
     <string name="text_progress_login">Authenticating &#8230;</string>
     <string name="text_progress_register">Creating &#8230;</string>
     <string name="text_progress_change">Changing &#8230;</string>
     <string name="text_progress_save">Saving &#8230;</string>
     <string name="text_progress_reset">Resetting &#8230;</string>
+
+    <!--Hint String-->
+    <string name="hint_question_title">Question title</string>
+    <string name="hint_question_choice">Question choice</string>
 
     <!--Error String-->
     <string name="error_name_not_fill">Please fill in full name</string>
@@ -67,6 +76,9 @@
     <!--Menu String-->
     <string name="menu_about">About</string>
     <string name="menu_logout">Log out</string>
+
+    <!--Toolbar-->
+    <string name="toolbar_add_question">Add Question</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.AdminExamFrag;
+import com.example.luisle.equiz.Fragment.AdminQuestionFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -42,6 +43,7 @@ public class AdminHomeAct extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationAdmin);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayoutActHomeAdmin, AdminExamFrag.newInstance());
         transaction.commit();
@@ -77,13 +79,15 @@ public class AdminHomeAct extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_exam:
+                    getSupportFragmentManager().popBackStackImmediate();
                     fragment = AdminExamFrag.newInstance();
                     break;
                 case R.id.navigation_question:
-
-                    fragment = AdminExamFrag.newInstance();
+                    getSupportFragmentManager().popBackStackImmediate();
+                    fragment = AdminQuestionFrag.newInstance();
                     break;
                 case R.id.navigation_account:
+                    getSupportFragmentManager().popBackStackImmediate();
                     fragment = AccountFrag.newInstance("Hello", "Hello");
                     break;
             }
