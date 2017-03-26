@@ -134,7 +134,7 @@ public class RegisterAct extends AppCompatActivity {
                 if (inputValidate(fullName, email, password, cPassword)) {
                     // Create progress dialog
                     registerProgressDialog = createProgressDialog(
-                                                getApplicationContext(),
+                                                RegisterAct.this,
                                                 getResources().getString(R.string.text_progress_register));
                     registerProgressDialog.show();
                     btnRegister.setEnabled(false);

@@ -1,17 +1,21 @@
 package com.example.luisle.equiz.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.luisle.equiz.Activity.MainAct;
 import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.R;
 
 import java.util.List;
+
+import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
+import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
  * Created by LuisLe on 3/4/2017.
@@ -37,7 +41,7 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
 
     @Override
     public void onBindViewHolder(ExamListAdapter.ExamListViewHolder holder, int position) {
-        // Get examin exam list via position
+        // Get exam in exam list via position
         Exam exam = examList.get(position);
 
         //bind data to viewholder
@@ -65,7 +69,14 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
         public void onClick(View view) {
             int position = getLayoutPosition();
             Exam exam = examList.get(position);
-            Toast.makeText(myContext, txtRowExam_Title.getText(), Toast.LENGTH_LONG).show();
+            if (isAdmin) {
+                showToast(myContext, exam.getTitle());
+            } else {
+                Intent mainIntent = new Intent(myContext, MainAct.class);
+                mainIntent.putExtra("EXAM_ID", exam.getID());
+                myContext.startActivity(mainIntent);
+            }
+
         }
     }
 }

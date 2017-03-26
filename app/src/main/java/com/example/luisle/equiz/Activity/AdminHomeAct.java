@@ -8,57 +8,44 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
-import com.example.luisle.equiz.Fragment.CategoryFrag;
+import com.example.luisle.equiz.Fragment.AdminExamFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 
-public class HomeAct extends AppCompatActivity implements CategoryFrag.OnDataPass{
+public class AdminHomeAct extends AppCompatActivity {
 
-    private String PUT_EXTRA_KEY = "CATEGORY";
+
     private Fragment fragment = null;
-
-    // Firebase
-    private FirebaseUser firebaseUser;
-
-    // Act Variables
-    private boolean isAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_home);
+        setContentView(R.layout.act_admin_home);
 
         // Init FirebaseDatabase
         eQuizDatabase = FirebaseDatabase.getInstance();
         // Init DatabaseRef
         eQuizRef = eQuizDatabase.getReference();
         // Get current user
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            if (TextUtils.equals(firebaseUser.getEmail(), "admin@gmail.com")) {
-                isAdmin = true;
-            }
-        }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHome);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHomeAdmin);
         setSupportActionBar(toolbar);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationAdmin);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frameLayoutActHome, CategoryFrag.newInstance("hello", "hello"));
+        transaction.replace(R.id.frameLayoutActHomeAdmin, AdminExamFrag.newInstance());
         transaction.commit();
+
     }
 
     @Override
@@ -77,23 +64,10 @@ public class HomeAct extends AppCompatActivity implements CategoryFrag.OnDataPas
                 break;
             case 222:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(HomeAct.this, LoginAct.class));
+                startActivity(new Intent(AdminHomeAct.this, LoginAct.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDataPass(String category) {
-        Intent examListAct = new Intent(HomeAct.this, ExamListAct.class);
-        examListAct.putExtra(PUT_EXTRA_KEY, category);
-        startActivity(examListAct);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        fragment.onActivityResult(requestCode, resultCode, data);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -102,22 +76,24 @@ public class HomeAct extends AppCompatActivity implements CategoryFrag.OnDataPas
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    fragment = CategoryFrag.newInstance("Hello", "Hello");
+                case R.id.navigation_exam:
+                    fragment = AdminExamFrag.newInstance();
                     break;
-                case R.id.navigation_ranking:
+                case R.id.navigation_question:
 
-                    fragment = AccountFrag.newInstance("Hello", "Hello");
+                    fragment = AdminExamFrag.newInstance();
                     break;
                 case R.id.navigation_account:
                     fragment = AccountFrag.newInstance("Hello", "Hello");
                     break;
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frameLayoutActHome, fragment);
+            transaction.replace(R.id.frameLayoutActHomeAdmin, fragment);
             transaction.commit();
             return true;
         }
 
     };
+
+
 }

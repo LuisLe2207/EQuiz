@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class LoginAct extends AppCompatActivity {
@@ -49,7 +50,14 @@ public class LoginAct extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    startActivity(new Intent(LoginAct.this, HomeAct.class));
+                    if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
+                        isAdmin = false;
+                        startActivity(new Intent(LoginAct.this, HomeAct.class));
+                    } else {
+                        isAdmin = true;
+                        startActivity(new Intent(LoginAct.this, AdminHomeAct.class));
+                    }
+
                 }
             }
         };
@@ -97,7 +105,7 @@ public class LoginAct extends AppCompatActivity {
                 if (inputValidate(email, password)) {
                     // Create progress dialog
                     loginProgressDialog = createProgressDialog(
-                                                getApplicationContext(),
+                                                LoginAct.this,
                                                 getResources().getString(R.string.text_progress_login));
                     loginProgressDialog.show();
                     // Disable Any Button when Login
@@ -158,7 +166,7 @@ public class LoginAct extends AppCompatActivity {
                                 );
                             } else {
                                 final ProgressDialog resetPasswordProgressDialog = createProgressDialog(
-                                                                                getApplicationContext(),
+                                                                                LoginAct.this,
                                                                                 getResources().getString(R.string.text_progress_reset));
                                 resetPasswordProgressDialog.show();
                                 mAuth.sendPasswordResetEmail(email)

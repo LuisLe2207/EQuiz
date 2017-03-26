@@ -60,6 +60,8 @@
     <!--Navigation String-->
     <string name="nav_home">Home</string>
     <string name="nav_ranking">Ranking</string>
+    <string name="nav_exam">Exam</string>
+    <string name="nav_question">Question</string>
     <string name="nav_account">Account</string>
 
     <!--Menu String-->

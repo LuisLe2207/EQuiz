@@ -41,6 +41,8 @@ public class MyEssential {
     public static final String USER_AVATAR = "User_Avatar/";
     // endregion
 
+    public static boolean isAdmin = false;
+
     // endregion
 
     //  region Firebase Global Variables
