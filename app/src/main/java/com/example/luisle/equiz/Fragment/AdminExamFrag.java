@@ -54,7 +54,7 @@ public class AdminExamFrag extends Fragment{
         examList.add(new Exam("1", "ABD", 50));
         examList.add(new Exam("1", "BCD", 50));
         examList.add(new Exam("1", "CBD", 50));
-        examListAdapter = new ExamListAdapter(getActivity(), examList);
+        examListAdapter = new ExamListAdapter(getContext(), examList);
         rvcExam.setAdapter(examListAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvcExam.setLayoutManager(linearLayoutManager);

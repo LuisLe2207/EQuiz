@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +21,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Adapter.QuestionChoiceAdapter;
 import com.example.luisle.equiz.R;
 
@@ -29,13 +28,11 @@ import java.util.ArrayList;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
-
 /**
  * Created by LuisLe on 3/26/2017.
  */
 
-public class AddQuestionFrag extends DialogFragment {
-
+public class AddExamFrag extends DialogFragment {
     // Layout
     EditText edtQuestionTitle, edtQuestionChoice;
     Button btnAddChoice;
@@ -45,9 +42,13 @@ public class AddQuestionFrag extends DialogFragment {
     ArrayList<String> choiceList;
     ArrayList<String> answerList;
     QuestionChoiceAdapter questionChoiceAdapter;
+    String id;
 
-    public static AddQuestionFrag newInstance() {
-        AddQuestionFrag fragment = new AddQuestionFrag();
+    public static AddExamFrag newInstance(String id) {
+        AddExamFrag fragment = new AddExamFrag();
+        Bundle args = new Bundle();
+        args.putString("ID", id);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -59,9 +60,11 @@ public class AddQuestionFrag extends DialogFragment {
 
         mappingLayout(view);
         createActionBar(view);
-        init();
-        addChoice();
 
+        if (getArguments() != null) {
+            id = getArguments().getString("ID");
+        }
+        showToast(getContext(), id);
 
         return view;
     }
@@ -91,8 +94,13 @@ public class AddQuestionFrag extends DialogFragment {
                 break;
             case android.R.id.home:
                 dismiss();
-                ((AdminHomeAct) getActivity()).getFloatingActionButton().show();
-                ((AdminHomeAct) getActivity()).getBottomNavigationView().setVisibility(View.VISIBLE);
+                FragmentManager fragmentManager = (getActivity()).getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                AdminExamFrag adminExamFrag1 = (AdminExamFrag) fragmentManager.findFragmentByTag("ExamListFrag");
+                transaction.attach(adminExamFrag1).commit();
+
+//                ((AdminHomeAct) getActivity()).getFloatingActionButton().show();
+//                ((AdminHomeAct) getActivity()).getBottomNavigationView().setVisibility(View.VISIBLE);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -120,29 +128,4 @@ public class AddQuestionFrag extends DialogFragment {
         setHasOptionsMenu(true);
     }
 
-    private void init() {
-        choiceList = new ArrayList<>();
-        answerList = new ArrayList<>();
-        questionChoiceAdapter = new QuestionChoiceAdapter(getContext(), choiceList, answerList);
-        rcvQuestion.setAdapter(questionChoiceAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rcvQuestion.setLayoutManager(linearLayoutManager);
-    }
-
-    private void addChoice() {
-        btnAddChoice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String choice = edtQuestionChoice.getText().toString().trim();
-                if (TextUtils.isEmpty(choice)) {
-                    edtQuestionChoice.setError("Lỗi nè");
-                } else {
-                    choiceList.add(choice);
-                    showToast(getContext(), String.valueOf(choiceList.size()));
-                    questionChoiceAdapter.notifyDataSetChanged();
-                    rcvQuestion.invalidate();
-                }
-            }
-        });
-    }
 }

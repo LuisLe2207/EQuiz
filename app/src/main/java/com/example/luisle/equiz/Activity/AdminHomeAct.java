@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +22,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 
-public class AdminHomeAct extends AppCompatActivity {
+public class AdminHomeAct extends AppCompatActivity implements AdminQuestionFrag.getFloatingButton{
 
 
     private Fragment fragment = null;
+    private FloatingActionButton floatingActionButton;
+    private BottomNavigationView navigation;
+    private Toolbar toolbar;
+    private String fragmentTag = "ExamListFrag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +42,16 @@ public class AdminHomeAct extends AppCompatActivity {
         eQuizRef = eQuizDatabase.getReference();
         // Get current user
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHomeAdmin);
+        toolbar = (Toolbar) findViewById(R.id.toolbarActHomeAdmin);
         setSupportActionBar(toolbar);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationAdmin);
+        navigation = (BottomNavigationView) findViewById(R.id.navigationAdmin);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frameLayoutActHomeAdmin, AdminExamFrag.newInstance());
+        transaction.replace(R.id.frameLayoutActHomeAdmin, AdminExamFrag.newInstance(), fragmentTag);
         transaction.commit();
 
     }
@@ -81,18 +87,21 @@ public class AdminHomeAct extends AppCompatActivity {
                 case R.id.navigation_exam:
                     getSupportFragmentManager().popBackStackImmediate();
                     fragment = AdminExamFrag.newInstance();
+                    fragmentTag = "ExamListFrag";
                     break;
                 case R.id.navigation_question:
                     getSupportFragmentManager().popBackStackImmediate();
                     fragment = AdminQuestionFrag.newInstance();
+                    fragmentTag = "QuestionListFrag";
                     break;
                 case R.id.navigation_account:
                     getSupportFragmentManager().popBackStackImmediate();
                     fragment = AccountFrag.newInstance("Hello", "Hello");
+                    fragmentTag = "AccountFrag";
                     break;
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frameLayoutActHomeAdmin, fragment);
+            transaction.replace(R.id.frameLayoutActHomeAdmin, fragment, fragmentTag);
             transaction.commit();
             return true;
         }
@@ -100,4 +109,16 @@ public class AdminHomeAct extends AppCompatActivity {
     };
 
 
+    public FloatingActionButton getFloatingActionButton() {
+        return floatingActionButton;
+    }
+
+    public BottomNavigationView getBottomNavigationView() {
+        return navigation;
+    }
+
+    @Override
+    public FloatingActionButton getAddButton(FloatingActionButton fab) {
+        return floatingActionButton = fab;
+    }
 }

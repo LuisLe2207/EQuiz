@@ -2,20 +2,24 @@ package com.example.luisle.equiz.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Activity.MainAct;
+import com.example.luisle.equiz.Fragment.AddExamFrag;
+import com.example.luisle.equiz.Fragment.AdminExamFrag;
 import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.R;
 
 import java.util.List;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
-import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
  * Created by LuisLe on 3/4/2017.
@@ -70,7 +74,18 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
             int position = getLayoutPosition();
             Exam exam = examList.get(position);
             if (isAdmin) {
-                showToast(myContext, exam.getTitle());
+                //showToast(myContext, exam.getTitle());
+                FragmentManager fragmentManager = ((AdminHomeAct) myContext).getSupportFragmentManager();
+                AddExamFrag addQuestionFrag = AddExamFrag.newInstance(exam.getID());
+                AdminExamFrag adminExamFrag = (AdminExamFrag) fragmentManager.findFragmentByTag("ExamListFrag");
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                if (adminExamFrag != null && adminExamFrag.isVisible()) {
+                    transaction.detach(adminExamFrag);
+                }
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                transaction.replace(android.R.id.content, addQuestionFrag).addToBackStack(null).commit();
+
+
             } else {
                 Intent mainIntent = new Intent(myContext, MainAct.class);
                 mainIntent.putExtra("EXAM_ID", exam.getID());

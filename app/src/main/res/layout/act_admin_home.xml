@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/linearLayoutActHomeAdmin"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarActHomeAdmin"
@@ -30,6 +33,5 @@
         android:layout_gravity="bottom"
         android:background="#2A7884"
         app:menu="@menu/navigation_admin" />
-
 
 </LinearLayout>
