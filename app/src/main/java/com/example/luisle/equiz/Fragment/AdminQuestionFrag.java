@@ -1,6 +1,5 @@
 package com.example.luisle.equiz.Fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -32,7 +31,6 @@ public class AdminQuestionFrag extends Fragment {
     private ArrayList<Question> questionList;
     private EndlessScrollListener scrollListener;
 
-    private getFloatingButton getAddButton;
 
 
     // TODO: Rename and change types and number of parameters
@@ -46,28 +44,20 @@ public class AdminQuestionFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_question_admin, container, false);
         mappingLayout(view);
-        getAddButton.getAddButton(fabQuestionAdd);
         fabQuestionAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                AddQuestionFrag addQuestionFrag = new AddQuestionFrag();
+                QuestionFrag questionFrag = new QuestionFrag();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fabQuestionAdd.hide();
-                ((AdminHomeAct) getActivity()).getBottomNavigationView().setVisibility(View.INVISIBLE);
-                transaction.add(android.R.id.content, addQuestionFrag).addToBackStack(null).commit();
-//                transaction.add(R.id.linearLayoutActHomeAdmin, addQuestionFrag).addToBackStack(null).commit();
+                hideLayout();
+                transaction.add(android.R.id.content, questionFrag).addToBackStack(null).commit();
             }
         });
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getAddButton = (getFloatingButton) context;
-    }
 
     public void customLoadMoreDataFromApi(int offset) {
     }
@@ -77,8 +67,14 @@ public class AdminQuestionFrag extends Fragment {
         fabQuestionAdd = (FloatingActionButton) view.findViewById(R.id.fabFragQuestionAdd);
     }
 
-    public interface getFloatingButton {
-        public FloatingActionButton getAddButton(FloatingActionButton fab);
+    private void hideLayout() {
+        fabQuestionAdd.hide();
+        rvcQuestion.setVisibility(View.INVISIBLE);
+        ((AdminHomeAct) getActivity()).getBottomNavigationView().setVisibility(View.INVISIBLE);
     }
 
+    public void showLayout() {
+        fabQuestionAdd.show();
+        rvcQuestion.setVisibility(View.VISIBLE);
+    }
 }

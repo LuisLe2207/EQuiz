@@ -3,8 +3,10 @@ package com.example.luisle.equiz.MyFramework;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 
+import com.example.luisle.equiz.Model.Question;
 import com.example.luisle.equiz.Model.User;
 import com.example.luisle.equiz.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +22,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USERS_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USER_AVATAR;
 import static com.example.luisle.equiz.MyFramework.MyEssential.convertImageViewToByte;
@@ -31,6 +34,8 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
  */
 
 public class DatabaseLib {
+
+    // region User Firebase
 
     /**
      *
@@ -84,24 +89,41 @@ public class DatabaseLib {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                showToast(
-                                                        context,
-                                                        context.getResources().getString(R.string.change_email_success));
-                                                emailProgressDialog.dismiss();
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        emailProgressDialog.dismiss();
+                                                        showToast(
+                                                                context,
+                                                                context.getResources().getString(R.string.change_email_success));
+                                                    }
+                                                }, 2000);
+
                                             } else {
-                                                showToast(
-                                                        context,
-                                                        context.getResources().getString(R.string.change_email_failed));
-                                                emailProgressDialog.dismiss();
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        emailProgressDialog.dismiss();
+                                                        showToast(
+                                                                context,
+                                                                context.getResources().getString(R.string.change_email_failed));
+                                                    }
+                                                }, 2000);
+
                                             }
                                         }
                                     });
                         } else {
-                            emailProgressDialog.dismiss();
-                            showToast(
-                                    context,
-                                    context.getResources().getString(R.string.login_failed)
-                            );
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    emailProgressDialog.dismiss();
+                                    showToast(
+                                            context,
+                                            context.getResources().getString(R.string.login_failed)
+                                    );
+                                }
+                            }, 2000);
                         }
 
                     }
@@ -125,27 +147,80 @@ public class DatabaseLib {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                passwordProgressDialog.dismiss();
-                                                showToast(
-                                                        context,
-                                                        context.getResources().getString(R.string.change_password_success));
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        passwordProgressDialog.dismiss();
+                                                        showToast(
+                                                                context,
+                                                                context.getResources().getString(R.string.change_password_success));
+                                                    }
+                                                }, 2000);
+
                                             } else {
-                                                passwordProgressDialog.dismiss();
-                                                showToast(
-                                                        context,
-                                                        context.getResources().getString(R.string.change_password_failed));
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        passwordProgressDialog.dismiss();
+                                                        showToast(
+                                                                context,
+                                                                context.getResources().getString(R.string.change_password_failed));
+                                                    }
+                                                }, 2000);
+
                                             }
                                         }
                                     });
                         } else {
-                            passwordProgressDialog.dismiss();
-                            showToast(
-                                    context,
-                                    context.getResources().getString(R.string.login_failed)
-                            );
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    passwordProgressDialog.dismiss();
+                                    showToast(
+                                            context,
+                                            context.getResources().getString(R.string.login_failed)
+                                    );
+                                }
+                            }, 2000);
                         }
                     }
                 });
     }
+
+    // endregion
+
+    // region Question Firebase
+    public static void addQuestion(final Context context, final DatabaseReference dataRef, Question newQuestion) {
+        final ProgressDialog saveQuestionProgressDialog = createProgressDialog(context,
+                context.getResources().getString(R.string.text_progress_save));
+        saveQuestionProgressDialog.show();
+        final String questionID = dataRef.child(QUESTION_CHILD).push().getKey();
+        newQuestion.setID(questionID);
+        dataRef.child(QUESTION_CHILD).child(questionID).setValue(newQuestion, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                   new Handler().postDelayed(new Runnable() {
+                       @Override
+                       public void run() {
+                           saveQuestionProgressDialog.dismiss();
+                           showToast(context, context.getResources().getString(R.string.save_question_sucess));
+                       }
+                   }, 2000);
+
+                } else {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveQuestionProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.save_question_failed));
+                        }
+                    }, 2000);
+                }
+
+            }
+        });
+    }
+    // endregion
 
 }

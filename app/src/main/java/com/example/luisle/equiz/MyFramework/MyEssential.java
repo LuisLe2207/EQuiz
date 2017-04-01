@@ -32,6 +32,11 @@ public class MyEssential {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_IMAGE_GALLERY = 2;
     // endregion
+    public static Integer MAX_CHOICE = 5;
+    public static Integer MIN_CHOICE = 4;
+    public static Integer MAX_ANSWER = 3;
+    public static Integer MIN_ANSWER = 1;
+    public static Integer choiceID = 1;
 
     //region Firebase Child
     public static final String USERS_CHILD = "USER_CHILD";
@@ -42,6 +47,7 @@ public class MyEssential {
     // endregion
 
     public static boolean isAdmin = false;
+    public static boolean isDelete = false;
 
     // endregion
 

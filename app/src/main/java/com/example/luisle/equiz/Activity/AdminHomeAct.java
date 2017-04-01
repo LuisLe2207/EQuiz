@@ -2,6 +2,7 @@ package com.example.luisle.equiz.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.AdminExamFrag;
@@ -22,14 +24,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 
-public class AdminHomeAct extends AppCompatActivity implements AdminQuestionFrag.getFloatingButton{
+public class AdminHomeAct extends AppCompatActivity {
 
 
     private Fragment fragment = null;
-    private FloatingActionButton floatingActionButton;
+    private FloatingActionButton fabQuestionAdd, fabExamAdd;
     private BottomNavigationView navigation;
     private Toolbar toolbar;
     private String fragmentTag = "ExamListFrag";
+
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,25 @@ public class AdminHomeAct extends AppCompatActivity implements AdminQuestionFrag
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -108,17 +131,8 @@ public class AdminHomeAct extends AppCompatActivity implements AdminQuestionFrag
 
     };
 
-
-    public FloatingActionButton getFloatingActionButton() {
-        return floatingActionButton;
-    }
-
     public BottomNavigationView getBottomNavigationView() {
         return navigation;
     }
 
-    @Override
-    public FloatingActionButton getAddButton(FloatingActionButton fab) {
-        return floatingActionButton = fab;
-    }
 }

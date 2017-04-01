@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -21,8 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
-import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
 
 public class LoginAct extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class LoginAct extends AppCompatActivity {
 
     // Act Variables
     private ProgressDialog loginProgressDialog;
+    private boolean isNew;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,25 +45,28 @@ public class LoginAct extends AppCompatActivity {
         setContentView(R.layout.act_login);
         // Initilize Firebase FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
-        // Initilize Firebase AuthStateListener
+        isNew  = getIntent().getBooleanExtra("New", false);
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
-                        isAdmin = false;
-                        startActivity(new Intent(LoginAct.this, HomeAct.class));
-                    } else {
-                        isAdmin = true;
-                        startActivity(new Intent(LoginAct.this, AdminHomeAct.class));
-                    }
+                if (isNew) {
+                    FirebaseAuth.getInstance().signOut();
+                } else {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        // User is signed in
+                        if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
+                            isAdmin = false;
+                            startActivity(new Intent(LoginAct.this, HomeAct.class));
+                        } else {
+                            isAdmin = true;
+                            startActivity(new Intent(LoginAct.this, AdminHomeAct.class));
+                        }
 
+                    }
                 }
             }
         };
-
         mappingLayout();
         onLogin();
         onForgotPass();
@@ -71,14 +76,19 @@ public class LoginAct extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        if (!isNew) {
+            mAuth.addAuthStateListener(mAuthListener);
+        }
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+        if (!isNew) {
+            if (mAuthListener != null) {
+                mAuth.removeAuthStateListener(mAuthListener);
+            }
         }
     }
 
@@ -174,16 +184,27 @@ public class LoginAct extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    resetPasswordProgressDialog.dismiss();
-                                                    resetPasswordDialog.dismiss();
-                                                    showToast(
-                                                            getApplicationContext(),
-                                                            getResources().getString(R.string.reset_password_success));
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            resetPasswordProgressDialog.dismiss();
+                                                            resetPasswordDialog.dismiss();
+                                                            showToast(
+                                                                    getApplicationContext(),
+                                                                    getResources().getString(R.string.reset_password_success));
+                                                        }
+                                                    }, 2000);
+
                                                 } else {
-                                                    resetPasswordProgressDialog.dismiss();
-                                                    showToast(
-                                                            getApplicationContext(),
-                                                            getResources().getString(R.string.reset_password_failed));
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            resetPasswordProgressDialog.dismiss();
+                                                            showToast(
+                                                                    getApplicationContext(),
+                                                                    getResources().getString(R.string.reset_password_failed));
+                                                        }
+                                                    }, 2000);
                                                 }
                                             }
                                         });
@@ -204,6 +225,7 @@ public class LoginAct extends AppCompatActivity {
         );
         loginProgressDialog.dismiss();
         enableButton();
+        isNew = false;
     }
 
     public void onFailure() {

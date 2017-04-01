@@ -48,6 +48,12 @@
     <string name="error_email_not_fill">Please fill in email!</string>
     <string name="error_pass_not_fill">Please fill in password!</string>
     <string name="error_cpass_not_fill">Please fill in confirm password!</string>
+    <string name="error_title_not_fill">Please fill in title</string>
+    <string name="error_choice_not_fill">Please fill in choice</string>
+    <string name="error_max_choice_length">Maximum choice is 5</string>
+    <string name="error_min_choice_length">You must have at least 4 choice</string>
+    <string name="error_max_answer_length">Maximum answer is 3</string>
+    <string name="error_min_answer_length">You must choose at least one answer</string>
     <string name="error_pass_cpass_not_equal">Password and Confirm Password is not equal!</string>
     <string name="error_email_format">Wrong email format!</string>
     <string name="error_pass_min_length">Password must be at least 6 character</string>
@@ -65,6 +71,8 @@
     <string name="update_profile_success">Update user profile successfully</string>
     <string name="reset_password_success">Reset password successfully./n Please check your email for reset password link!</string>
     <string name="reset_password_failed">Reset password Failed!\nPlease try again!</string>
+    <string name="save_question_sucess">Save question successfully</string>
+    <string name="save_question_failed">Save question failed!\nPlease try again!</string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>

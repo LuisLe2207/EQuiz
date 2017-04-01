@@ -1,7 +1,5 @@
 package com.example.luisle.equiz.Model;
 
-import android.text.style.QuoteSpan;
-
 import java.util.List;
 
 /**
@@ -13,8 +11,8 @@ public class Question {
     private String ID;
     private String title;
     private String questionType;
-    private List<String> choiceList;
-    private List<String> resultList;
+    private List<Choice> choiceList;
+    private List<Integer> answerList;
 
     // region GET SET
 
@@ -42,20 +40,20 @@ public class Question {
         this.questionType = questionType;
     }
 
-    public List<String> getChoiceList() {
+    public List<Choice> getChoiceList() {
         return choiceList;
     }
 
-    public void setChoiceList(List<String> choiceList) {
+    public void setChoiceList(List<Choice> choiceList) {
         this.choiceList = choiceList;
     }
 
-    public List<String> getResultList() {
-        return resultList;
+    public List<Integer> getAnswerList() {
+        return answerList;
     }
 
-    public void setResultList(List<String> resultList) {
-        this.resultList = resultList;
+    public void setAnswerList(List<Integer> resultList) {
+        this.answerList = resultList;
     }
 
     // endregion
@@ -66,12 +64,12 @@ public class Question {
         // Firebase required
     }
 
-    public Question(String ID, String title, String questionType, List<String> choiceList, List<String> resultList) {
+    public Question(String ID, String title, String questionType, List<Choice> choiceList, List<Integer> answerList) {
         this.ID = ID;
         this.title = title;
         this.questionType = questionType;
         this.choiceList = choiceList;
-        this.resultList = resultList;
+        this.answerList = answerList;
     }
 
     // endregion

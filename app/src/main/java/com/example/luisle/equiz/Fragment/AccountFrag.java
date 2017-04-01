@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -271,11 +272,17 @@ public class AccountFrag extends Fragment{
                             childUpdate.put(USERS_CHILD + "/" + firebaseUser.getUid() + "/", user);
                             eQuizRef.updateChildren(childUpdate);
                             setProfile(firebaseUser, user);
-                            saveProgressDialog.dismiss();
-                            showToast(
-                                    getContext(),
-                                    getResources().getString(R.string.update_profile_success)
-                            );
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    saveProgressDialog.dismiss();
+                                    showToast(
+                                            getContext(),
+                                            getResources().getString(R.string.update_profile_success)
+                                    );
+                                }
+                            }, 2000);
+
                         }
                     });
                 } else {

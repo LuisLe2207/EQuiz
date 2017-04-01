@@ -26,7 +26,8 @@
         <activity android:name=".Activity.RegisterAct" />
         <activity android:name=".Activity.ExamListAct" />
         <activity android:name=".Activity.HomeAct"></activity>
-        <activity android:name=".Activity.AdminHomeAct"></activity>
+        <activity android:name=".Activity.AdminHomeAct">
+        </activity>
     </application>
 
 </manifest>

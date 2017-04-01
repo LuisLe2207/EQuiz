@@ -168,7 +168,7 @@ public class RegisterAct extends AppCompatActivity {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
             User newUser = new User(firebaseUser.getUid(), email, fullName, "", mobile);
-            saveUser(eQuizRef, eQUizStorageRef, newUser, firebaseUser,imgAvatar);
+            saveUser(eQuizRef, eQUizStorageRef, newUser, firebaseUser, imgAvatar);
             return true;
         }
         return false;
@@ -181,6 +181,10 @@ public class RegisterAct extends AppCompatActivity {
         );
         registerProgressDialog.dismiss();
         btnRegister.setEnabled(true);
+        FirebaseAuth.getInstance().signOut();
+        Intent loginActIntent = new Intent(RegisterAct.this, LoginAct.class);
+        loginActIntent.putExtra("New", true);
+        startActivity(loginActIntent);
     }
 
     private void onRegisterFailure() {
