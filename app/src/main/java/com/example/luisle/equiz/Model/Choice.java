@@ -25,6 +25,10 @@ public class Choice {
         this.content = content;
     }
 
+    public Choice() {
+        // Firebase required
+    }
+
     public Choice(Integer ID, String content) {
         this.ID = ID;
         this.content = content;

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 
+import com.example.luisle.equiz.Adapter.QuestionListAdapter;
 import com.example.luisle.equiz.Model.Question;
 import com.example.luisle.equiz.Model.User;
 import com.example.luisle.equiz.R;
@@ -16,11 +18,15 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.ArrayList;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USERS_CHILD;
@@ -217,6 +223,42 @@ public class DatabaseLib {
                         }
                     }, 2000);
                 }
+
+            }
+        });
+    }
+
+    public static void getListQuestion(
+            final DatabaseReference dataRef,
+            final RecyclerView rcv,
+            final ArrayList<Question> questionList,
+            final QuestionListAdapter adapter) {
+        dataRef.child(QUESTION_CHILD).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Question question = dataSnapshot.getValue(Question.class);
+                questionList.add(question);
+                adapter.notifyDataSetChanged();
+                rcv.setAdapter(adapter);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

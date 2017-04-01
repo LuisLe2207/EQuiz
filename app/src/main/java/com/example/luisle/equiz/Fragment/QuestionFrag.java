@@ -53,9 +53,13 @@ public class QuestionFrag extends DialogFragment {
     ArrayList<Choice> choiceList;
     ArrayList<Integer> answerList;
     QuestionChoiceAdapter questionChoiceAdapter;
+    String id;
 
-    public static QuestionFrag newInstance() {
+    public static QuestionFrag newInstance(String id) {
         QuestionFrag fragment = new QuestionFrag();
+        Bundle args = new Bundle();
+        args.putString("ID", id);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -67,8 +71,15 @@ public class QuestionFrag extends DialogFragment {
 
         mappingLayout(view);
         createActionBar(view);
+
+        if (getArguments() != null) {
+            id = getArguments().getString("ID");
+        }
+        showToast(getContext(), id);
+
         init();
         addChoice();
+
 
 
         return view;
