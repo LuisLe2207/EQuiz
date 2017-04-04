@@ -1,5 +1,7 @@
 package com.example.luisle.equiz.Model;
 
+import java.util.List;
+
 /**
  * Created by LuisLe on 2/4/2017.
  */
@@ -8,6 +10,7 @@ public class Exam {
 
     private String ID;
     private String title;
+    private List<String> questionList;
     private Integer numberOfQuestion;
     private Integer duration;
     private String dateCreated;
@@ -29,6 +32,14 @@ public class Exam {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<String> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(List<String> questionList) {
+        this.questionList = questionList;
     }
 
     public Integer getNumberOfQuestion() {
@@ -63,6 +74,7 @@ public class Exam {
         this.level = level;
     }
 
+
     // endregion
 
     // region CONTRUCTOR
@@ -71,13 +83,15 @@ public class Exam {
         // Firebase required
     }
 
-//    public Exam(String ID, String title, Integer numberOfQuestion, Integer duration, String dateCreated) {
-//        this.ID = ID;
-//        this.title = title;
-//        this.numberOfQuestion = numberOfQuestion;
-//        this.duration = duration;
-//        this.dateCreated = dateCreated;
-//    }
+    public Exam(String ID, String title, List<String> questionList, Integer numberOfQuestion, Integer duration, String dateCreated, String level) {
+        this.ID = ID;
+        this.title = title;
+        this.questionList = questionList;
+        this.numberOfQuestion = numberOfQuestion;
+        this.duration = duration;
+        this.dateCreated = dateCreated;
+        this.level = level;
+    }
 
     public Exam(String ID, String title, Integer duration) {
         this.ID = ID;

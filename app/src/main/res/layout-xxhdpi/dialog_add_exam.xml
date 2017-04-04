@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/EQuizTheme"
+        layout_width="wrap_content"
+        layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarDialogAddExam"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/EQuizTheme"
+            layout_width="wrap_content"
+            layout_height="wrap_content" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                style="@style/TextView_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_exam_title" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#205963"
+                    android:scaleType="centerInside"
+                    android:src="@mipmap/ic_title" />
+
+                <EditText
+                    android:id="@+id/edtDialog_AddExam_Title"
+                    style="@style/EditText_Custom"
+                    android:hint="@string/hint_exam_title"
+                    android:inputType="textMultiLine"
+                    android:paddingLeft="5dp" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextView_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_exam_duration" />
+
+            <RadioGroup
+                android:id="@+id/rdGrpDialog_AddExam_Duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="3'"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="7'"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="15'"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="20'"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <TextView
+                style="@style/TextView_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_exam_list_of_question" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcvDialogAddExam_Question"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:padding="5dp">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>

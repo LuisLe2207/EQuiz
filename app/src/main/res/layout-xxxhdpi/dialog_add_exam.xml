@@ -14,7 +14,7 @@
         layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarDialogAddQuestion"
+            android:id="@+id/toolbarDialogAddExam"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
@@ -37,7 +37,7 @@
             <TextView
                 style="@style/TextView_Custom"
                 android:layout_marginTop="10dp"
-                android:text="@string/text_question_title"
+                android:text="@string/text_exam_title"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -53,9 +53,9 @@
                     />
 
                 <EditText
-                    android:id="@+id/edtDialog_AddQuestion_Title"
+                    android:id="@+id/edtDialog_AddExam_Title"
                     style="@style/EditText_Custom"
-                    android:hint="@string/hint_question_title"
+                    android:hint="@string/hint_exam_title"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dp"
                     />
@@ -64,48 +64,63 @@
             <TextView
                 style="@style/TextView_Custom"
                 android:layout_marginTop="10dp"
-                android:text="@string/text_question_choice"
+                android:text="@string/text_exam_duration"
                 />
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/rdGrpDialog_AddExam_Duration"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@mipmap/ic_choice"
-                    android:background="#205963"
-                    android:scaleType="centerInside"
-                    android:layout_marginTop="5dp"
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3'"
+                    android:textSize="18sp"
+                    android:checked="true"
                     />
 
-                <EditText
-                    android:id="@+id/edtDialog_AddQuestion_Choice"
-                    style="@style/EditText_Custom"
-                    android:hint="@string/hint_question_choice"
-                    android:inputType="textMultiLine"
-                    android:paddingLeft="5dp"
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="7'"
+                    android:textSize="18sp"
                     />
-            </LinearLayout>
 
-            <Button
-                android:id="@+id/btnDialog_AddQuestion_AddChoice"
-                style="@style/Button_Custom"
-                android:layout_marginTop="10dp"
-                android:text="@string/text_add"
-                android:textAlignment="center"
-                />
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="15'"
+                    android:textSize="18sp"
+                    />
+
+                <RadioButton
+                    android:id="@+id/rdBtnDialog_AddExam_Duration20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="20'"
+                    android:textSize="18sp"
+                    />
+
+            </RadioGroup>
 
             <TextView
                 style="@style/TextView_Custom"
-                android:layout_marginTop="10dp"
-                android:text="@string/text_question_list_of_choice"
+                android:layout_marginTop="5dp"
+                android:text="@string/text_exam_list_of_question"
                 />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rcvDialogAddQuestion"
+                android:id="@+id/rcvDialogAddExam_Question"
                 android:layout_marginTop="10dp"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

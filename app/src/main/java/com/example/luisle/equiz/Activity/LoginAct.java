@@ -49,22 +49,19 @@ public class LoginAct extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (isNew) {
-                    FirebaseAuth.getInstance().signOut();
-                } else {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user != null) {
-                        // User is signed in
-                        if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
-                            isAdmin = false;
-                            startActivity(new Intent(LoginAct.this, HomeAct.class));
-                        } else {
-                            isAdmin = true;
-                            startActivity(new Intent(LoginAct.this, AdminHomeAct.class));
-                        }
-
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
+                        isAdmin = false;
+                        startActivity(new Intent(LoginAct.this, HomeAct.class));
+                    } else {
+                        isAdmin = true;
+                        startActivity(new Intent(LoginAct.this, AdminHomeAct.class));
                     }
+
                 }
+
             }
         };
         mappingLayout();
@@ -76,19 +73,15 @@ public class LoginAct extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (!isNew) {
-            mAuth.addAuthStateListener(mAuthListener);
-        }
+        mAuth.addAuthStateListener(mAuthListener);
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (!isNew) {
-            if (mAuthListener != null) {
-                mAuth.removeAuthStateListener(mAuthListener);
-            }
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 

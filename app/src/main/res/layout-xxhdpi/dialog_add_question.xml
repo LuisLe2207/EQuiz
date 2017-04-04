@@ -6,85 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                style="@style/TextView_Custom"
-                android:layout_marginTop="10dp"
-                android:text="@string/text_question_title" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#205963"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/ic_title" />
-
-                <EditText
-                    android:id="@+id/edtDialog_AddQuestion_Title"
-                    style="@style/EditText_Custom"
-                    android:hint="@string/hint_question_title"
-                    android:inputType="textMultiLine"
-                    android:paddingLeft="5dp" />
-            </LinearLayout>
-
-            <TextView
-                style="@style/TextView_Custom"
-                android:layout_marginTop="10dp"
-                android:text="@string/text_question_choice" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#205963"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/ic_choice" />
-
-                <EditText
-                    android:id="@+id/edtDialog_AddQuestion_Choice"
-                    style="@style/EditText_Custom"
-                    android:hint="@string/hint_question_choice"
-                    android:inputType="textMultiLine"
-                    android:paddingLeft="5dp" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnDialog_AddQuestion_AddChoice"
-                style="@style/Button_Custom"
-                android:layout_marginTop="10dp"
-                android:text="@string/text_add"
-                android:textAlignment="center" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rcvDialogAddQuestion"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:padding="5dp">
-
-            </android.support.v7.widget.RecyclerView>
-        </LinearLayout>
-
-    </android.support.design.widget.CoordinatorLayout>
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,5 +23,95 @@
             layout_height="wrap_content" />
 
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            >
+
+            <TextView
+                style="@style/TextView_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_question_title"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/ic_title"
+                    android:background="#205963"
+                    android:scaleType="centerInside"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edtDialog_AddQuestion_Title"
+                    style="@style/EditText_Custom"
+                    android:hint="@string/hint_question_title"
+                    android:inputType="textMultiLine"
+                    android:paddingLeft="5dp"
+                    />
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextView_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_question_choice"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/ic_choice"
+                    android:background="#205963"
+                    android:scaleType="centerInside"
+                    android:layout_marginTop="5dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edtDialog_AddQuestion_Choice"
+                    style="@style/EditText_Custom"
+                    android:hint="@string/hint_question_choice"
+                    android:inputType="textMultiLine"
+                    android:paddingLeft="5dp"
+                    />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnDialog_AddQuestion_AddChoice"
+                style="@style/Button_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_add"
+                android:textAlignment="center"
+                />
+
+            <TextView
+                style="@style/TextView_Custom"
+                android:layout_marginTop="10dp"
+                android:text="@string/text_question_list_of_choice"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcvDialogAddQuestion"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

@@ -20,7 +20,7 @@ import com.example.luisle.equiz.R;
 
 import java.util.ArrayList;
 
-import static com.example.luisle.equiz.MyFramework.DatabaseLib.getListQuestion;
+import static com.example.luisle.equiz.MyFramework.DatabaseLib.getQuestions;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 
 /**
@@ -56,10 +56,9 @@ public class AdminQuestionFrag extends Fragment {
 
     private void init() {
         questionList = new ArrayList<>();
-        questionListAdapter = new QuestionListAdapter(getContext(), questionList);
-        getListQuestion(eQuizRef, rcvQuestion, questionList, questionListAdapter);
+        questionListAdapter = new QuestionListAdapter(getContext(), questionList, true);
+        getQuestions(eQuizRef, rcvQuestion, questionList, questionListAdapter);
         rcvQuestion.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        //rcvQuestion.setAdapter(questionListAdapter);
 }
 
     public void customLoadMoreDataFromApi(int offset) {
@@ -75,7 +74,7 @@ public class AdminQuestionFrag extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                QuestionFrag questionFrag = new QuestionFrag();
+                QuestionFrag questionFrag = QuestionFrag.newInstance("");
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 hideLayout();

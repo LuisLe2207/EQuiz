@@ -29,7 +29,8 @@ import com.example.luisle.equiz.R;
 
 import java.util.ArrayList;
 
-import static com.example.luisle.equiz.MyFramework.DatabaseLib.addQuestion;
+import static com.example.luisle.equiz.MyFramework.DatabaseLib.getQuestion;
+import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveQuestion;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_CHOICE;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MIN_CHOICE;
 import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
@@ -50,10 +51,10 @@ public class QuestionFrag extends DialogFragment {
     RecyclerView rcvQuestion;
 
     // Fragment Variables
-    ArrayList<Choice> choiceList;
-    ArrayList<Integer> answerList;
-    QuestionChoiceAdapter questionChoiceAdapter;
-    String id;
+    private ArrayList<Choice> choiceList;
+    private ArrayList<Integer> answerList;
+    private QuestionChoiceAdapter questionChoiceAdapter;
+    private String id;
 
     public static QuestionFrag newInstance(String id) {
         QuestionFrag fragment = new QuestionFrag();
@@ -97,9 +98,14 @@ public class QuestionFrag extends DialogFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
+        if (TextUtils.isEmpty(id)) {
+            MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_create));
+            createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        } else {
+            MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_modify));
+            createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
 
-        MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_create));
-        createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -115,7 +121,12 @@ public class QuestionFrag extends DialogFragment {
                         questionType = "Multiple";
                     }
                     Question newQuestion = new Question("", title, questionType, choiceList, answerList);
-                    addQuestion(getContext(), eQuizRef, newQuestion);
+                    if (TextUtils.isEmpty(id)) {
+                        saveQuestion(getContext(), eQuizRef, newQuestion, "");
+                    } else {
+                        saveQuestion(getContext(), eQuizRef, newQuestion, id);
+                    }
+
                     choiceID = 1;
                 }
                 break;
@@ -158,6 +169,9 @@ public class QuestionFrag extends DialogFragment {
         choiceList = new ArrayList<>();
         answerList = new ArrayList<>();
         questionChoiceAdapter = new QuestionChoiceAdapter(getContext(), choiceList, answerList);
+        if (!TextUtils.isEmpty(id)) {
+            getQuestion(eQuizRef, id, choiceList, answerList, edtQuestionTitle, questionChoiceAdapter);
+        }
         rcvQuestion.setAdapter(questionChoiceAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rcvQuestion.setLayoutManager(linearLayoutManager);

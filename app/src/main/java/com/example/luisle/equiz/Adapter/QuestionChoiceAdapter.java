@@ -16,6 +16,7 @@ import com.example.luisle.equiz.R;
 import java.util.List;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_ANSWER;
+import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
@@ -99,7 +100,8 @@ public class QuestionChoiceAdapter extends RecyclerView.Adapter<QuestionChoiceAd
             } else {
                 int position = getLayoutPosition();
                 choiceList.remove(position);
-                showToast(myContext, String.valueOf(answerList.size()));
+                choiceID--;
+                showToast(myContext, String.valueOf(choiceID));
                 notifyDataSetChanged();
             }
 

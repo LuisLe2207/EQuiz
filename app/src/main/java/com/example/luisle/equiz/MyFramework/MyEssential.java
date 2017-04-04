@@ -36,6 +36,8 @@ public class MyEssential {
     public static Integer MIN_CHOICE = 4;
     public static Integer MAX_ANSWER = 3;
     public static Integer MIN_ANSWER = 1;
+    public static Integer MIN_QUESTTION = 5;
+    public static Integer MAX_QUESTION = 30;
     public static Integer choiceID = 1;
 
     //region Firebase Child

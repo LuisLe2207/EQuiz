@@ -20,6 +20,9 @@ import com.example.luisle.equiz.R;
 
 import java.util.ArrayList;
 
+import static com.example.luisle.equiz.MyFramework.DatabaseLib.getExams;
+import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+
 /**
  * Created by LuisLe on 3/26/2017.
  */
@@ -44,70 +47,53 @@ public class AdminExamFrag extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_exam_admin, container, false);
         mappingLayout(view);
-        examList = new ArrayList<>();
-        examList.add(new Exam("1", "A", 50));
-        examList.add(new Exam("2", "AB", 50));
-        examList.add(new Exam("3", "ABC", 50));
-        examList.add(new Exam("4", "ABCD", 50));
-        examList.add(new Exam("5", "AD", 50));
-        examList.add(new Exam("6", "AC", 50));
-        examList.add(new Exam("7", "ACD", 50));
-        examList.add(new Exam("8", "ABD", 50));
-        examList.add(new Exam("9", "BCD", 50));
-        examList.add(new Exam("10", "CBD", 50));
-        examListAdapter = new ExamListAdapter(getContext(), examList);
-        rcvExam.setAdapter(examListAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rcvExam.setLayoutManager(linearLayoutManager);
-        rcvExam.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                customLoadMoreDataFromApi(current_page);
-            }
-        });
         fabExamAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 ExamFrag examFrag = new ExamFrag();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                AdminExamFrag adminExamFrag = (AdminExamFrag) fragmentManager.findFragmentByTag("ExamListFrag");
-//                if (adminExamFrag != null && adminExamFrag.isVisible()) {
-//                    transaction.detach(adminExamFrag);
-//                }
                 hideLayout();
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.replace(android.R.id.content, examFrag).addToBackStack(null).commit();
             }
         });
+        init();
         return view;
     }
 
 
     public void customLoadMoreDataFromApi(int offset) {
-        ArrayList<Exam> arr = new ArrayList<>();
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        arr.add(new Exam("1", "ABC", 70));
-        examList.addAll(arr);
-
-        int curSize = examListAdapter.getItemCount();
-        examListAdapter.notifyItemRangeInserted(curSize, examList.size() - 1);
+//        ArrayList<Exam> arr = new ArrayList<>();
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        arr.add(new Exam("1", "ABC", 70));
+//        examList.addAll(arr);
+//
+//        int curSize = examListAdapter.getItemCount();
+//        examListAdapter.notifyItemRangeInserted(curSize, examList.size() - 1);
     }
 
     private void mappingLayout(View view) {
         rcvExam = (RecyclerView) view.findViewById(R.id.rcvExamAdmin);
         fabExamAdd = (FloatingActionButton) view.findViewById(R.id.fabFragExamAdd);
+    }
+
+    private void init() {
+        examList = new ArrayList<>();
+        examListAdapter = new ExamListAdapter(getContext(), examList);
+        getExams(eQuizRef, rcvExam, examList, examListAdapter);
+        rcvExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     public void hideLayout() {

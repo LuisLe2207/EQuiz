@@ -78,11 +78,7 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
                 ExamFrag examFrag = ExamFrag.newInstance(exam.getID());
                 AdminExamFrag adminExamFrag = (AdminExamFrag) fragmentManager.findFragmentByTag("ExamListFrag");
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                if (adminExamFrag != null && adminExamFrag.isVisible()) {
-//                    transaction.detach(adminExamFrag);
-//                }
                 adminExamFrag.hideLayout();
-//                adminExamFrag.showLayout();
                 ((AdminHomeAct) myContext).getBottomNavigationView().setVisibility(View.INVISIBLE);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.replace(android.R.id.content, examFrag).addToBackStack(null).commit();

@@ -6,8 +6,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.widget.EditText;
 
+import com.example.luisle.equiz.Adapter.ExamListAdapter;
+import com.example.luisle.equiz.Adapter.QuestionChoiceAdapter;
 import com.example.luisle.equiz.Adapter.QuestionListAdapter;
+import com.example.luisle.equiz.Model.Choice;
+import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.Model.Question;
 import com.example.luisle.equiz.Model.User;
 import com.example.luisle.equiz.R;
@@ -22,15 +28,18 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 
+import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USERS_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USER_AVATAR;
+import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
 import static com.example.luisle.equiz.MyFramework.MyEssential.convertImageViewToByte;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
@@ -196,12 +205,19 @@ public class DatabaseLib {
     // endregion
 
     // region Question Firebase
-    public static void addQuestion(final Context context, final DatabaseReference dataRef, Question newQuestion) {
+    public static void saveQuestion(final Context context, final DatabaseReference dataRef, Question newQuestion, String id) {
         final ProgressDialog saveQuestionProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_save));
         saveQuestionProgressDialog.show();
-        final String questionID = dataRef.child(QUESTION_CHILD).push().getKey();
-        newQuestion.setID(questionID);
+        String questionID = "";
+        if (TextUtils.isEmpty(id)) {
+            questionID = dataRef.child(QUESTION_CHILD).push().getKey();
+            newQuestion.setID(questionID);
+        } else {
+            questionID = id;
+            newQuestion.setID(questionID);
+        }
+
         dataRef.child(QUESTION_CHILD).child(questionID).setValue(newQuestion, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -228,7 +244,7 @@ public class DatabaseLib {
         });
     }
 
-    public static void getListQuestion(
+    public static void getQuestions(
             final DatabaseReference dataRef,
             final RecyclerView rcv,
             final ArrayList<Question> questionList,
@@ -263,6 +279,134 @@ public class DatabaseLib {
             }
         });
     }
+
+    public static void getQuestion(final DatabaseReference dataRef, String id,
+                                   final ArrayList<Choice> choiceList,
+                                   final ArrayList<Integer> answerList,
+                                   final EditText edtTitle,
+                                   final QuestionChoiceAdapter adapter) {
+        dataRef.child(QUESTION_CHILD).child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Question question = dataSnapshot.getValue(Question.class);
+                choiceList.clear();
+                choiceList.addAll(question.getChoiceList());
+                answerList.addAll(question.getAnswerList());
+                edtTitle.setText(question.getTitle());
+                adapter.notifyDataSetChanged();
+                choiceID = question.getChoiceList().size() + 1;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    // endregion
+
+    // region Exam Firebase
+
+    public static void saveExam(final Context context,
+                                final DatabaseReference dataRef,
+                                Exam newExam,
+                                String id) {
+        final ProgressDialog saveExamProgressDialog = createProgressDialog(context,
+                context.getResources().getString(R.string.text_progress_save));
+        saveExamProgressDialog.show();
+        String examID = "";
+        if (TextUtils.isEmpty(id)) {
+            examID = dataRef.child(EXAM_CHILD).push().getKey();
+            newExam.setID(examID);
+        } else  {
+            examID = id;
+            newExam.setID(examID);
+        }
+
+        dataRef.child(EXAM_CHILD).child(examID).setValue(newExam, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveExamProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.save_exam_sucess));
+                        }
+                    }, 2000);
+
+                } else {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveExamProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.save_exam_failed));
+                        }
+                    }, 2000);
+                }
+
+            }
+        });
+
+    }
+
+    public static void getExams(final DatabaseReference dataRef,
+                                final RecyclerView rcv,
+                                final ArrayList<Exam> examList,
+                                final ExamListAdapter adapter) {
+        dataRef.child(EXAM_CHILD).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Exam question = dataSnapshot.getValue(Exam.class);
+                examList.add(question);
+                adapter.notifyDataSetChanged();
+                rcv.setAdapter(adapter);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getExam(final DatabaseReference dataRef,
+                               final String id,
+                               final ArrayList<String> examQuestionList,
+                               final EditText edtTitle,
+                               final QuestionListAdapter adapter) {
+        dataRef.child(EXAM_CHILD).child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Exam exam = dataSnapshot.getValue(Exam.class);
+                examQuestionList.clear();
+                examQuestionList.addAll(exam.getQuestionList());
+                edtTitle.setText(exam.getTitle());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     // endregion
 
 }

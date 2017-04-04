@@ -30,9 +30,13 @@
     <string name="text_reset">Reset</string>
     <string name="text_question_title">Question title</string>
     <string name="text_question_choice">Question choice</string>
+    <string name="text_question_list_of_choice">List of choices</string>
     <string name="text_exam_title">Exam title</string>
+    <string name="text_exam_duration">Duration</string>
+    <string name="text_exam_list_of_question">List of questions</string>
     <string name="text_add">Add</string>
     <string name="text_create">Create</string>
+    <string name="text_modify">Modify</string>
     <string name="text_progress_login">Authenticating &#8230;</string>
     <string name="text_progress_register">Creating &#8230;</string>
     <string name="text_progress_change">Changing &#8230;</string>
@@ -42,6 +46,7 @@
     <!--Hint String-->
     <string name="hint_question_title">Question title</string>
     <string name="hint_question_choice">Question choice</string>
+    <string name="hint_exam_title">Exam title</string>
 
     <!--Error String-->
     <string name="error_name_not_fill">Please fill in full name</string>
@@ -54,6 +59,8 @@
     <string name="error_min_choice_length">You must have at least 4 choice</string>
     <string name="error_max_answer_length">Maximum answer is 3</string>
     <string name="error_min_answer_length">You must choose at least one answer</string>
+    <string name="error_min_question_length">You must have at least 5 question for each exam</string>
+    <string name="error_max_question_length">Maximum question is 30</string>
     <string name="error_pass_cpass_not_equal">Password and Confirm Password is not equal!</string>
     <string name="error_email_format">Wrong email format!</string>
     <string name="error_pass_min_length">Password must be at least 6 character</string>
@@ -73,6 +80,9 @@
     <string name="reset_password_failed">Reset password Failed!\nPlease try again!</string>
     <string name="save_question_sucess">Save question successfully</string>
     <string name="save_question_failed">Save question failed!\nPlease try again!</string>
+    <string name="save_exam_sucess">Save exam successfully</string>
+    <string name="save_exam_failed">Save exam failed!\nPlease try again!</string>
+    <string name="press_twice_to_minimize">Please click BACK again to minimize</string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>

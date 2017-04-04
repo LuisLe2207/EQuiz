@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
@@ -20,6 +22,7 @@ import com.example.luisle.equiz.R;
 import java.util.List;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
+import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
  * Created by LuisLe on 3/26/2017.
@@ -28,31 +31,68 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
 public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapter.QuestionListViewHolder> {
 
     private List<Question> questionsList;
+    private List<String> examQuestionList;
     private Context myContext;
+    private boolean inAdminQuestion;
     private LayoutInflater layoutInflater;
 
-    public QuestionListAdapter(Context myContext, List<Question> questionsList) {
+    public QuestionListAdapter(Context myContext, List<Question> questionsList, Boolean inAdminQuestion) {
         this.myContext = myContext;
         this.questionsList = questionsList;
+        this.inAdminQuestion = inAdminQuestion;
+        layoutInflater = LayoutInflater.from(myContext);
+    }
+
+    public QuestionListAdapter(Context myContext, List<Question> questionsList, List<String> examQuestionList, Boolean inAdminQuestion) {
+        this.myContext = myContext;
+        this.questionsList = questionsList;
+        this.examQuestionList = examQuestionList;
+        this.inAdminQuestion = inAdminQuestion;
         layoutInflater = LayoutInflater.from(myContext);
     }
 
     @Override
     public QuestionListAdapter.QuestionListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = layoutInflater.inflate(R.layout.row_question, parent, false);
+        View itemView = null;
+        if (inAdminQuestion) {
+            itemView = layoutInflater.inflate(R.layout.row_question, parent, false);
+        } else {
+            itemView = layoutInflater.inflate(R.layout.row_question_checkbox, parent, false);
+        }
+
         return new QuestionListViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(QuestionListAdapter.QuestionListViewHolder holder, int position) {
         // Get exam in exam list via position
-        Question question = questionsList.get(position);
+        final Question question = questionsList.get(position);
 
         //bind data to viewholder
         holder.txtRowQuestion_Title.setText(question.getTitle());
         holder.txtRowQuestion_Type.setText(question.getQuestionType());
         holder.txtRowQuestion_Choice.setText("Choice: " + String.valueOf(question.getChoiceList().size()));
         holder.txtRowQuestion_Answer.setText("Answer: " + String.valueOf(question.getAnswerList().size()));
+
+        if (!inAdminQuestion) {
+            if (examQuestionList.contains(question.getID())) {
+                holder.ckbRowQuestion_Question.setChecked(true);
+            }
+
+            // Set checked change listener for each checkbox
+            holder.ckbRowQuestion_Question.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        examQuestionList.add(question.getID());
+                    } else {
+                        if (examQuestionList.contains(question.getID())) {
+                            examQuestionList.remove(examQuestionList.indexOf(question.getID()));
+                        }
+                    }
+                }
+            });
+        }
     }
 
 
@@ -61,15 +101,25 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         return questionsList.size();
     }
 
-    class QuestionListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class QuestionListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         private TextView txtRowQuestion_Title, txtRowQuestion_Type, txtRowQuestion_Choice, txtRowQuestion_Answer;
+        private CheckBox ckbRowQuestion_Question;
         public QuestionListViewHolder(View itemView) {
             super(itemView);
             txtRowQuestion_Title = (TextView) itemView.findViewById(R.id.txtRowQuestion_Title);
             txtRowQuestion_Type = (TextView) itemView.findViewById(R.id.txtRowQuestion_Type);
             txtRowQuestion_Choice = (TextView) itemView.findViewById(R.id.txtRowQuestion_Choice);
             txtRowQuestion_Answer = (TextView) itemView.findViewById(R.id.txtRowQuestion_Answer);
-            itemView.setOnClickListener(this);
+            if (!inAdminQuestion) {
+                ckbRowQuestion_Question = (CheckBox) itemView.findViewById(R.id.ckbRowQuestion_Question);
+            }
+
+            // Add click listener for each item view
+            if (inAdminQuestion) {
+                itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
+            }
+
         }
 
         @Override
@@ -81,11 +131,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
                 QuestionFrag questionFrag = QuestionFrag.newInstance(question.getID());
                 AdminQuestionFrag questionExamFrag = (AdminQuestionFrag) fragmentManager.findFragmentByTag("QuestionListFrag");
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                if (adminExamFrag != null && adminExamFrag.isVisible()) {
-//                    transaction.detach(adminExamFrag);
-//                }
                 questionExamFrag.hideLayout();
-//                adminExamFrag.showLayout();
                 ((AdminHomeAct) myContext).getBottomNavigationView().setVisibility(View.INVISIBLE);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.replace(android.R.id.content, questionFrag).addToBackStack(null).commit();
@@ -95,6 +141,12 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
                 myContext.startActivity(mainIntent);
             }
 
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            showToast(myContext, "Hello");
+            return true;
         }
     }
 
