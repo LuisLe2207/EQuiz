@@ -108,15 +108,4 @@ public class QuestionChoiceAdapter extends RecyclerView.Adapter<QuestionChoiceAd
         }
     }
 
-    private void hideOrShowCheckBox(CompoundButton compoundButton) {
-        if (!choiceList.isEmpty()) {
-            for (int i = 0; i < choiceList.size(); i++) {
-                Choice choice = choiceList.get(i);
-                if (!answerList.contains(choice.getID())) {
-                    compoundButton.setEnabled(false);
-                }
-            }
-        }
-    }
-
 }
