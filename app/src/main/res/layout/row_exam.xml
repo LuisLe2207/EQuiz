@@ -19,8 +19,8 @@
             android:padding="5dp">
 
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:src="@mipmap/ic_grammar" />
 
             <LinearLayout
@@ -34,15 +34,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Exam"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
                 <TextView
                     android:id="@+id/txtRowExam_Duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Duaration: "
-                    android:textSize="18sp"
+                    android:text="@string/text_exam_duration"
+                    android:textSize="16sp"
                     />
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -50,10 +50,11 @@
                     android:layout_marginTop="5dp">
 
                     <TextView
+                        android:id="@+id/txtRowExam_Questions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Level: "
-                        android:textSize="15sp" />
+                        android:text="@string/text_exam_num_of_question"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 

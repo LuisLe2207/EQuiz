@@ -14,10 +14,28 @@
     <string name="text_category_read">Read &amp; Understand</string>
     <string name="text_category_exam">Synthetic</string>
 
+    <!--Layout Row-->
+    <string name="text_page_question">Question </string>
+
     <!--Layout Frag String-->
     <string name="text_save">Save</string>
     <string name="text_change_email">Change email</string>
     <string name="text_change_password">Change password</string>
+    <string name="text_question_title">Question title</string>
+    <string name="text_question_choice">Question choice</string>
+    <string name="text_question_list_of_choice">List of choices</string>
+    <string name="text_exam_title">Exam title</string>
+    <string name="text_exam_duration">Duration</string>
+    <string name="text_exam_num_of_question">Number of questions: </string>
+    <string name="text_exam_created_date">Created date: </string>
+    <string name="text_exam_comment">comment</string>
+    <string name="text_exam_has_comment">This exam has  </string>
+    <string name="text_exam_no_comment">There is no comment yet</string>
+    <string name="text_exam_list_of_question">List of questions</string>
+    <string name="text_add">Add</string>
+    <string name="text_create">Create</string>
+    <string name="text_modify">Modify</string>
+    <string name="text_start">Start</string>
 
     <!--Layout Dialog String-->
     <string name="text_current_email">Current Email</string>
@@ -28,20 +46,15 @@
     <string name="text_gallery">Gallery</string>
     <string name="text_change">Change</string>
     <string name="text_reset">Reset</string>
-    <string name="text_question_title">Question title</string>
-    <string name="text_question_choice">Question choice</string>
-    <string name="text_question_list_of_choice">List of choices</string>
-    <string name="text_exam_title">Exam title</string>
-    <string name="text_exam_duration">Duration</string>
-    <string name="text_exam_list_of_question">List of questions</string>
-    <string name="text_add">Add</string>
-    <string name="text_create">Create</string>
-    <string name="text_modify">Modify</string>
     <string name="text_progress_login">Authenticating &#8230;</string>
     <string name="text_progress_register">Creating &#8230;</string>
     <string name="text_progress_change">Changing &#8230;</string>
     <string name="text_progress_save">Saving &#8230;</string>
     <string name="text_progress_reset">Resetting &#8230;</string>
+    <string name="text_do_exam">Do you want to do this exam? </string>
+    <string name="text_yes">Yes</string>
+    <string name="text_no">No</string>
+
 
     <!--Hint String-->
     <string name="hint_question_title">Question title</string>
@@ -97,6 +110,10 @@
 
     <!--Toolbar-->
     <string name="toolbar_add_question">Add Question</string>
+    <string name="toolbar_modify_question">Modify Question</string>
+    <string name="toolbar_add_exam">Add Exam</string>
+    <string name="toolbar_modify_exam">Modify Exam</string>
+    <string name="toolbar_detail">Exam Detail</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

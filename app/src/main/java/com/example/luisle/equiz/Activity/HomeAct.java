@@ -2,6 +2,7 @@ package com.example.luisle.equiz.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
-import com.example.luisle.equiz.Fragment.CategoryFrag;
+import com.example.luisle.equiz.Fragment.HomeFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,17 +22,21 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
-public class HomeAct extends AppCompatActivity implements CategoryFrag.OnDataPass{
+public class HomeAct extends AppCompatActivity {
 
-    private String PUT_EXTRA_KEY = "CATEGORY";
     private Fragment fragment = null;
+    private BottomNavigationView navigation;
+
 
     // Firebase
     private FirebaseUser firebaseUser;
 
     // Act Variables
     private boolean isAdmin = false;
+    private boolean doubleBackToExitPressedOnce = false;
+    private String fragmentTag = "HomeFrag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +58,12 @@ public class HomeAct extends AppCompatActivity implements CategoryFrag.OnDataPas
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHome);
         setSupportActionBar(toolbar);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frameLayoutActHome, CategoryFrag.newInstance("hello", "hello"));
+        transaction.replace(R.id.frameLayoutActHome, HomeFrag.newInstance(), fragmentTag);
         transaction.commit();
     }
 
@@ -84,16 +90,30 @@ public class HomeAct extends AppCompatActivity implements CategoryFrag.OnDataPas
     }
 
     @Override
-    public void onDataPass(String category) {
-        Intent examListAct = new Intent(HomeAct.this, ExamListAct.class);
-        examListAct.putExtra(PUT_EXTRA_KEY, category);
-        startActivity(examListAct);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        showToast(getApplicationContext(), getResources().getString(R.string.press_twice_to_minimize));
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -103,21 +123,30 @@ public class HomeAct extends AppCompatActivity implements CategoryFrag.OnDataPas
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    fragment = CategoryFrag.newInstance("Hello", "Hello");
+                    getSupportFragmentManager().popBackStackImmediate();
+                    fragment = HomeFrag.newInstance();
+                    fragmentTag = "HomeFrag";
                     break;
                 case R.id.navigation_ranking:
-
+                    getSupportFragmentManager().popBackStackImmediate();
                     fragment = AccountFrag.newInstance("Hello", "Hello");
+                    fragmentTag = "AccountFrag";
                     break;
                 case R.id.navigation_account:
+                    getSupportFragmentManager().popBackStackImmediate();
                     fragment = AccountFrag.newInstance("Hello", "Hello");
+                    fragmentTag = "AccountFrag";
                     break;
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frameLayoutActHome, fragment);
+            transaction.replace(R.id.frameLayoutActHome, fragment, fragmentTag);
             transaction.commit();
             return true;
         }
 
     };
+
+    public BottomNavigationView getBottomNavigationView() {
+        return navigation;
+    }
 }

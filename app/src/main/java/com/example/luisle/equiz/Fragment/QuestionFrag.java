@@ -54,12 +54,12 @@ public class QuestionFrag extends DialogFragment {
     private ArrayList<Choice> choiceList;
     private ArrayList<Integer> answerList;
     private QuestionChoiceAdapter questionChoiceAdapter;
-    private String id;
+    private String questionID;
 
-    public static QuestionFrag newInstance(String id) {
+    public static QuestionFrag newInstance(String questionID) {
         QuestionFrag fragment = new QuestionFrag();
         Bundle args = new Bundle();
-        args.putString("ID", id);
+        args.putString("ID", questionID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,9 +74,8 @@ public class QuestionFrag extends DialogFragment {
         createActionBar(view);
 
         if (getArguments() != null) {
-            id = getArguments().getString("ID");
+            questionID = getArguments().getString("ID");
         }
-        showToast(getContext(), id);
 
         init();
         addChoice();
@@ -98,7 +97,7 @@ public class QuestionFrag extends DialogFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        if (TextUtils.isEmpty(id)) {
+        if (TextUtils.isEmpty(questionID)) {
             MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_create));
             createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } else {
@@ -121,10 +120,10 @@ public class QuestionFrag extends DialogFragment {
                         questionType = "Multiple";
                     }
                     Question newQuestion = new Question("", title, questionType, choiceList, answerList);
-                    if (TextUtils.isEmpty(id)) {
+                    if (TextUtils.isEmpty(questionID)) {
                         saveQuestion(getContext(), eQuizRef, newQuestion, "");
                     } else {
-                        saveQuestion(getContext(), eQuizRef, newQuestion, id);
+                        saveQuestion(getContext(), eQuizRef, newQuestion, questionID);
                     }
 
                     choiceID = 1;
@@ -152,7 +151,12 @@ public class QuestionFrag extends DialogFragment {
 
     private void createActionBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddQuestion);
-        toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_question));
+        if (TextUtils.isEmpty(questionID)) {
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_question));
+        } else {
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_modify_question));
+        }
+
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
@@ -169,8 +173,8 @@ public class QuestionFrag extends DialogFragment {
         choiceList = new ArrayList<>();
         answerList = new ArrayList<>();
         questionChoiceAdapter = new QuestionChoiceAdapter(getContext(), choiceList, answerList);
-        if (!TextUtils.isEmpty(id)) {
-            getQuestion(eQuizRef, id, choiceList, answerList, edtQuestionTitle, questionChoiceAdapter);
+        if (!TextUtils.isEmpty(questionID)) {
+            getQuestion(eQuizRef, questionID, choiceList, answerList, edtQuestionTitle, questionChoiceAdapter);
         }
         rcvQuestion.setAdapter(questionChoiceAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);

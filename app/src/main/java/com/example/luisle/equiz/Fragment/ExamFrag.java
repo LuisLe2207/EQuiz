@@ -55,13 +55,13 @@ public class ExamFrag extends DialogFragment {
     ArrayList<Question> questionList;
     ArrayList<String> examQuestionList;
     QuestionListAdapter questionListAdapter;
-    String id;
+    String examID;
     Integer examDuration = 3;
 
-    public static ExamFrag newInstance(String id) {
+    public static ExamFrag newInstance(String examID) {
         ExamFrag fragment = new ExamFrag();
         Bundle args = new Bundle();
-        args.putString("ID", id);
+        args.putString("ID", examID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,9 +76,8 @@ public class ExamFrag extends DialogFragment {
         createActionBar(view);
 
         if (getArguments() != null) {
-            id = getArguments().getString("ID");
+            examID = getArguments().getString("ID");
         }
-        showToast(getContext(), id);
         init();
 
         return view;
@@ -96,7 +95,7 @@ public class ExamFrag extends DialogFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        if (TextUtils.isEmpty(id)) {
+        if (TextUtils.isEmpty(examID)) {
             MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_create));
             createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } else {
@@ -116,15 +115,13 @@ public class ExamFrag extends DialogFragment {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                     final String createDate = simpleDateFormat.format(calendar.getTime());
                     Exam newExam = new Exam("", examTitle, examQuestionList, numberQuestion, examDuration, createDate, "");
-                    saveExam(getContext(), eQuizRef, newExam, id);
+                    saveExam(getContext(), eQuizRef, newExam, examID);
                 }
                 break;
             case android.R.id.home:
                 dismiss();
                 FragmentManager fragmentManager = (getActivity()).getSupportFragmentManager();
-//                FragmentTransaction transaction = fragmentManager.beginTransaction();
                 AdminExamFrag adminExamFrag1 = (AdminExamFrag) fragmentManager.findFragmentByTag("ExamListFrag");
-//                transaction.attach(adminExamFrag1).commit();
                 adminExamFrag1.showLayout();
                 ((AdminHomeAct) getActivity()).getBottomNavigationView().setVisibility(View.VISIBLE);
                 break;
@@ -143,15 +140,20 @@ public class ExamFrag extends DialogFragment {
         examQuestionList = new ArrayList<>();
         questionListAdapter = new QuestionListAdapter(getContext(), questionList, examQuestionList, false);
         getQuestions(eQuizRef, rcvQuestion, questionList, questionListAdapter);
-        if (!TextUtils.isEmpty(id)) {
-            getExam(eQuizRef, id, examQuestionList, edtExamTitle, questionListAdapter);
+        if (!TextUtils.isEmpty(examID)) {
+            getExam(eQuizRef, examID, examQuestionList, edtExamTitle, questionListAdapter);
         }
         rcvQuestion.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     private void createActionBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddExam);
-        toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_question));
+        if (TextUtils.isEmpty(examID)) {
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_exam));
+        } else {
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_modify_exam));
+        }
+
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 

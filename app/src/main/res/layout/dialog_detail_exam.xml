@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/EQuizTheme"
+        layout_width="wrap_content"
+        layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarDialogDetailExam"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/EQuizTheme"
+            layout_width="wrap_content"
+            layout_height="wrap_content" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/txtDialogDetailExam_Title"
+            style="@style/TextView_Custom"
+            android:layout_marginTop="5dp"
+            android:text="@string/text_exam_title"
+            android:textSize="20sp"
+            android:lines="1"
+            />
+
+        <TextView
+            android:id="@+id/txtDialogDetailExam_Duration"
+            style="@style/TextView_Custom"
+            android:layout_marginTop="5dp"
+            android:text="@string/text_exam_duration"
+            android:textSize="20sp"
+            android:lines="1"
+            />
+
+        <TextView
+            android:id="@+id/txtDialogDetailExam_NumberOFQuestion"
+            style="@style/TextView_Custom"
+            android:layout_marginTop="5dp"
+            android:text="@string/text_exam_num_of_question"
+            android:textSize="20sp"
+            android:lines="1"
+            />
+
+        <TextView
+            android:id="@+id/txtDialogDetailExam_CreatedDate"
+            style="@style/TextView_Custom"
+            android:layout_marginTop="5dp"
+            android:text="@string/text_exam_created_date"
+            android:textSize="20sp"
+            android:lines="1"
+            />
+
+        <TextView
+            android:id="@+id/txtDialogDetailExam_NumberOfComment"
+            android:layout_gravity="center"
+            style="@style/TextView_Custom"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_exam_comment"
+            android:textSize="15sp"
+            android:lines="1"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcvComment"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+</LinearLayout>
