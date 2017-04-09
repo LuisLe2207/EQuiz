@@ -53,6 +53,8 @@ public class MyEssential {
 
     public static boolean isAdmin = false;
     public static boolean isDelete = false;
+    public static boolean dialogOnScreen = false;
+    public static boolean inAddExamDialog = false;
 
     // endregion
 

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
@@ -38,7 +39,9 @@ import static com.example.luisle.equiz.MyFramework.DatabaseLib.getQuestions;
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveExam;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_QUESTION;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MIN_QUESTTION;
+import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
@@ -47,16 +50,18 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class ExamFrag extends DialogFragment {
     // Layout
-    EditText edtExamTitle;
-    RadioGroup rdGrpDuration;
-    RecyclerView rcvQuestion;
+    private EditText edtExamTitle;
+    private RadioGroup rdGrpDuration;
+    private RecyclerView rcvQuestion;
+    private ProgressBar pgBarLoading;
+
 
     // Fragment Variables
-    ArrayList<Question> questionList;
-    ArrayList<String> examQuestionList;
-    QuestionListAdapter questionListAdapter;
-    String examID;
-    Integer examDuration = 3;
+    private ArrayList<Question> questionList;
+    private ArrayList<String> examQuestionList;
+    private QuestionListAdapter questionListAdapter;
+    private String examID;
+    private Integer examDuration = 3;
 
     public static ExamFrag newInstance(String examID) {
         ExamFrag fragment = new ExamFrag();
@@ -74,7 +79,7 @@ public class ExamFrag extends DialogFragment {
 
         mappingLayout(view);
         createActionBar(view);
-
+        setExamDuration();
         if (getArguments() != null) {
             examID = getArguments().getString("ID");
         }
@@ -124,6 +129,8 @@ public class ExamFrag extends DialogFragment {
                 AdminExamFrag adminExamFrag1 = (AdminExamFrag) fragmentManager.findFragmentByTag("ExamListFrag");
                 adminExamFrag1.showLayout();
                 ((AdminHomeAct) getActivity()).getBottomNavigationView().setVisibility(View.VISIBLE);
+                dialogOnScreen = false;
+                inAddExamDialog = false;
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -133,13 +140,16 @@ public class ExamFrag extends DialogFragment {
         edtExamTitle = (EditText) view.findViewById(R.id.edtDialog_AddExam_Title);
         rdGrpDuration = (RadioGroup) view.findViewById(R.id.rdGrpDialog_AddExam_Duration);
         rcvQuestion = (RecyclerView) view.findViewById(R.id.rcvDialogAddExam_Question);
+        pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarDialogAddExam_LoadingQuestion);
     }
 
     private void init() {
+        pgBarLoading.setVisibility(View.VISIBLE);
+        rcvQuestion.setVisibility(View.INVISIBLE);
         questionList = new ArrayList<>();
         examQuestionList = new ArrayList<>();
         questionListAdapter = new QuestionListAdapter(getContext(), questionList, examQuestionList, false);
-        getQuestions(eQuizRef, rcvQuestion, questionList, questionListAdapter);
+        getQuestions(eQuizRef, rcvQuestion, pgBarLoading, questionList, questionListAdapter);
         if (!TextUtils.isEmpty(examID)) {
             getExam(eQuizRef, examID, examQuestionList, edtExamTitle, questionListAdapter);
         }

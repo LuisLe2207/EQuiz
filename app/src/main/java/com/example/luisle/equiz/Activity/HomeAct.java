@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,12 +16,12 @@ import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.HomeFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+
 
 public class HomeAct extends AppCompatActivity {
 
@@ -30,11 +29,7 @@ public class HomeAct extends AppCompatActivity {
     private BottomNavigationView navigation;
 
 
-    // Firebase
-    private FirebaseUser firebaseUser;
-
     // Act Variables
-    private boolean isAdmin = false;
     private boolean doubleBackToExitPressedOnce = false;
     private String fragmentTag = "HomeFrag";
 
@@ -47,13 +42,6 @@ public class HomeAct extends AppCompatActivity {
         eQuizDatabase = FirebaseDatabase.getInstance();
         // Init DatabaseRef
         eQuizRef = eQuizDatabase.getReference();
-        // Get current user
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            if (TextUtils.equals(firebaseUser.getEmail(), "admin@gmail.com")) {
-                isAdmin = true;
-            }
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHome);
         setSupportActionBar(toolbar);

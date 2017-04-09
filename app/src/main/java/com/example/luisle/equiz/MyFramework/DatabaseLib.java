@@ -8,9 +8,12 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.luisle.equiz.Activity.CommentAct;
+import com.example.luisle.equiz.Activity.ResultAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
 import com.example.luisle.equiz.Adapter.QuestionChoiceAdapter;
 import com.example.luisle.equiz.Adapter.QuestionListAdapter;
@@ -51,6 +54,8 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.USER_AVATAR;
 import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
 import static com.example.luisle.equiz.MyFramework.MyEssential.convertImageViewToByte;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
+import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
@@ -256,6 +261,7 @@ public class DatabaseLib {
     public static void getQuestions(
             final DatabaseReference dataRef,
             final RecyclerView rcv,
+            final ProgressBar pgb,
             final ArrayList<Question> questionList,
             final QuestionListAdapter adapter) {
         dataRef.child(QUESTION_CHILD).addChildEventListener(new ChildEventListener() {
@@ -265,6 +271,10 @@ public class DatabaseLib {
                 questionList.add(question);
                 adapter.notifyDataSetChanged();
                 rcv.setAdapter(adapter);
+                if (!dialogOnScreen || inAddExamDialog) {
+                    pgb.setVisibility(View.INVISIBLE);
+                    rcv.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -361,6 +371,7 @@ public class DatabaseLib {
 
     public static void getExams(final DatabaseReference dataRef,
                                 final RecyclerView rcv,
+                                final ProgressBar pgb,
                                 final ArrayList<Exam> examList,
                                 final ExamListAdapter adapter) {
         dataRef.child(EXAM_CHILD).addChildEventListener(new ChildEventListener() {
@@ -370,6 +381,10 @@ public class DatabaseLib {
                 examList.add(question);
                 adapter.notifyDataSetChanged();
                 rcv.setAdapter(adapter);
+                if (!dialogOnScreen) {
+                    pgb.setVisibility(View.INVISIBLE);
+                    rcv.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -419,7 +434,7 @@ public class DatabaseLib {
     // endregion
 
     // region RESULT
-    public static void saveResult(final Context context, DatabaseReference dataRef, final String examID, ArrayList<Result> resultList) {
+    public static void saveResult(final Context context, DatabaseReference dataRef, String userID,final String examID, ArrayList<Result> resultList) {
         final ProgressDialog saveResultProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_submit));
         saveResultProgressDialog.show();
@@ -430,6 +445,7 @@ public class DatabaseLib {
             resultMap.put(result.getQuestionID(), result);
         }
         dataRef.child(RESULT_CHILD)
+                .child(userID)
                 .child(examID)
                 .child(String.valueOf(calendar.getTimeInMillis()))
                 .setValue(resultMap, new DatabaseReference.CompletionListener() {
@@ -463,7 +479,7 @@ public class DatabaseLib {
 
     // region COMMENT
 
-    public static void submitComment(final Context context, DatabaseReference dataRef, String examID, Comment comment) {
+    public static void submitComment(final Context context, DatabaseReference dataRef, final String examID, Comment comment) {
         final ProgressDialog saveCommentProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_submit));
         saveCommentProgressDialog.show();
@@ -482,6 +498,9 @@ public class DatabaseLib {
                         public void run() {
                             saveCommentProgressDialog.dismiss();
                             showToast(context, context.getResources().getString(R.string.submit_comment_success));
+                            Intent resultIntent = new Intent(context, ResultAct.class);
+                            resultIntent.putExtra("ID", examID);
+                            context.startActivity(resultIntent);
                         }
                     }, 2000);
 

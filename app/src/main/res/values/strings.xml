@@ -12,10 +12,14 @@
     <string name="text_next">Next</string>
     <string name="text_rate">Rate this exam</string>
     <string name="text_leave_comment">Leave comments</string>
+    <string name="text_exam_result_title">Exam\'s result</string>
+    <string name="text_back_home">Back to Home</string>
 
-    <!--Layout Row-->
+    <!--Item view-->
     <string name="text_page_question">Question </string>
     <string name="text_by">by</string>
+    <string name="text_correct">Correct</string>
+    <string name="text_wrong">Wrong</string>
 
     <!--Layout Frag String-->
     <string name="text_save">Save</string>
@@ -56,6 +60,8 @@
     <string name="text_no">No</string>
     <string name="text_quit_exam">Do you want to quit doing this exam?</string>
     <string name="text_submit_exam">Do you want to submit this exam?</string>
+    <string name="text_progress_collecting_result">Collecting results &#8230;</string>
+    <string name="text_progress_back_home">Moving back home &#8230;</string>
 
 
     <!--Hint String-->

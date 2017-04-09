@@ -34,6 +34,7 @@ import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveQuestion;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_CHOICE;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MIN_CHOICE;
 import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
+import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.isDelete;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
@@ -137,6 +138,7 @@ public class QuestionFrag extends DialogFragment {
                                                     .findFragmentByTag("QuestionListFrag");
                 adminQuestionFrag.showLayout();
                 ((AdminHomeAct) getActivity()).getBottomNavigationView().setVisibility(View.VISIBLE);
+                dialogOnScreen = false;
                 break;
         }
         return super.onOptionsItemSelected(item);

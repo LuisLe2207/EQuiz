@@ -11,17 +11,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
 import com.example.luisle.equiz.Model.Exam;
-import com.example.luisle.equiz.MyFramework.EndlessScrollListener;
 import com.example.luisle.equiz.R;
 
 import java.util.ArrayList;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.getExams;
+import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
 
 /**
  * Created by LuisLe on 3/26/2017.
@@ -30,10 +32,10 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 public class AdminExamFrag extends Fragment{
 
     private RecyclerView rcvExam;
+    private ProgressBar pgBarLoading;
     private FloatingActionButton fabExamAdd;
     private ExamListAdapter examListAdapter;
     private ArrayList<Exam> examList;
-    private EndlessScrollListener scrollListener;
 
 
     // TODO: Rename and change types and number of parameters
@@ -50,6 +52,8 @@ public class AdminExamFrag extends Fragment{
         fabExamAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialogOnScreen = true;
+                inAddExamDialog = true;
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 ExamFrag examFrag = new ExamFrag();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -62,37 +66,18 @@ public class AdminExamFrag extends Fragment{
         return view;
     }
 
-
-    public void customLoadMoreDataFromApi(int offset) {
-//        ArrayList<Exam> arr = new ArrayList<>();
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        arr.add(new Exam("1", "ABC", 70));
-//        examList.addAll(arr);
-//
-//        int curSize = examListAdapter.getItemCount();
-//        examListAdapter.notifyItemRangeInserted(curSize, examList.size() - 1);
-    }
-
     private void mappingLayout(View view) {
         rcvExam = (RecyclerView) view.findViewById(R.id.rcvExamAdmin);
+        pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragExamAdmin_Loading);
         fabExamAdd = (FloatingActionButton) view.findViewById(R.id.fabFragExamAdd);
     }
 
     private void init() {
+        pgBarLoading.setVisibility(View.VISIBLE);
+        rcvExam.setVisibility(View.INVISIBLE);
         examList = new ArrayList<>();
         examListAdapter = new ExamListAdapter(getContext(), examList);
-        getExams(eQuizRef, rcvExam, examList, examListAdapter);
+        getExams(eQuizRef, rcvExam, pgBarLoading, examList, examListAdapter);
         rcvExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 

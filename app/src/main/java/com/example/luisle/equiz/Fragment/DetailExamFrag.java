@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.HomeAct;
@@ -57,7 +58,9 @@ public class DetailExamFrag extends DialogFragment {
 
     private EditText edtTitle, edtDuration, edtNumberOFQuestion, edtCreatedDate;
     private TextView txtNumberOfComment;
+
     private RecyclerView rcvComment;
+    private ProgressBar pgBarLoading;
 
     public static DetailExamFrag newInstance(String examID) {
         DetailExamFrag fragment = new DetailExamFrag();
@@ -120,9 +123,12 @@ public class DetailExamFrag extends DialogFragment {
         edtCreatedDate = (EditText) view.findViewById(R.id.edtDialogDetailExam_CreatedDate);
         txtNumberOfComment = (TextView) view.findViewById(R.id.txtDialogDetailExam_NumberOfComment);
         rcvComment = (RecyclerView) view.findViewById(R.id.rcvComment);
+        pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragExamDetail_LoadingComment);
     }
 
     private void init() {
+        pgBarLoading.setVisibility(View.VISIBLE);
+        rcvComment.setVisibility(View.INVISIBLE);
         commentList = new ArrayList<>();
         getExam(examID);
         getComment(examID);
@@ -138,6 +144,8 @@ public class DetailExamFrag extends DialogFragment {
                 rcvComment.setAdapter(commentListAdapter);
                 rcvComment.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 loadExamDetailProgressDialog.dismiss();
+                pgBarLoading.setVisibility(View.INVISIBLE);
+                rcvComment.setVisibility(View.VISIBLE);
             }
         }, 2000);
     }

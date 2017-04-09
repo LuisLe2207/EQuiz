@@ -31,6 +31,7 @@ public class CommentAct extends AppCompatActivity {
     private String userID, examID;
     private Float rateStar;
     private String commentContent;
+    private boolean doubleBackToExitPressedOnce = false;
 
     private FirebaseUser firebaseUser;
 
@@ -43,6 +44,27 @@ public class CommentAct extends AppCompatActivity {
         init();
         pressNextButton();
         pressSkipButton();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            Intent startMain = new Intent(Intent.ACTION_MAIN);
+            startMain.addCategory(Intent.CATEGORY_HOME);
+            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startMain);
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        showToast(getApplicationContext(), getResources().getString(R.string.press_twice_to_minimize));
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 
     private void mappingLayout() {

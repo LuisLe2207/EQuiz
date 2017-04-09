@@ -20,8 +20,11 @@ import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.Model.Question;
 import com.example.luisle.equiz.Model.Result;
 import com.example.luisle.equiz.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -31,12 +34,14 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createAlertDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class MainAct extends AppCompatActivity {
 
     private String examID;
+    private String userID;
     private Exam exam;
     private Integer examDuration;
     private ArrayList<Question> questionList;
@@ -50,10 +55,18 @@ public class MainAct extends AppCompatActivity {
 
     private ProgressDialog progressDialogRetrievingData;
 
+    private FirebaseUser firebaseUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
+
+        // Init FirebaseDatabase
+        eQuizDatabase = FirebaseDatabase.getInstance();
+        // Init DatabaseRef
+        eQuizRef = eQuizDatabase.getReference();
+        // Get current user
 
         examID = getIntent().getStringExtra("ID");
 
@@ -92,6 +105,7 @@ public class MainAct extends AppCompatActivity {
     }
 
     private void init() {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         questionList = new ArrayList<>();
         resultList = new ArrayList<>();
         unChooseList = new ArrayList<>();
@@ -104,6 +118,7 @@ public class MainAct extends AppCompatActivity {
             public void run() {
                 createActionBar();
                 examDuration = exam.getDuration();
+                userID = firebaseUser.getUid();
                 questionPagerAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), MainAct.this, examID, exam.getNumberOfQuestion());
                 viewPgActMain_Question.setAdapter(questionPagerAdapter);
                 progressDialogRetrievingData.dismiss();
@@ -133,7 +148,7 @@ public class MainAct extends AppCompatActivity {
                 // Set result list
                 if (setResultList()) {
                     // Save to firebase
-                    saveResult(MainAct.this, eQuizRef, examID, resultList);
+                    saveResult(MainAct.this, eQuizRef, userID, examID, resultList);
                 }
             }
         });
@@ -224,12 +239,15 @@ public class MainAct extends AppCompatActivity {
                             boolean check = false;
                             if (userAnswerList.size() < answerList.size()) {
                                 check = false;
+                            } else if (userAnswerList.size() > answerList.size()) {
+                                check = false;
                             } else {
                                 for (Integer userAnswerMultiple : userAnswerList) {
                                     if (answerList.contains(userAnswerMultiple)) {
                                         check = true;
                                     } else {
                                         check = false;
+                                        break;
                                     }
                                 }
                             }

@@ -166,8 +166,8 @@ public class AccountFrag extends Fragment{
                     .placeholder(R.mipmap.ic_avatar)
                     .error(R.mipmap.ic_avatar)
                     .into(imgAccFrag_Avatar);
-        }
 
+        }
         eQuizRef.child(USERS_CHILD).child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
