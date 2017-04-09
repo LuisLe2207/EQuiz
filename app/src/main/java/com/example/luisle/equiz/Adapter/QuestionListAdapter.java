@@ -1,7 +1,6 @@
 package com.example.luisle.equiz.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
-import com.example.luisle.equiz.Activity.MainAct;
 import com.example.luisle.equiz.Fragment.AdminQuestionFrag;
 import com.example.luisle.equiz.Fragment.QuestionFrag;
 import com.example.luisle.equiz.Model.Question;
@@ -135,12 +133,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
                 ((AdminHomeAct) myContext).getBottomNavigationView().setVisibility(View.INVISIBLE);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.replace(android.R.id.content, questionFrag).addToBackStack(null).commit();
-            } else {
-                Intent mainIntent = new Intent(myContext, MainAct.class);
-                mainIntent.putExtra("EXAM_ID", question.getID());
-                myContext.startActivity(mainIntent);
             }
-
         }
 
         @Override

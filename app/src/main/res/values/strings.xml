@@ -111,6 +111,9 @@
     <string name="warning_not_choose_answer">You should choose answers for all questions</string>
     <string name="submit_comment_success">Your comment has been submitted</string>
     <string name="submit_comment_failed">Can not submit your comment!\nPlease try again!</string>
+    <string name="warning_1_minute_left">You have 1 minute left</string>
+    <string name="warning_30_seconds_left">You have 30 seconds left</string>
+    <string name="warning_15_seconds_left">You have 15 seconds left</string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>

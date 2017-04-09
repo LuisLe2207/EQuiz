@@ -127,7 +127,7 @@ public class ResultAct extends AppCompatActivity {
     }
 
     private void getResults() {
-        eQuizRef.child(RESULT_CHILD).child("H5G0r0kFIuYMCm4k6pyXDGYSqg72").child("-KgslENSJ-1Qy7flEqP3")
+        eQuizRef.child(RESULT_CHILD).child(userID).child(examID)
                 .limitToLast(1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

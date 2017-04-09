@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -28,6 +29,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import at.grabner.circleprogress.CircleProgressView;
+import at.grabner.circleprogress.TextMode;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveResult;
 import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
@@ -43,15 +48,17 @@ public class MainAct extends AppCompatActivity {
     private String examID;
     private String userID;
     private Exam exam;
-    private Integer examDuration;
+    private int examDuration;
     private ArrayList<Question> questionList;
     private ArrayList<Result> resultList;
     private ArrayList<Integer> unChooseList;
+    private CountDownTimer examDutaionCountDown;
 
 
     private ViewPager viewPgActMain_Question;
     private FloatingActionButton fabMainQuestionList;
     private QuestionPagerAdapter questionPagerAdapter;
+    private CircleProgressView cpgViewDuration;
 
     private ProgressDialog progressDialogRetrievingData;
 
@@ -102,6 +109,7 @@ public class MainAct extends AppCompatActivity {
     private void mappingLayout() {
         viewPgActMain_Question = (ViewPager) findViewById(R.id.viewPgActMain_Question);
         fabMainQuestionList = (FloatingActionButton) findViewById(R.id.fabMainQuestionList);
+        cpgViewDuration = (CircleProgressView) findViewById(R.id.cpgViewActMain_Duration);
     }
 
     private void init() {
@@ -117,11 +125,13 @@ public class MainAct extends AppCompatActivity {
             @Override
             public void run() {
                 createActionBar();
-                examDuration = exam.getDuration();
+                examDuration = exam.getDuration() * 60000;
                 userID = firebaseUser.getUid();
                 questionPagerAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), MainAct.this, examID, exam.getNumberOfQuestion());
                 viewPgActMain_Question.setAdapter(questionPagerAdapter);
                 progressDialogRetrievingData.dismiss();
+                setDuration();
+                examDutaionCountDown.start();
             }
         }, 2000);
     }
@@ -171,6 +181,7 @@ public class MainAct extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        examDutaionCountDown.cancel();
                         quitProgressDialog.dismiss();
                         startActivity(new Intent(MainAct.this, HomeAct.class));
                     }
@@ -185,6 +196,39 @@ public class MainAct extends AppCompatActivity {
             }
         });
         quitAlertDialog.show();
+    }
+
+    private void setDuration() {
+        cpgViewDuration.setMaxValue(examDuration);
+        cpgViewDuration.setValue(examDuration);
+        examDutaionCountDown = new CountDownTimer(examDuration, 1000) {
+            @Override
+            public void onTick(long l) {
+                cpgViewDuration.setTextMode(TextMode.TEXT);
+                cpgViewDuration.setText("" + String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes(l),
+                        TimeUnit.MILLISECONDS.toSeconds(l) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(l))));
+                cpgViewDuration.setValue(l);
+                if (l < 60000 && l > 59000) {
+                    showToast(getApplicationContext()
+                            , getResources().getString(R.string.warning_1_minute_left));
+                }
+                if (l < 30000 && l > 29000) {
+                    showToast(getApplicationContext()
+                            , getResources().getString(R.string.warning_30_seconds_left));
+                }
+                if (l < 15000 && l > 14000) {
+                    showToast(getApplicationContext()
+                            , getResources().getString(R.string.warning_15_seconds_left));
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                submitExam();
+            }
+        };
     }
 
     private boolean setResultList() {

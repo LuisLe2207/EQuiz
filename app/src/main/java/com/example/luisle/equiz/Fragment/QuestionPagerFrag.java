@@ -164,7 +164,9 @@ public class QuestionPagerFrag extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     if (userAnswerChoice.size() < MAX_ANSWER) {
-                        userAnswerChoice.add(checkBox.getId());
+                        if (!userAnswerChoice.contains(checkBox.getId())) {
+                            userAnswerChoice.add(checkBox.getId());
+                        }
                     } else {
                         showToast(getContext(), getContext().getResources().getString(R.string.error_max_answer_length));
                         checkBox.setChecked(false);
@@ -172,9 +174,15 @@ public class QuestionPagerFrag extends Fragment {
                     //showToast(getContext(), String.valueOf(userAnswerChoice.size()));
                 }
                 else {
-                    if (userAnswerChoice.contains(checkBox.getId())) {
-                        userAnswerChoice.remove(userAnswerChoice.indexOf(checkBox.getId()));
+                    if (userAnswerChoice.size() == 1) {
+                        showToast(getContext(), getContext().getResources().getString(R.string.error_min_answer_length));
+                        checkBox.setChecked(true);
+                    } else {
+                        if (userAnswerChoice.contains(checkBox.getId())) {
+                            userAnswerChoice.remove(userAnswerChoice.indexOf(checkBox.getId()));
+                        }
                     }
+
                     //showToast(getContext(), String.valueOf(userAnswerChoice.size()));
                 }
             }

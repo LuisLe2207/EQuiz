@@ -25,6 +25,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <at.grabner.circleprogress.CircleProgressView
+        android:id="@+id/cpgViewActMain_Duration"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        app:cpv_barWidth="15dp"
+        app:cpv_rimWidth="15dp"
+        app:cpv_rimColor="@color/colorAccent"
+        app:cpv_textColor="#2A7884"
+        app:cpv_textSize="13sp"
+        />
+
 
     <android.support.design.widget.CoordinatorLayout
 
