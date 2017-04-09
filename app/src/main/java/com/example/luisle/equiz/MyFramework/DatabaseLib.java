@@ -2,6 +2,7 @@ package com.example.luisle.equiz.MyFramework;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -9,12 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.widget.EditText;
 
+import com.example.luisle.equiz.Activity.CommentAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
 import com.example.luisle.equiz.Adapter.QuestionChoiceAdapter;
 import com.example.luisle.equiz.Adapter.QuestionListAdapter;
 import com.example.luisle.equiz.Model.Choice;
+import com.example.luisle.equiz.Model.Comment;
 import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.Model.Question;
+import com.example.luisle.equiz.Model.Result;
 import com.example.luisle.equiz.Model.User;
 import com.example.luisle.equiz.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,10 +37,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
+import static com.example.luisle.equiz.MyFramework.MyEssential.COMMENT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.RESULT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USERS_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USER_AVATAR;
 import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
@@ -403,6 +412,88 @@ public class DatabaseLib {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    // endregion
+
+    // region RESULT
+    public static void saveResult(final Context context, DatabaseReference dataRef, final String examID, ArrayList<Result> resultList) {
+        final ProgressDialog saveResultProgressDialog = createProgressDialog(context,
+                context.getResources().getString(R.string.text_progress_submit));
+        saveResultProgressDialog.show();
+        // Get date finish exam
+        Calendar calendar = Calendar.getInstance();
+        HashMap<String, Object> resultMap = new HashMap<>();
+        for (Result result : resultList) {
+            resultMap.put(result.getQuestionID(), result);
+        }
+        dataRef.child(RESULT_CHILD)
+                .child(examID)
+                .child(String.valueOf(calendar.getTimeInMillis()))
+                .setValue(resultMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveResultProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.save_result_success));
+                            Intent commentIntent = new Intent(context, CommentAct.class);
+                            commentIntent.putExtra("ID", examID);
+                            context.startActivity(commentIntent);
+                        }
+                    }, 2000);
+                } else {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveResultProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.save_result_failed));
+                        }
+                    }, 2000);
+                }
+            }
+        });
+
+    }
+    // endregion
+
+    // region COMMENT
+
+    public static void submitComment(final Context context, DatabaseReference dataRef, String examID, Comment comment) {
+        final ProgressDialog saveCommentProgressDialog = createProgressDialog(context,
+                context.getResources().getString(R.string.text_progress_submit));
+        saveCommentProgressDialog.show();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final String createDate = simpleDateFormat.format(calendar.getTime());
+        String commentID = dataRef.child(COMMENT_CHILD).child(examID).push().getKey();
+        comment.setID(commentID);
+        comment.setDateCreated(createDate);
+        dataRef.child(COMMENT_CHILD).child(examID).child(commentID).setValue(comment, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveCommentProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.submit_comment_success));
+                        }
+                    }, 2000);
+
+                } else {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveCommentProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.submit_comment_failed));
+                        }
+                    }, 2000);
+                }
             }
         });
     }

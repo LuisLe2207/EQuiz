@@ -193,4 +193,8 @@ public class QuestionPagerFrag extends Fragment {
         };
     }
 
+    public ArrayList<Integer> getUserAnswerChoice() {
+        return userAnswerChoice;
+    }
+
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -45,6 +46,8 @@ public class MyEssential {
     public static final String QUESTION_CHILD = "QUESTION_CHILD";
     public static final String EXAM_CHILD = "EXAM_CHILD";
     public static final String RESULT_CHILD = "RESULT_CHILD";
+    public static final String COMMENT_CHILD = "COMMENT_CHILD";
+    public static final String RECORD_CHILD = "RECORD_CHILD";
     public static final String USER_AVATAR = "User_Avatar/";
     // endregion
 
@@ -80,6 +83,14 @@ public class MyEssential {
         progressDialog.setMessage(message);
         progressDialog.setCanceledOnTouchOutside(false);
         return progressDialog;
+    }
+
+    public static AlertDialog.Builder createAlertDialog(Context context, String message) {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setMessage(message);
+        alertDialog.create();
+        alertDialog.setCancelable(false);
+        return alertDialog;
     }
 
     public static void openAvatarActionDialog(final AppCompatActivity activity) {

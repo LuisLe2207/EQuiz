@@ -1,9 +1,11 @@
 package com.example.luisle.equiz.Fragment;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -11,6 +13,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +23,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.Activity.MainAct;
+import com.example.luisle.equiz.Adapter.CommentListAdapter;
+import com.example.luisle.equiz.Model.Comment;
+import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
-import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import java.util.ArrayList;
+
+import static com.example.luisle.equiz.MyFramework.MyEssential.COMMENT_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 
 /**
  * Created by LuisLe on 4/5/2017.
@@ -33,7 +50,14 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 public class DetailExamFrag extends DialogFragment {
 
 
-    String examID;
+    private String examID;
+    private Exam exam;
+    private ArrayList<Comment> commentList;
+    private CommentListAdapter commentListAdapter;
+
+    private EditText edtTitle, edtDuration, edtNumberOFQuestion, edtCreatedDate;
+    private TextView txtNumberOfComment;
+    private RecyclerView rcvComment;
 
     public static DetailExamFrag newInstance(String examID) {
         DetailExamFrag fragment = new DetailExamFrag();
@@ -48,10 +72,11 @@ public class DetailExamFrag extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_detail_exam, container, false);
         createActionBar(view);
+        mappingLayout(view);
         if (getArguments() != null) {
             examID = getArguments().getString("ID");
         }
-        showToast(getContext(), examID);
+        init();
         return view;
     }
 
@@ -88,6 +113,35 @@ public class DetailExamFrag extends DialogFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void mappingLayout(View view) {
+        edtTitle = (EditText) view.findViewById(R.id.edtDialogDetailExam_Title);
+        edtDuration = (EditText) view.findViewById(R.id.edtDialogDetailExam_Duration);
+        edtNumberOFQuestion = (EditText) view.findViewById(R.id.edtDialogDetailExam_NumberOFQuestion);
+        edtCreatedDate = (EditText) view.findViewById(R.id.edtDialogDetailExam_CreatedDate);
+        txtNumberOfComment = (TextView) view.findViewById(R.id.txtDialogDetailExam_NumberOfComment);
+        rcvComment = (RecyclerView) view.findViewById(R.id.rcvComment);
+    }
+
+    private void init() {
+        commentList = new ArrayList<>();
+        getExam(examID);
+        getComment(examID);
+        final ProgressDialog loadExamDetailProgressDialog = createProgressDialog(getContext()
+                , getContext().getResources().getString(R.string.text_progress_retrieving));
+        loadExamDetailProgressDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setExamDetail();
+                setCommentList();
+                commentListAdapter = new CommentListAdapter(getContext(), commentList);
+                rcvComment.setAdapter(commentListAdapter);
+                rcvComment.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                loadExamDetailProgressDialog.dismiss();
+            }
+        }, 2000);
+    }
+
     private void createActionBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogDetailExam);
         toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_detail));
@@ -101,6 +155,23 @@ public class DetailExamFrag extends DialogFragment {
             actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
         }
         setHasOptionsMenu(true);
+    }
+
+    private void setExamDetail() {
+        edtTitle.append(exam.getTitle());
+        edtDuration.append(exam.getDuration() + "'");
+        edtNumberOFQuestion.append(String.valueOf(exam.getNumberOfQuestion()) + " questions");
+        edtCreatedDate.append(exam.getDateCreated());
+    }
+
+    private void setCommentList() {
+        if (commentList.isEmpty()) {
+            txtNumberOfComment.setText(getContext().getResources().getString(R.string.text_exam_no_comment));
+        } else {
+            txtNumberOfComment.setText(getContext().getResources().getString(R.string.text_exam_has_comment)
+                    + " " + commentList.size()
+                    + " " + getContext().getResources().getString(R.string.text_exam_comment));
+        }
     }
 
     private void doExam() {
@@ -124,5 +195,44 @@ public class DetailExamFrag extends DialogFragment {
         doExamAlertDialog.create();
         doExamAlertDialog.setCancelable(false);
         doExamAlertDialog.show();
+    }
+
+    public void getExam(String examID) {
+        eQuizRef.child(EXAM_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                setExam(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setExam(DataSnapshot dataSnapshot) {
+        exam = dataSnapshot.getValue(Exam.class);
+    }
+
+    private void getComment(String examID) {
+        eQuizRef.child(COMMENT_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                setComments(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setComments(DataSnapshot dataSnapshot) {
+        for (DataSnapshot commentSnapshot : dataSnapshot.getChildren()) {
+            Comment comment = commentSnapshot.getValue(Comment.class);
+            commentList.add(comment);
+        }
     }
 }

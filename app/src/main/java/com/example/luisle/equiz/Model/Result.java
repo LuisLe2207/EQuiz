@@ -9,7 +9,7 @@ import java.util.List;
 public class Result {
 
     private String questionID;
-    private List<String> answerList;
+    private List<Integer> answerList;
     private Boolean boolResult;
 
     // region GET and SET
@@ -22,11 +22,11 @@ public class Result {
         this.questionID = questionID;
     }
 
-    public List<String> getAnswerList() {
+    public List<Integer> getAnswerList() {
         return answerList;
     }
 
-    public void setAnswerList(List<String> answerList) {
+    public void setAnswerList(List<Integer> answerList) {
         this.answerList = answerList;
     }
 
@@ -46,7 +46,7 @@ public class Result {
         
     }
 
-    public Result(String questionID, List<String> answerList, Boolean boolResult) {
+    public Result(String questionID, List<Integer> answerList, Boolean boolResult) {
         this.questionID = questionID;
         this.answerList = answerList;
         this.boolResult = boolResult;

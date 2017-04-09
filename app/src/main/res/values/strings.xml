@@ -8,14 +8,14 @@
     <string name="text_login">Login</string>
     <string name="text_forgotpass">Forgot password?</string>
     <string name="text_register">Register</string>
-    <string name="text_category_grammar">Grammar</string>
-    <string name="text_category_volcabuary">Volcabuary</string>
-    <string name="text_category_communicate">Communication</string>
-    <string name="text_category_read">Read &amp; Understand</string>
-    <string name="text_category_exam">Synthetic</string>
+    <string name="text_skip">Skip</string>
+    <string name="text_next">Next</string>
+    <string name="text_rate">Rate this exam</string>
+    <string name="text_leave_comment">Leave comments</string>
 
     <!--Layout Row-->
     <string name="text_page_question">Question </string>
+    <string name="text_by">by</string>
 
     <!--Layout Frag String-->
     <string name="text_save">Save</string>
@@ -32,10 +32,6 @@
     <string name="text_exam_has_comment">This exam has  </string>
     <string name="text_exam_no_comment">There is no comment yet</string>
     <string name="text_exam_list_of_question">List of questions</string>
-    <string name="text_add">Add</string>
-    <string name="text_create">Create</string>
-    <string name="text_modify">Modify</string>
-    <string name="text_start">Start</string>
 
     <!--Layout Dialog String-->
     <string name="text_current_email">Current Email</string>
@@ -50,10 +46,16 @@
     <string name="text_progress_register">Creating &#8230;</string>
     <string name="text_progress_change">Changing &#8230;</string>
     <string name="text_progress_save">Saving &#8230;</string>
+    <string name="text_progress_submit">Submitting &#8230;</string>
     <string name="text_progress_reset">Resetting &#8230;</string>
+    <string name="text_progress_retrieving">Retrieving data &#8230;</string>
+    <string name="text_progress_quit">Quiting &#8230;</string>
+    <string name="text_progress_skip">Skipping &#8230;</string>
     <string name="text_do_exam">Do you want to do this exam? </string>
     <string name="text_yes">Yes</string>
     <string name="text_no">No</string>
+    <string name="text_quit_exam">Do you want to quit doing this exam?</string>
+    <string name="text_submit_exam">Do you want to submit this exam?</string>
 
 
     <!--Hint String-->
@@ -78,6 +80,8 @@
     <string name="error_email_format">Wrong email format!</string>
     <string name="error_pass_min_length">Password must be at least 6 character</string>
     <string name="error_pass_max_length">Password max character is 15</string>
+    <string name="error_empty_comment">Please leave a comment before go to next step</string>
+    <string name="error_empty_star">Please rate before go to next step</string>
 
     <!--Toast String-->
     <string name="login_failed">Login Failed!\nPlease try again!</string>
@@ -96,6 +100,11 @@
     <string name="save_exam_sucess">Save exam successfully</string>
     <string name="save_exam_failed">Save exam failed!\nPlease try again!</string>
     <string name="press_twice_to_minimize">Please click BACK again to minimize</string>
+    <string name="save_result_success">Submit successfully</string>
+    <string name="save_result_failed">Submit failed!\nPlease try again!</string>
+    <string name="warning_not_choose_answer">You should choose answers for all questions</string>
+    <string name="submit_comment_success">Your comment has been submitted</string>
+    <string name="submit_comment_failed">Can not submit your comment!\nPlease try again!</string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>
@@ -114,6 +123,11 @@
     <string name="toolbar_add_exam">Add Exam</string>
     <string name="toolbar_modify_exam">Modify Exam</string>
     <string name="toolbar_detail">Exam Detail</string>
+    <string name="text_add">Add</string>
+    <string name="text_create">Create</string>
+    <string name="text_modify">Modify</string>
+    <string name="text_start">Start</string>
+    <string name="text_submit">Submit</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

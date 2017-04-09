@@ -7,10 +7,10 @@ package com.example.luisle.equiz.Model;
 public class Comment {
 
     private String ID;
-    private String authorName;
+    private String authorID;
     private String dateCreated;
     private String content;
-    private Integer rate;
+    private Float rate;
 
 
     public String getID() {
@@ -21,12 +21,12 @@ public class Comment {
         this.ID = ID;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public String getAuthorID() {
+        return authorID;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setAuthorID(String authorID) {
+        this.authorID = authorID;
     }
 
     public String getDateCreated() {
@@ -45,11 +45,11 @@ public class Comment {
         this.content = content;
     }
 
-    public Integer getRate() {
+    public Float getRate() {
         return rate;
     }
 
-    public void setRate(Integer rate) {
+    public void setRate(Float rate) {
         this.rate = rate;
     }
 
@@ -58,9 +58,9 @@ public class Comment {
         // Firebase required
     }
 
-    public Comment(String ID, String authorName, String dateCreated, String content, Integer rate) {
+    public Comment(String ID, String authorID, String dateCreated, String content, Float rate) {
         this.ID = ID;
-        this.authorName = authorName;
+        this.authorID = authorID;
         this.dateCreated = dateCreated;
         this.content = content;
         this.rate = rate;
