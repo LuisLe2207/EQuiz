@@ -114,6 +114,7 @@
     <string name="warning_1_minute_left">You have 1 minute left</string>
     <string name="warning_30_seconds_left">You have 30 seconds left</string>
     <string name="warning_15_seconds_left">You have 15 seconds left</string>
+    <string name="alert_exam_will_be_submit">Your exam will be submit after few seconds</string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>

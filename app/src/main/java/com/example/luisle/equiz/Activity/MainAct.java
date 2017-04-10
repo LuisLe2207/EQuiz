@@ -49,6 +49,7 @@ public class MainAct extends AppCompatActivity {
     private String userID;
     private Exam exam;
     private int examDuration;
+    private boolean isTimeOut = false;
     private ArrayList<Question> questionList;
     private ArrayList<Result> resultList;
     private ArrayList<Integer> unChooseList;
@@ -226,7 +227,18 @@ public class MainAct extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                submitExam();
+                isTimeOut = true;
+                showToast(getApplicationContext(), getResources().getString(R.string.alert_exam_will_be_submit));
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (setResultList()) {
+                            // Save to firebase
+                            saveResult(MainAct.this, eQuizRef, userID, examID, resultList);
+                        }
+                    }
+                }, 2000);
             }
         };
     }
@@ -313,7 +325,15 @@ public class MainAct extends AppCompatActivity {
             }
         }
         if (!hasChoose) {
-            showToast(getApplicationContext(), getResources().getString(R.string.warning_not_choose_answer));
+            if (!isTimeOut) {
+                showToast(getApplicationContext(), getResources().getString(R.string.warning_not_choose_answer));
+            } else {
+                for (Integer i : unChooseList) {
+                    resultList.add(new Result(questionList.get(i).getID(), null, false));
+                }
+                allowSubmit = true;
+            }
+
         }
         return allowSubmit;
     }
