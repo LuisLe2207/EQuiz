@@ -94,7 +94,7 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
                 homeFrag.hideLayout();
                 ((HomeAct) myContext).getBottomNavigationView().setVisibility(View.INVISIBLE);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.replace(android.R.id.content, detailExamFrag).addToBackStack(null).commit();
+                transaction.replace(android.R.id.content, detailExamFrag, "DetailExamFrag").addToBackStack(null).commit();
 
             }
 

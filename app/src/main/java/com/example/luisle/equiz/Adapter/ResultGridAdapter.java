@@ -2,6 +2,7 @@ package com.example.luisle.equiz.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +25,13 @@ public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.Re
 
     private Context myContext;
     private List<Result> resultList;
+    private Integer spanCount;
     private LayoutInflater layoutInflater;
 
-    public ResultGridAdapter(Context myContext, List<Result> resultList) {
+    public ResultGridAdapter(Context myContext, List<Result> resultList, StaggeredGridLayoutManager manager) {
         this.myContext = myContext;
         this.resultList = resultList;
+        this.spanCount = manager.getSpanCount();
         layoutInflater = LayoutInflater.from(myContext);
     }
 
@@ -48,6 +51,18 @@ public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.Re
         } else {
             imgMood.setImageResource(R.mipmap.ic_sad);
             txtResult.setText(myContext.getResources().getString(R.string.text_wrong));
+        }
+
+        final ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+        if (layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
+            StaggeredGridLayoutManager.LayoutParams staggLayoutParams = (StaggeredGridLayoutManager.LayoutParams) layoutParams;
+            if (getItemCount() % spanCount != 0) {
+                int lastPos = getItemCount() - 1;
+                if (position == lastPos) {
+                    staggLayoutParams.setFullSpan(true);
+                    holder.itemView.setLayoutParams(staggLayoutParams);
+                }
+            }
         }
     }
 

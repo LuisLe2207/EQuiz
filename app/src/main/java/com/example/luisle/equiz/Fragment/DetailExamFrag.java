@@ -130,24 +130,36 @@ public class DetailExamFrag extends DialogFragment {
         pgBarLoading.setVisibility(View.VISIBLE);
         rcvComment.setVisibility(View.INVISIBLE);
         commentList = new ArrayList<>();
-        getExam(examID);
-        getComment(examID);
-        final ProgressDialog loadExamDetailProgressDialog = createProgressDialog(getContext()
-                , getContext().getResources().getString(R.string.text_progress_retrieving));
-        loadExamDetailProgressDialog.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setExamDetail();
-                setCommentList();
-                commentListAdapter = new CommentListAdapter(getContext(), commentList);
-                rcvComment.setAdapter(commentListAdapter);
-                rcvComment.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                loadExamDetailProgressDialog.dismiss();
-                pgBarLoading.setVisibility(View.INVISIBLE);
-                rcvComment.setVisibility(View.VISIBLE);
+        if (examID != null && !examID.isEmpty()) {
+            getExam(examID);
+            getComment(examID);
+            final ProgressDialog loadExamDetailProgressDialog = createProgressDialog(getContext()
+                    , getContext().getResources().getString(R.string.text_progress_retrieving));
+            if (exam == null) {
+                loadExamDetailProgressDialog.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (exam != null) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setExamDetail();
+                                    setCommentList();
+                                    commentListAdapter = new CommentListAdapter(getContext(), commentList);
+                                    rcvComment.setAdapter(commentListAdapter);
+                                    rcvComment.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                                }
+                            }, 500);
+                        }
+                        loadExamDetailProgressDialog.dismiss();
+                        pgBarLoading.setVisibility(View.INVISIBLE);
+                        rcvComment.setVisibility(View.VISIBLE);
+                    }
+                }, 1500);
             }
-        }, 2000);
+
+        }
     }
 
     private void createActionBar(View view) {

@@ -99,9 +99,9 @@ public class ResultAct extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showToast(getApplicationContext(), String.valueOf(resultList.size()));
-                resultGridAdapter = new ResultGridAdapter(ResultAct.this, resultList);
-                rcvResult.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                resultGridAdapter = new ResultGridAdapter(ResultAct.this, resultList, manager);
+                rcvResult.setLayoutManager(manager);
                 rcvResult.setAdapter(resultGridAdapter);
                 collectingDataProgressDialog.dismiss();
             }

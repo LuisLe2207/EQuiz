@@ -1,5 +1,6 @@
 package com.example.luisle.equiz.Activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,11 +13,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 
 import com.example.luisle.equiz.Adapter.QuestionPagerAdapter;
 import com.example.luisle.equiz.Fragment.QuestionPagerFrag;
+import com.example.luisle.equiz.Model.Comment;
 import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.Model.Question;
 import com.example.luisle.equiz.Model.Result;
@@ -35,9 +43,11 @@ import at.grabner.circleprogress.CircleProgressView;
 import at.grabner.circleprogress.TextMode;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveResult;
+import static com.example.luisle.equiz.MyFramework.DatabaseLib.submitComment;
 import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createAlertDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.createDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
@@ -62,6 +72,7 @@ public class MainAct extends AppCompatActivity {
     private CircleProgressView cpgViewDuration;
 
     private ProgressDialog progressDialogRetrievingData;
+    private Dialog rateCommentDialog;
 
     private FirebaseUser firebaseUser;
 
@@ -118,23 +129,36 @@ public class MainAct extends AppCompatActivity {
         questionList = new ArrayList<>();
         resultList = new ArrayList<>();
         unChooseList = new ArrayList<>();
-        getExam(examID);
-        getQuestions();
-        progressDialogRetrievingData  = createProgressDialog(MainAct.this, getResources().getString(R.string.text_progress_retrieving));
-        progressDialogRetrievingData.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                createActionBar();
-                examDuration = exam.getDuration() * 60000;
-                userID = firebaseUser.getUid();
-                questionPagerAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), MainAct.this, examID, exam.getNumberOfQuestion());
-                viewPgActMain_Question.setAdapter(questionPagerAdapter);
-                progressDialogRetrievingData.dismiss();
-                setDuration();
-                examDutaionCountDown.start();
+        if (examID != null && !examID.isEmpty()) {
+            getExam(examID);
+            getQuestions();
+            rateCommentDialog = createDialog(MainAct.this, R.layout.dialog_rate_comment, "Rate & Comment");
+            rateCommentDialog.setCanceledOnTouchOutside(false);
+            progressDialogRetrievingData  = createProgressDialog(MainAct.this, getResources().getString(R.string.text_progress_retrieving));
+            if (exam == null) {
+                progressDialogRetrievingData.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (exam != null) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    createActionBar();
+                                    examDuration = exam.getDuration() * 60000;
+                                    userID = firebaseUser.getUid();
+                                    questionPagerAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), MainAct.this, examID, exam.getNumberOfQuestion());
+                                    viewPgActMain_Question.setAdapter(questionPagerAdapter);
+                                    setDuration();
+                                    examDutaionCountDown.start();
+                                }
+                            }, 500);
+                        }
+                        progressDialogRetrievingData.dismiss();
+                    }
+                }, 1500);
             }
-        }, 2000);
+        }
     }
 
     private void createActionBar() {
@@ -156,10 +180,18 @@ public class MainAct extends AppCompatActivity {
         submitAlertDialog.setPositiveButton(getResources().getString(R.string.text_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                examDutaionCountDown.cancel();
                 // Set result list
                 if (setResultList()) {
                     // Save to firebase
                     saveResult(MainAct.this, eQuizRef, userID, examID, resultList);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            rateAndComment(rateCommentDialog);
+                            rateCommentDialog.show();
+                        }
+                    }, 3000);
                 }
             }
         });
@@ -177,12 +209,12 @@ public class MainAct extends AppCompatActivity {
         quitAlertDialog.setPositiveButton(getResources().getString(R.string.text_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                examDutaionCountDown.cancel();
                 final ProgressDialog quitProgressDialog = createProgressDialog(MainAct.this, getResources().getString(R.string.text_progress_quit));
                 quitProgressDialog.show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        examDutaionCountDown.cancel();
                         quitProgressDialog.dismiss();
                         startActivity(new Intent(MainAct.this, HomeAct.class));
                     }
@@ -236,6 +268,13 @@ public class MainAct extends AppCompatActivity {
                         if (setResultList()) {
                             // Save to firebase
                             saveResult(MainAct.this, eQuizRef, userID, examID, resultList);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    rateAndComment(rateCommentDialog);
+                                    rateCommentDialog.show();
+                                }
+                            }, 3000);
                         }
                     }
                 }, 2000);
@@ -336,6 +375,66 @@ public class MainAct extends AppCompatActivity {
 
         }
         return allowSubmit;
+    }
+
+
+    private void rateAndComment(Dialog dialog) {
+        // mapping Dialog layout
+        final RatingBar rateBarStart = (RatingBar) dialog.findViewById(R.id.rateBarDialogRateComment_Stars);
+        final EditText edtComment = (EditText) dialog.findViewById(R.id.edtDialogRateComment_Comment);
+        Button btnNext = (Button) dialog.findViewById(R.id.btnDialogRateComment_Next);
+        Button btnSkip = (Button) dialog.findViewById(R.id.btnDialogRateComment_Skip);
+        final Float[] rateStar = new Float[1];
+        rateBarStart.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                rateStar[0] = v;
+                Log.d("Rating", String.valueOf(rateStar[0]));
+            }
+        });
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Get rating bar status
+                if (rateStar[0] != null) {
+                    showToast(getApplicationContext(), String.valueOf(5));
+                }
+
+                // Get comment
+                String commentContent = edtComment.getText().toString();
+
+                // Validate Input
+                if (rateStar[0] == 0.0 || TextUtils.isEmpty(commentContent)) {
+                    if (TextUtils.isEmpty(commentContent)) {
+                        edtComment.setError(getResources().getString(R.string.error_empty_comment));
+                        showToast(getApplicationContext(), getResources().getString(R.string.error_empty_comment));
+                    }
+                    if (rateStar[0] == 0.0) {
+                        showToast(getApplicationContext(), getResources().getString(R.string.error_empty_star));
+                    }
+                } else {
+                    Comment comment = new Comment("", userID, "", commentContent, rateStar[0]);
+                    submitComment(MainAct.this, eQuizRef, examID, comment);
+                }
+            }
+        });
+
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ProgressDialog skipProgressDialog = createProgressDialog(MainAct.this, getResources().getString(R.string.text_progress_skip));
+                skipProgressDialog.show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        skipProgressDialog.dismiss();
+                        startActivity(new Intent(MainAct.this, ResultAct.class));
+                    }
+                }, 2000);
+            }
+        });
+
     }
 
 

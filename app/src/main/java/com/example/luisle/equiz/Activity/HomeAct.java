@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
+import com.example.luisle.equiz.Fragment.DetailExamFrag;
 import com.example.luisle.equiz.Fragment.HomeFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,7 +51,11 @@ public class HomeAct extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        DetailExamFrag detailExamFrag = (DetailExamFrag) getSupportFragmentManager().findFragmentByTag("DetailExamFrag");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (detailExamFrag != null) {
+            transaction.remove(detailExamFrag);
+        }
         transaction.replace(R.id.frameLayoutActHome, HomeFrag.newInstance(), fragmentTag);
         transaction.commit();
     }

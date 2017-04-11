@@ -95,6 +95,13 @@ public class MyEssential {
         return alertDialog;
     }
 
+    public static Dialog createDialog(Context context, Integer layout, String title) {
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(layout);
+        dialog.setTitle(title);
+        return dialog;
+    }
+
     public static void openAvatarActionDialog(final AppCompatActivity activity) {
         Dialog avatarActionDialog = new Dialog(activity);
         avatarActionDialog.setContentView(R.layout.dialog_choose_avatar_action);

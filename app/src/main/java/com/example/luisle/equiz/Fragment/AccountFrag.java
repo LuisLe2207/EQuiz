@@ -48,6 +48,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.REQUEST_IMAGE_GAL
 import static com.example.luisle.equiz.MyFramework.MyEssential.USERS_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USER_AVATAR;
 import static com.example.luisle.equiz.MyFramework.MyEssential.convertImageViewToByte;
+import static com.example.luisle.equiz.MyFramework.MyEssential.createDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQUizStorageRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
@@ -197,9 +198,9 @@ public class AccountFrag extends Fragment{
         btnAccFrag_ChangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dialog changeEmailDialog = new Dialog(getContext());
-                changeEmailDialog.setContentView(R.layout.dialog_change_email);
-                changeEmailDialog.setTitle("Change Email");
+                Dialog changeEmailDialog = createDialog(getContext(),
+                        R.layout.dialog_change_email,
+                        getContext().getResources().getString(R.string.text_change_email));
                 Button btnChangeEmail = (Button) changeEmailDialog.findViewById(R.id.btnDialog_ChangeEmail_Save);
                 edtDialog_ChangeEmail_Email = (EditText) changeEmailDialog.findViewById(R.id.edtDialog_ChangeEmail_Email);
                 edtDialog_ChangeEmail_Pass = (EditText) changeEmailDialog.findViewById(R.id.edtDialog_ChangeEmail_Pass);
@@ -224,9 +225,9 @@ public class AccountFrag extends Fragment{
         btnAccFrag_ChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dialog changePasswordDialog = new Dialog(getContext());
-                changePasswordDialog.setContentView(R.layout.dialog_change_password);
-                changePasswordDialog.setTitle("Change Password");
+                Dialog changePasswordDialog = createDialog(getContext(),
+                        R.layout.dialog_change_password,
+                        getContext().getResources().getString(R.string.text_change_password));
                 Button btnChangePassword = (Button) changePasswordDialog.findViewById(R.id.btnDialog_ChangePassword_Save);
                 edtDialog_ChangePassword_Email = (EditText) changePasswordDialog.findViewById(R.id.edtDialog_ChangePassword_Email);
                 edtDialog_ChangePassword_Pass = (EditText) changePasswordDialog.findViewById(R.id.edtDialog_ChangePassword_Pass);

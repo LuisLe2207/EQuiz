@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import com.example.luisle.equiz.Activity.CommentAct;
 import com.example.luisle.equiz.Activity.ResultAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
 import com.example.luisle.equiz.Adapter.QuestionChoiceAdapter;
@@ -457,9 +456,9 @@ public class DatabaseLib {
                         public void run() {
                             saveResultProgressDialog.dismiss();
                             showToast(context, context.getResources().getString(R.string.save_result_success));
-                            Intent commentIntent = new Intent(context, CommentAct.class);
-                            commentIntent.putExtra("ID", examID);
-                            context.startActivity(commentIntent);
+//                            Intent commentIntent = new Intent(context, CommentAct.class);
+//                            commentIntent.putExtra("ID", examID);
+//                            context.startActivity(commentIntent);
                         }
                     }, 2000);
                 } else {

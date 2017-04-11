@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="7dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RatingBar
+                android:id="@+id/rateBarDialogRateComment_Stars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp">
+
+        <TextView
+            style="@style/TextView_Custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_leave_comment"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtDialogRateComment_Comment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/EditText_Custom"
+            android:gravity="left|top"
+            android:inputType="textMultiLine|textCapSentences"
+            android:scrollbarAlwaysDrawVerticalTrack="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="7dp"
+        android:weightSum="5">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <Button
+                android:id="@+id/btnDialogRateComment_Skip"
+                style="@style/Button_Custom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/text_skip" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            ></LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <Button
+                android:id="@+id/btnDialogRateComment_Next"
+                style="@style/Button_Custom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/text_next"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
