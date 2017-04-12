@@ -1,6 +1,8 @@
 package com.example.luisle.equiz.Adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -9,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.luisle.equiz.Model.Result;
+import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.R;
 
 import java.util.List;
@@ -24,11 +26,11 @@ public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.Re
 
 
     private Context myContext;
-    private List<Result> resultList;
+    private List<QuestionResult> resultList;
     private Integer spanCount;
     private LayoutInflater layoutInflater;
 
-    public ResultGridAdapter(Context myContext, List<Result> resultList, StaggeredGridLayoutManager manager) {
+    public ResultGridAdapter(Context myContext, List<QuestionResult> resultList, StaggeredGridLayoutManager manager) {
         this.myContext = myContext;
         this.resultList = resultList;
         this.spanCount = manager.getSpanCount();
@@ -42,15 +44,15 @@ public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.Re
     }
 
     @Override
-    public void onBindViewHolder(ResultGridViewHolder holder, int position) {
-        Result result = resultList.get(position);
-        txtQuestion.append(" " + String.valueOf(position + 1));
+    public void onBindViewHolder(ResultGridAdapter.ResultGridViewHolder holder, int position) {
+        QuestionResult result = resultList.get(position);
+        holder.txtQuestion.append(" " + String.valueOf(position + 1));
         if (result.getBoolResult()) {
-            imgMood.setImageResource(R.mipmap.ic_smile);
-            txtResult.setText(myContext.getResources().getString(R.string.text_correct));
+            holder.imgMood.setImageResource(R.mipmap.ic_smile);
+            holder.txtResult.setText(myContext.getResources().getString(R.string.text_correct));
         } else {
-            imgMood.setImageResource(R.mipmap.ic_sad);
-            txtResult.setText(myContext.getResources().getString(R.string.text_wrong));
+            holder.imgMood.setImageResource(R.mipmap.ic_sad);
+            holder.txtResult.setText(myContext.getResources().getString(R.string.text_wrong));
         }
 
         final ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
@@ -64,18 +66,25 @@ public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.Re
                 }
             }
         }
+
+        if (result.getBoolResult()) {
+            holder.cvGridResult.setCardBackgroundColor(ContextCompat.getColor(myContext, R.color.correctAnswer));
+        } else {
+            holder.cvGridResult.setCardBackgroundColor(ContextCompat.getColor(myContext, R.color.wrongAnswer));
+        }
     }
 
     @Override
     public int getItemCount() {
         return resultList.size();
     }
-    private ImageView imgMood;
-    private TextView txtQuestion, txtResult;
     public class ResultGridViewHolder extends RecyclerView.ViewHolder {
-
+        private ImageView imgMood;
+        private TextView txtQuestion, txtResult;
+        private CardView cvGridResult;
         public ResultGridViewHolder(View itemView) {
             super(itemView);
+            cvGridResult = (CardView) itemView.findViewById(R.id.cvGridResult);
             imgMood = (ImageView) itemView.findViewById(imgGridResult_Mood);
             txtQuestion = (TextView) itemView.findViewById(R.id.txtGridResult_Question);
             txtResult = (TextView) itemView.findViewById(R.id.txtGridResult_Result);

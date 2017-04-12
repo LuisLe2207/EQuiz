@@ -5,33 +5,135 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.luisle.equiz.Activity.ResultAct"
-    android:padding="5dp"
-    android:weightSum="8">
+    tools:context="com.example.luisle.equiz.Activity.ResultAct">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/EQuizTheme"
+        layout_width="wrap_content"
+        layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarActResult"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/EQuizTheme"
+            layout_width="wrap_content"
+            layout_height="wrap_content" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="5dp"
+        android:layout_marginTop="10dp">
 
         <TextView
-            style="@style/EQuizTheme"
+            style="@style/TextView_Custom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/text_exam_result_title"
+            android:text="@string/text_congratulation"
             android:textSize="25sp"
             />
 
-    </LinearLayout>
+        <TextView
+            style="@style/TextView_Custom"
+            android:text="@string/text_exam_title"
+            android:layout_marginTop="10dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:padding="10dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_title"
+                android:scaleType="centerInside"
+                android:background="#205963"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/edtActResult_ExamTitle"
+                style="@style/EditText_Custom"
+                android:inputType="none"
+                android:paddingLeft="5dp"
+                android:enabled="false"
+                />
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextView_Custom"
+            android:text="@string/text_complete_time"
+            android:layout_marginTop="5dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_duration"
+                android:scaleType="centerInside"
+                android:background="#205963"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/edtActResult_CompleteTime"
+                style="@style/EditText_Custom"
+                android:inputType="none"
+                android:paddingLeft="5dp"
+                android:enabled="false"
+                />
+        </LinearLayout>
+
+
+        <TextView
+            style="@style/TextView_Custom"
+            android:text="@string/text_correct_answer"
+            android:layout_marginTop="5dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_check"
+                android:scaleType="centerInside"
+                android:background="#205963"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/edtActResult_CorrectAnswer"
+                style="@style/EditText_Custom"
+                android:inputType="none"
+                android:paddingLeft="5dp"
+                android:enabled="false"
+                />
+        </LinearLayout>
+
+
+        <TextView
+            style="@style/TextView_Custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:text="@string/text_exam_result_title"
+            android:textSize="15sp"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rcvActResult_Result"
             android:layout_width="match_parent"
@@ -40,24 +142,8 @@
 
         </android.support.v7.widget.RecyclerView>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btnActResult_BackHome"
-            style="@style/Button_Custom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="5dp"
-            android:text="@string/text_back_home"
-            />
 
     </LinearLayout>
+
 
 </LinearLayout>

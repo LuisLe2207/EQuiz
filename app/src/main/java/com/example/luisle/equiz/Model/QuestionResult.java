@@ -6,7 +6,7 @@ import java.util.List;
  * Created by LuisLe on 2/4/2017.
  */
 
-public class Result {
+public class QuestionResult {
 
     private String questionID;
     private List<Integer> answerList;
@@ -42,11 +42,11 @@ public class Result {
 
     // region CONSTRUCTOR
 
-    public Result() {
+    public QuestionResult() {
         
     }
 
-    public Result(String questionID, List<Integer> answerList, Boolean boolResult) {
+    public QuestionResult(String questionID, List<Integer> answerList, Boolean boolResult) {
         this.questionID = questionID;
         this.answerList = answerList;
         this.boolResult = boolResult;

@@ -26,8 +26,9 @@ import com.example.luisle.equiz.Adapter.QuestionPagerAdapter;
 import com.example.luisle.equiz.Fragment.QuestionPagerFrag;
 import com.example.luisle.equiz.Model.Comment;
 import com.example.luisle.equiz.Model.Exam;
+import com.example.luisle.equiz.Model.ExamResult;
 import com.example.luisle.equiz.Model.Question;
-import com.example.luisle.equiz.Model.Result;
+import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,9 +60,10 @@ public class MainAct extends AppCompatActivity {
     private String userID;
     private Exam exam;
     private int examDuration;
+    private long completeTime = 0;
     private boolean isTimeOut = false;
     private ArrayList<Question> questionList;
-    private ArrayList<Result> resultList;
+    private ArrayList<QuestionResult> questionResultList;
     private ArrayList<Integer> unChooseList;
     private CountDownTimer examDutaionCountDown;
 
@@ -127,7 +129,7 @@ public class MainAct extends AppCompatActivity {
     private void init() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         questionList = new ArrayList<>();
-        resultList = new ArrayList<>();
+        questionResultList = new ArrayList<>();
         unChooseList = new ArrayList<>();
         if (examID != null && !examID.isEmpty()) {
             getExam(examID);
@@ -184,7 +186,8 @@ public class MainAct extends AppCompatActivity {
                 // Set result list
                 if (setResultList()) {
                     // Save to firebase
-                    saveResult(MainAct.this, eQuizRef, userID, examID, resultList);
+                    ExamResult examResult = new ExamResult("", exam.getTitle(), completeTime, 0, questionResultList);
+                    saveResult(MainAct.this, eQuizRef, userID, examID, examResult);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -255,6 +258,7 @@ public class MainAct extends AppCompatActivity {
                     showToast(getApplicationContext()
                             , getResources().getString(R.string.warning_15_seconds_left));
                 }
+                completeTime = examDuration - l;
             }
 
             @Override
@@ -267,7 +271,8 @@ public class MainAct extends AppCompatActivity {
                     public void run() {
                         if (setResultList()) {
                             // Save to firebase
-                            saveResult(MainAct.this, eQuizRef, userID, examID, resultList);
+                            ExamResult examResult = new ExamResult("", exam.getTitle(), completeTime, 0, questionResultList);
+                            saveResult(MainAct.this, eQuizRef, userID, examID, examResult);
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -321,13 +326,13 @@ public class MainAct extends AppCompatActivity {
                              * In this case in single answer question
                              */
                             Integer userAnswerSingle = userAnswerList.get(0);
-                            Result resultSingle = null;
+                            QuestionResult resultQuestionSingle = null;
                             if (answerList.contains(userAnswerSingle)) {
-                                resultSingle = new Result(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), true);
+                                resultQuestionSingle = new QuestionResult(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), true);
                             } else {
-                                resultSingle = new Result(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), false);
+                                resultQuestionSingle = new QuestionResult(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), false);
                             }
-                            resultList.add(resultSingle);
+                            questionResultList.add(resultQuestionSingle);
 
                             break;
                         case "Multiple":
@@ -346,13 +351,13 @@ public class MainAct extends AppCompatActivity {
                                     }
                                 }
                             }
-                            Result resultMultiple = null;
+                            QuestionResult resultQuestionMultiple = null;
                             if (check) {
-                                resultMultiple = new Result(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), true);
+                                resultQuestionMultiple = new QuestionResult(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), true);
                             } else {
-                                resultMultiple = new Result(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), false);
+                                resultQuestionMultiple = new QuestionResult(questionList.get(i).getID(), questionPagerFrag.getUserAnswerChoice(), false);
                             }
-                            resultList.add(resultMultiple);
+                            questionResultList.add(resultQuestionMultiple);
                             break;
                     }
                     allowSubmit = true;
@@ -368,7 +373,7 @@ public class MainAct extends AppCompatActivity {
                 showToast(getApplicationContext(), getResources().getString(R.string.warning_not_choose_answer));
             } else {
                 for (Integer i : unChooseList) {
-                    resultList.add(new Result(questionList.get(i).getID(), null, false));
+                    questionResultList.add(new QuestionResult(questionList.get(i).getID(), null, false));
                 }
                 allowSubmit = true;
             }
@@ -429,7 +434,9 @@ public class MainAct extends AppCompatActivity {
                     @Override
                     public void run() {
                         skipProgressDialog.dismiss();
-                        startActivity(new Intent(MainAct.this, ResultAct.class));
+                        Intent resultIntent = new Intent(MainAct.this, ResultAct.class);
+                        resultIntent.putExtra("ID", examID);
+                        startActivity(resultIntent);
                     }
                 }, 2000);
             }

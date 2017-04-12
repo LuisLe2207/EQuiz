@@ -19,8 +19,9 @@ import com.example.luisle.equiz.Adapter.QuestionListAdapter;
 import com.example.luisle.equiz.Model.Choice;
 import com.example.luisle.equiz.Model.Comment;
 import com.example.luisle.equiz.Model.Exam;
+import com.example.luisle.equiz.Model.ExamResult;
 import com.example.luisle.equiz.Model.Question;
-import com.example.luisle.equiz.Model.Result;
+import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.Model.User;
 import com.example.luisle.equiz.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,7 +43,6 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.COMMENT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
@@ -433,21 +433,26 @@ public class DatabaseLib {
     // endregion
 
     // region RESULT
-    public static void saveResult(final Context context, DatabaseReference dataRef, String userID,final String examID, ArrayList<Result> resultList) {
+    public static void saveResult(final Context context, DatabaseReference dataRef, String userID,final String examID, ExamResult examResult) {
         final ProgressDialog saveResultProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_submit));
         saveResultProgressDialog.show();
         // Get date finish exam
         Calendar calendar = Calendar.getInstance();
-        HashMap<String, Object> resultMap = new HashMap<>();
-        for (Result result : resultList) {
-            resultMap.put(result.getQuestionID(), result);
+        // Create count of correct answer
+        Integer correctAnswer = 0;
+        for (QuestionResult result : examResult.getQuestionResults()) {
+            if (result.getBoolResult()) {
+                correctAnswer++;
+            }
         }
+        examResult.setID(String.valueOf(calendar.getTimeInMillis()));
+        examResult.setCorrectAnswer(correctAnswer);
         dataRef.child(RESULT_CHILD)
                 .child(userID)
                 .child(examID)
                 .child(String.valueOf(calendar.getTimeInMillis()))
-                .setValue(resultMap, new DatabaseReference.CompletionListener() {
+                .setValue(examResult, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
