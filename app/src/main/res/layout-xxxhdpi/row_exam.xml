@@ -16,45 +16,142 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="7dp">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:id="@+id/imageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:src="@mipmap/ic_grammar" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="5dp"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="8">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_exam_title"
+                            android:textSize="12sp"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@mipmap/ic_title"
+                                android:scaleType="centerInside"
+                                android:background="#205963"
+                                android:layout_marginTop="5dp"
+                                />
+
+                            <EditText
+                                android:id="@+id/edtRowExam_Title"
+                                style="@style/EditText_Custom"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="12sp"
+                                android:inputType="none"
+                                android:paddingLeft="5dp"
+                                android:enabled="false"
+                                />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_exam_duration"
+                            android:textSize="12sp"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@mipmap/ic_duration"
+                                android:scaleType="centerInside"
+                                android:background="#205963"
+                                android:layout_marginTop="5dp"
+                                />
+
+                            <EditText
+                                android:id="@+id/edtRowExam_Duration"
+                                style="@style/EditText_Custom"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="12sp"
+                                android:inputType="none"
+                                android:paddingLeft="5dp"
+                                android:enabled="false"
+                                />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <TextView
-                    android:id="@+id/txtRowExam_Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Exam"
-                    android:textSize="18sp"
-                    />
-                <TextView
-                    android:id="@+id/txtRowExam_Duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="@string/text_exam_duration"
-                    android:textSize="16sp"
+                    android:text="@string/text_exam_num_of_question"
+                    android:textSize="12sp"
                     />
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/txtRowExam_Questions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_exam_num_of_question"
-                        android:textSize="14sp" />
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@mipmap/ic_question_mark"
+                        android:scaleType="centerInside"
+                        android:background="#205963"
+                        android:layout_marginTop="5dp"
+                        />
+
+                    <EditText
+                        android:id="@+id/edtRowExam_Questions"
+                        style="@style/EditText_Custom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="12sp"
+                        android:inputType="none"
+                        android:paddingLeft="5dp"
+                        android:enabled="false"
+                        />
 
                 </LinearLayout>
 

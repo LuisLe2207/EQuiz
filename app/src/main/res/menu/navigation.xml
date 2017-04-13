@@ -7,9 +7,9 @@
         android:title="@string/nav_home" />
 
     <item
-        android:id="@+id/navigation_ranking"
-        android:icon="@mipmap/ic_nav_ranking1"
-        android:title="@string/nav_ranking" />
+        android:id="@+id/navigation_statistics"
+        android:icon="@mipmap/ic_nav_statistics"
+        android:title="@string/nav_statistics" />
 
     <item
         android:id="@+id/navigation_account"

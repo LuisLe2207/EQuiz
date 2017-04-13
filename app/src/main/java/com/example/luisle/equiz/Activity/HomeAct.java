@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.DetailExamFrag;
 import com.example.luisle.equiz.Fragment.HomeFrag;
+import com.example.luisle.equiz.Fragment.UserStatisticsFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -120,10 +121,10 @@ public class HomeAct extends AppCompatActivity {
                     fragment = HomeFrag.newInstance();
                     fragmentTag = "HomeFrag";
                     break;
-                case R.id.navigation_ranking:
+                case R.id.navigation_statistics:
                     getSupportFragmentManager().popBackStackImmediate();
-                    fragment = AccountFrag.newInstance("Hello", "Hello");
-                    fragmentTag = "AccountFrag";
+                    fragment = UserStatisticsFrag.newInstance();
+                    fragmentTag = "UserStatisticsFrag";
                     break;
                 case R.id.navigation_account:
                     getSupportFragmentManager().popBackStackImmediate();

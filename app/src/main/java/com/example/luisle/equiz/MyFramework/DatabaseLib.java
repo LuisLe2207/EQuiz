@@ -376,8 +376,8 @@ public class DatabaseLib {
         dataRef.child(EXAM_CHILD).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Exam question = dataSnapshot.getValue(Exam.class);
-                examList.add(question);
+                Exam exam = dataSnapshot.getValue(Exam.class);
+                examList.add(exam);
                 adapter.notifyDataSetChanged();
                 rcv.setAdapter(adapter);
                 if (!dialogOnScreen) {
@@ -409,11 +409,11 @@ public class DatabaseLib {
     }
 
     public static void getExam(final DatabaseReference dataRef,
-                               final String id,
+                               final String examID,
                                final ArrayList<String> examQuestionList,
                                final EditText edtTitle,
                                final QuestionListAdapter adapter) {
-        dataRef.child(EXAM_CHILD).child(id).addValueEventListener(new ValueEventListener() {
+        dataRef.child(EXAM_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Exam exam = dataSnapshot.getValue(Exam.class);
@@ -521,6 +521,34 @@ public class DatabaseLib {
         });
     }
 
+    // endregion
+
+    // region User Statistics
+    public static void getDoneExam(final DatabaseReference dataRef,
+                                   final String examID,
+                                   final RecyclerView rcv,
+                                   final ProgressBar pgb,
+                                   final ArrayList<Exam> examList,
+                                   final ExamListAdapter adapter) {
+        dataRef.child(EXAM_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Exam exam = dataSnapshot.getValue(Exam.class);
+                examList.add(exam);
+                adapter.notifyDataSetChanged();
+                rcv.setAdapter(adapter);
+                if (!dialogOnScreen) {
+                    pgb.setVisibility(View.INVISIBLE);
+                    rcv.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     // endregion
 
 }

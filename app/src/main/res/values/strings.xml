@@ -23,6 +23,9 @@
     <string name="text_by">by</string>
     <string name="text_correct">Correct</string>
     <string name="text_wrong">Wrong</string>
+    <string name="text_date">Date</string>
+    <string name="text_question_type">Question type</string>
+    <string name="text_question_answer">Question answer</string>
 
     <!--Layout Frag String-->
     <string name="text_save">Save</string>
@@ -33,9 +36,13 @@
     <string name="text_question_list_of_choice">List of choices</string>
     <string name="text_exam_title">Exam title</string>
     <string name="text_exam_duration">Duration</string>
+    <string name="text_exam_best_complete_time">Best complete time</string>
     <string name="text_exam_num_of_question">Number of questions: </string>
     <string name="text_exam_created_date">Created date: </string>
+    <string name="text_exam_done_date">Done date</string>
     <string name="text_exam_comment">comment</string>
+    <string name="text_exam_done">You have done this exam for</string>
+    <string name="text_exam_times">times</string>
     <string name="text_exam_has_comment">This exam has  </string>
     <string name="text_exam_no_comment">There is no comment yet</string>
     <string name="text_exam_list_of_question">List of questions</string>
@@ -121,7 +128,7 @@
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>
-    <string name="nav_ranking">Ranking</string>
+    <string name="nav_statistics">Statistics</string>
     <string name="nav_exam">Exam</string>
     <string name="nav_question">Question</string>
     <string name="nav_account">Account</string>

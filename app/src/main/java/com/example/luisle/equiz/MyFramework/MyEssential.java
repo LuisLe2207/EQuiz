@@ -47,7 +47,6 @@ public class MyEssential {
     public static final String EXAM_CHILD = "EXAM_CHILD";
     public static final String RESULT_CHILD = "RESULT_CHILD";
     public static final String COMMENT_CHILD = "COMMENT_CHILD";
-    public static final String RECORD_CHILD = "RECORD_CHILD";
     public static final String USER_AVATAR = "User_Avatar/";
     // endregion
 
@@ -55,6 +54,7 @@ public class MyEssential {
     public static boolean isDelete = false;
     public static boolean dialogOnScreen = false;
     public static boolean inAddExamDialog = false;
+    public static boolean inHomeFrag = false;
 
     // endregion
 

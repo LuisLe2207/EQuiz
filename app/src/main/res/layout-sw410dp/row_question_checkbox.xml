@@ -17,66 +17,151 @@
             android:padding="5dp">
 
             <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
                 android:src="@mipmap/ic_question_mark"
                 />
 
             <LinearLayout
-                android:layout_width="290dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginLeft="5dp">
 
-                <TextView
-                    android:id="@+id/txtRowQuestion_Title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Question_Title"
-                    android:textSize="13sp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    />
-
-                <TextView
-                    android:id="@+id/txtRowQuestion_Type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Question_Type"
-                    android:textSize="12sp"
-                    />
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:weightSum="5"
-                    >
-
-                    <TextView
-                        android:id="@+id/txtRowQuestion_Choice"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:textSize="11sp"
-                        android:text="Choice: "
-                        />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="11dp"
-                        android:layout_weight="1"
-                        android:src="@mipmap/ic_vertical_line"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@mipmap/ic_title"
+                        android:scaleType="centerInside"
+                        android:background="#205963"
+                        android:layout_marginTop="5dp"
                         />
 
-                    <TextView
-                        android:id="@+id/txtRowQuestion_Answer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Answerss: "
+                    <EditText
+                        android:id="@+id/edtRowQuestion_Title"
+                        style="@style/EditText_Custom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:enabled="false"
+                        android:inputType="none"
+                        android:paddingLeft="5dp"
                         android:textSize="12sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="3dp">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@mipmap/ic_question_type"
+                        android:scaleType="centerInside"
+                        android:background="#205963"
+                        android:layout_marginTop="5dp"
+                        />
+
+                    <EditText
+                        android:id="@+id/edtRowQuestion_Type"
+                        style="@style/EditText_Custom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="12sp"
+                        android:inputType="none"
+                        android:paddingLeft="5dp"
+                        android:enabled="false"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="8"
+                    android:layout_marginTop="3dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3.5"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@mipmap/ic_choice"
+                                android:scaleType="centerInside"
+                                android:background="#205963"
+                                android:layout_marginTop="5dp"
+                                />
+
+                            <EditText
+                                android:id="@+id/edtRowQuestion_Choice"
+                                style="@style/EditText_Custom"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="12sp"
+                                android:inputType="none"
+                                android:paddingLeft="5dp"
+                                android:enabled="false"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5">
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3.5"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:src="@mipmap/ic_check"
+                                android:scaleType="centerInside"
+                                android:background="#205963"
+                                android:layout_marginTop="5dp"
+                                />
+
+                            <EditText
+                                android:id="@+id/edtRowQuestion_Answer"
+                                style="@style/EditText_Custom"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="12sp"
+                                android:inputType="none"
+                                android:paddingLeft="5dp"
+                                android:enabled="false"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -86,8 +171,8 @@
                 android:id="@+id/ckbRowQuestion_Question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="3dp"/>
+                android:layout_marginLeft="3dp"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.getExams;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.inHomeFrag;
 
 /**
  * Created by LuisLe on 4/5/2017.
@@ -41,6 +42,7 @@ public class HomeFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_home, container, false);
+        inHomeFrag = true;
         mappingLayout(view);
         init();
         return view;
@@ -52,7 +54,7 @@ public class HomeFrag extends Fragment {
     }
 
     private void init() {
-        rcvFragHomeExam.setVisibility(View.VISIBLE);
+        pgBarLoading.setVisibility(View.VISIBLE);
         rcvFragHomeExam.setVisibility(View.INVISIBLE);
         examList = new ArrayList<>();
         examListAdapter = new ExamListAdapter(getContext(), examList);

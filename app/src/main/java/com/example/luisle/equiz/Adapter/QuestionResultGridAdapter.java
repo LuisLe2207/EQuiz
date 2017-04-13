@@ -22,7 +22,7 @@ import static com.example.luisle.equiz.R.id.imgGridResult_Mood;
  * Created by LuisLe on 4/9/2017.
  */
 
-public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.ResultGridViewHolder> {
+public class QuestionResultGridAdapter extends RecyclerView.Adapter<QuestionResultGridAdapter.ResultGridViewHolder> {
 
 
     private Context myContext;
@@ -30,7 +30,7 @@ public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.Re
     private Integer spanCount;
     private LayoutInflater layoutInflater;
 
-    public ResultGridAdapter(Context myContext, List<QuestionResult> resultList, StaggeredGridLayoutManager manager) {
+    public QuestionResultGridAdapter(Context myContext, List<QuestionResult> resultList, StaggeredGridLayoutManager manager) {
         this.myContext = myContext;
         this.resultList = resultList;
         this.spanCount = manager.getSpanCount();
@@ -44,7 +44,7 @@ public class ResultGridAdapter extends RecyclerView.Adapter<ResultGridAdapter.Re
     }
 
     @Override
-    public void onBindViewHolder(ResultGridAdapter.ResultGridViewHolder holder, int position) {
+    public void onBindViewHolder(QuestionResultGridAdapter.ResultGridViewHolder holder, int position) {
         QuestionResult result = resultList.get(position);
         holder.txtQuestion.append(" " + String.valueOf(position + 1));
         if (result.getBoolResult()) {

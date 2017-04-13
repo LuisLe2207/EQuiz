@@ -7,19 +7,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.Fragment.AdminExamFrag;
 import com.example.luisle.equiz.Fragment.DetailExamFrag;
+import com.example.luisle.equiz.Fragment.DetailUserStatisticsFrag;
 import com.example.luisle.equiz.Fragment.ExamFrag;
 import com.example.luisle.equiz.Fragment.HomeFrag;
+import com.example.luisle.equiz.Fragment.UserStatisticsFrag;
 import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.R;
 
 import java.util.List;
 
+import static com.example.luisle.equiz.MyFramework.MyEssential.inHomeFrag;
 import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
 
 /**
@@ -50,9 +53,9 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
         Exam exam = examList.get(position);
 
         //bind data to viewholder
-        holder.txtRowExam_Title.setText(exam.getTitle());
-        holder.txtRowExam_Duration.append(": " + String.valueOf(exam.getDuration()));
-        holder.txtRowExam_Questions.append(String.valueOf(exam.getNumberOfQuestion()));
+        holder.edtRowExam_Title.setText(exam.getTitle());
+        holder.edtRowExam_Duration.setText(String.valueOf(exam.getDuration()) + "'");
+        holder.edtRowExam_Questions.setText(String.valueOf(exam.getNumberOfQuestion()));
     }
 
 
@@ -62,12 +65,12 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
     }
 
     class ExamListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView txtRowExam_Title, txtRowExam_Duration, txtRowExam_Questions;
+        private EditText edtRowExam_Title, edtRowExam_Duration, edtRowExam_Questions;
         public ExamListViewHolder(View itemView) {
             super(itemView);
-            txtRowExam_Title = (TextView) itemView.findViewById(R.id.txtRowExam_Title);
-            txtRowExam_Duration = (TextView) itemView.findViewById(R.id.txtRowExam_Duration);
-            txtRowExam_Questions = (TextView) itemView.findViewById(R.id.txtRowExam_Questions);
+            edtRowExam_Title = (EditText) itemView.findViewById(R.id.edtRowExam_Title);
+            edtRowExam_Duration = (EditText) itemView.findViewById(R.id.edtRowExam_Duration);
+            edtRowExam_Questions = (EditText) itemView.findViewById(R.id.edtRowExam_Questions);
             itemView.setOnClickListener(this);
         }
 
@@ -88,14 +91,24 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ExamLi
 
             } else {
                 FragmentManager fragmentManager = ((HomeAct) myContext).getSupportFragmentManager();
-                DetailExamFrag detailExamFrag = DetailExamFrag.newInstance(exam.getID());
-                HomeFrag homeFrag = (HomeFrag) fragmentManager.findFragmentByTag("HomeFrag");
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                homeFrag.hideLayout();
-                ((HomeAct) myContext).getBottomNavigationView().setVisibility(View.INVISIBLE);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.replace(android.R.id.content, detailExamFrag, "DetailExamFrag").addToBackStack(null).commit();
-
+                FragmentTransaction transaction;
+                if (inHomeFrag) {
+                    DetailExamFrag detailExamFrag = DetailExamFrag.newInstance(exam.getID());
+                    HomeFrag homeFrag = (HomeFrag) fragmentManager.findFragmentByTag("HomeFrag");
+                    transaction = fragmentManager.beginTransaction();
+                    homeFrag.hideLayout();
+                    ((HomeAct) myContext).getBottomNavigationView().setVisibility(View.INVISIBLE);
+                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    transaction.replace(android.R.id.content, detailExamFrag, "DetailExamFrag").addToBackStack(null).commit();
+                } else {
+                    DetailUserStatisticsFrag detailUserStatisticsFrag = DetailUserStatisticsFrag.newInstance(exam.getID());
+                    UserStatisticsFrag UserStatisticsFrag = (UserStatisticsFrag) fragmentManager.findFragmentByTag("UserStatisticsFrag");
+                    transaction = fragmentManager.beginTransaction();
+                    UserStatisticsFrag.hideLayout();
+                    ((HomeAct) myContext).getBottomNavigationView().setVisibility(View.INVISIBLE);
+                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    transaction.replace(android.R.id.content, detailUserStatisticsFrag, "DetailUserStatisticFrag").addToBackStack(null).commit();
+                }
             }
 
         }

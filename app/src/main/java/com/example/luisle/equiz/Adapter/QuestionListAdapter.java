@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Fragment.AdminQuestionFrag;
@@ -67,10 +67,10 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         final Question question = questionsList.get(position);
 
         //bind data to viewholder
-        holder.txtRowQuestion_Title.setText(question.getTitle());
-        holder.txtRowQuestion_Type.setText(question.getQuestionType());
-        holder.txtRowQuestion_Choice.setText("Choice: " + String.valueOf(question.getChoiceList().size()));
-        holder.txtRowQuestion_Answer.setText("Answer: " + String.valueOf(question.getAnswerList().size()));
+        holder.edtRowQuestion_Title.setText(question.getTitle());
+        holder.edtRowQuestion_Type.setText(question.getQuestionType());
+        holder.edtRowQuestion_Choice.setText(String.valueOf(question.getChoiceList().size()));
+        holder.edtRowQuestion_Answer.setText(String.valueOf(question.getAnswerList().size()));
 
         if (!inAdminQuestion) {
             if (examQuestionList.contains(question.getID())) {
@@ -100,14 +100,15 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     }
 
     class QuestionListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
-        private TextView txtRowQuestion_Title, txtRowQuestion_Type, txtRowQuestion_Choice, txtRowQuestion_Answer;
+        private EditText edtRowQuestion_Title, edtRowQuestion_Type, edtRowQuestion_Choice, edtRowQuestion_Answer;
         private CheckBox ckbRowQuestion_Question;
         public QuestionListViewHolder(View itemView) {
             super(itemView);
-            txtRowQuestion_Title = (TextView) itemView.findViewById(R.id.txtRowQuestion_Title);
-            txtRowQuestion_Type = (TextView) itemView.findViewById(R.id.txtRowQuestion_Type);
-            txtRowQuestion_Choice = (TextView) itemView.findViewById(R.id.txtRowQuestion_Choice);
-            txtRowQuestion_Answer = (TextView) itemView.findViewById(R.id.txtRowQuestion_Answer);
+            edtRowQuestion_Title = (EditText) itemView.findViewById(R.id.edtRowQuestion_Title);
+            edtRowQuestion_Type = (EditText) itemView.findViewById(R.id.edtRowQuestion_Type);
+            edtRowQuestion_Choice = (EditText) itemView.findViewById(R.id.edtRowQuestion_Choice);
+            edtRowQuestion_Answer = (EditText) itemView.findViewById(R.id.edtRowQuestion_Answer);
+
             if (!inAdminQuestion) {
                 ckbRowQuestion_Question = (CheckBox) itemView.findViewById(R.id.ckbRowQuestion_Question);
             }

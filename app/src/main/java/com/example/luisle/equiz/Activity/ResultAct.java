@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.example.luisle.equiz.Adapter.ResultGridAdapter;
+import com.example.luisle.equiz.Adapter.QuestionResultGridAdapter;
 import com.example.luisle.equiz.Model.ExamResult;
 import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.R;
@@ -39,7 +39,7 @@ public class ResultAct extends AppCompatActivity {
     private EditText edtExamTitle, edtCompleteTime, edtCorrectAnswer;
 
     private ArrayList<QuestionResult> questionResultList;
-    private ResultGridAdapter resultGridAdapter;
+    private QuestionResultGridAdapter questionResultGridAdapter;
 
     private String examID;
     private String userID;
@@ -149,9 +149,9 @@ public class ResultAct extends AppCompatActivity {
         edtCorrectAnswer.setText(String.valueOf(examResult.getCorrectAnswer()));
         questionResultList.addAll(examResult.getQuestionResults());
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        resultGridAdapter = new ResultGridAdapter(ResultAct.this, questionResultList, manager);
+        questionResultGridAdapter = new QuestionResultGridAdapter(ResultAct.this, questionResultList, manager);
         rcvResult.setLayoutManager(manager);
-        rcvResult.setAdapter(resultGridAdapter);
+        rcvResult.setAdapter(questionResultGridAdapter);
     }
 
 
