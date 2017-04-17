@@ -21,9 +21,11 @@ import com.example.luisle.equiz.R;
 import java.util.ArrayList;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.getExams;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowModify;
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
  * Created by LuisLe on 3/26/2017.
@@ -52,14 +54,21 @@ public class AdminExamFrag extends Fragment{
         fabExamAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogOnScreen = true;
-                inAddExamDialog = true;
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                ExamFrag examFrag = new ExamFrag();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                hideLayout();
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.replace(android.R.id.content, examFrag).addToBackStack(null).commit();
+                if (allowModify) {
+                    dialogOnScreen = true;
+                    inAddExamDialog = true;
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    ExamFrag examFrag = new ExamFrag();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    hideLayout();
+                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    transaction.replace(android.R.id.content, examFrag).addToBackStack(null).commit();
+                } else {
+                    showToast(getContext(),
+                                      getContext().getResources().getString(R.string.alert_you_must_create_push_notification)
+                                    + " "
+                                    + getContext().getResources().getString(R.string.text_create));
+                }
             }
         });
         init();

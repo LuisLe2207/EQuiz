@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -502,8 +503,11 @@ public class DatabaseLib {
                         public void run() {
                             saveCommentProgressDialog.dismiss();
                             showToast(context, context.getResources().getString(R.string.submit_comment_success));
+                            Bundle iDBundle = new Bundle();
+                            iDBundle.putString("examID", examID);
+                            iDBundle.putString("examResultID", "");
                             Intent resultIntent = new Intent(context, ResultAct.class);
-                            resultIntent.putExtra("ID", examID);
+                            resultIntent.putExtra("ID", iDBundle);
                             context.startActivity(resultIntent);
                         }
                     }, 2000);

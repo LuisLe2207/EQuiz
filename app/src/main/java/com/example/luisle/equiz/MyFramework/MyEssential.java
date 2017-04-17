@@ -21,6 +21,12 @@ import com.makeramen.roundedimageview.RoundedDrawable;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by LuisLe on 2/11/2017.
@@ -29,6 +35,8 @@ import java.io.ByteArrayOutputStream;
 public class MyEssential {
 
     // region APP CONSTANTS
+    public static String SERVER_SEND_TOKEN_URL = "http://192.168.1.3:8080/equiz/register.php";
+    public static String SERVER_PUSH_NOTIFICATION = "http://192.168.1.3:8080/equiz/push.php";
     // region Activities Codes
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_IMAGE_GALLERY = 2;
@@ -51,6 +59,7 @@ public class MyEssential {
     // endregion
 
     public static boolean isAdmin = false;
+    public static boolean allowModify = false;
     public static boolean isDelete = false;
     public static boolean dialogOnScreen = false;
     public static boolean inAddExamDialog = false;
@@ -137,6 +146,44 @@ public class MyEssential {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+    public static void registerToken(String token) {
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add("Token",token)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(SERVER_SEND_TOKEN_URL)
+                .post(body)
+                .build();
+
+        try {
+            client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void pushNotification(String title, String message) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add("Title",title)
+                .add("Message", message)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(SERVER_PUSH_NOTIFICATION)
+                .post(body)
+                .build();
+
+        try {
+            client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // endregion

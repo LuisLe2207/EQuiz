@@ -1,6 +1,7 @@
 package com.example.luisle.equiz.Activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,9 +20,12 @@ import com.example.luisle.equiz.Fragment.UserStatisticsFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.registerToken;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 
@@ -44,6 +48,16 @@ public class HomeAct extends AppCompatActivity {
         eQuizDatabase = FirebaseDatabase.getInstance();
         // Init DatabaseRef
         eQuizRef = eQuizDatabase.getReference();
+        // Send token to PHP server
+        FirebaseMessaging.getInstance().subscribeToTopic("Notification");
+        FirebaseInstanceId.getInstance().getToken();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new sendToken().execute(FirebaseInstanceId.getInstance().getToken());
+            }
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHome);
         setSupportActionBar(toolbar);
@@ -142,5 +156,20 @@ public class HomeAct extends AppCompatActivity {
 
     public BottomNavigationView getBottomNavigationView() {
         return navigation;
+    }
+
+
+    private class sendToken extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            registerToken(strings[0]);
+            return "Complete";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            showToast(getApplicationContext(), s);
+        }
     }
 }

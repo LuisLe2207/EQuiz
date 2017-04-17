@@ -39,6 +39,7 @@ import static com.example.luisle.equiz.MyFramework.DatabaseLib.getQuestions;
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveExam;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_QUESTION;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MIN_QUESTTION;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowModify;
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
@@ -113,15 +114,29 @@ public class ExamFrag extends DialogFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 333:
-                String examTitle = edtExamTitle.getText().toString().trim();
-                if (validateBeforeSave(examTitle, examQuestionList)) {
-                    Integer numberQuestion = examQuestionList.size();
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    final String createDate = simpleDateFormat.format(calendar.getTime());
-                    Exam newExam = new Exam("", examTitle, examQuestionList, numberQuestion, examDuration, createDate, "");
-                    saveExam(getContext(), eQuizRef, newExam, examID);
+                if (allowModify) {
+                    String examTitle = edtExamTitle.getText().toString().trim();
+                    if (validateBeforeSave(examTitle, examQuestionList)) {
+                        Integer numberQuestion = examQuestionList.size();
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        final String createDate = simpleDateFormat.format(calendar.getTime());
+                        Exam newExam = new Exam("", examTitle, examQuestionList, numberQuestion, examDuration, createDate, "");
+                        saveExam(getContext(), eQuizRef, newExam, examID);
+                    }
+                } else {
+                    String action = "";
+                    if (TextUtils.isEmpty(examID)) {
+                        action = getContext().getResources().getString(R.string.toolbar_add_exam);
+                    } else {
+                        action = getContext().getResources().getString(R.string.toolbar_modify_exam);
+                    }
+                    showToast(getContext(),
+                            getContext().getResources().getString(R.string.alert_you_must_create_push_notification)
+                                    + " "
+                                    + action);
                 }
+
                 break;
             case android.R.id.home:
                 dismiss();

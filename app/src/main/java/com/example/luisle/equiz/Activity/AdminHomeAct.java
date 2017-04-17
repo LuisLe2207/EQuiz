@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +27,6 @@ public class AdminHomeAct extends AppCompatActivity {
 
 
     private Fragment fragment = null;
-    private FloatingActionButton fabQuestionAdd, fabExamAdd;
     private BottomNavigationView navigation;
     private Toolbar toolbar;
     private String fragmentTag = "ExamListFrag";

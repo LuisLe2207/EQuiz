@@ -130,7 +130,7 @@ public class DetailUserStatisticsFrag extends DialogFragment {
                 @Override
                 public void run() {
                     setDoneExamDetail();
-                    examResultListAdapter = new ExamResultListAdapter(getContext(), examResultList);
+                    examResultListAdapter = new ExamResultListAdapter(getContext(), examResultList, examID);
                     rcvDoneTimes.setAdapter(examResultListAdapter);
                     rcvDoneTimes.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     loadExamResultProgressDialog.dismiss();

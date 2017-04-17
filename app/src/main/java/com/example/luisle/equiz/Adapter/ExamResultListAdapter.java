@@ -1,13 +1,19 @@
 package com.example.luisle.equiz.Adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.luisle.equiz.Activity.ResultAct;
 import com.example.luisle.equiz.Model.ExamResult;
+import com.example.luisle.equiz.MyFramework.MyEssential;
 import com.example.luisle.equiz.R;
 
 import java.text.SimpleDateFormat;
@@ -22,12 +28,14 @@ import java.util.concurrent.TimeUnit;
 public class ExamResultListAdapter extends RecyclerView.Adapter<ExamResultListAdapter.ExamResultListViewHolder> {
 
     private Context myContext;
+    private String examID;
     private List<ExamResult> examResultList;
     private LayoutInflater layoutInflater;
 
-    public ExamResultListAdapter(Context myContext, List<ExamResult> examResultList) {
+    public ExamResultListAdapter(Context myContext, List<ExamResult> examResultList, String examID) {
         this.myContext = myContext;
         this.examResultList = examResultList;
+        this.examID = examID;
         layoutInflater = LayoutInflater.from(myContext);
     }
 
@@ -58,13 +66,36 @@ public class ExamResultListAdapter extends RecyclerView.Adapter<ExamResultListAd
         return examResultList.size();
     }
 
-    public class ExamResultListViewHolder extends RecyclerView.ViewHolder {
+    public class ExamResultListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private EditText edtCorrectAnswer, edtCompleteTime, edtDoneDate;
         public ExamResultListViewHolder(View itemView) {
             super(itemView);
             edtCorrectAnswer = (EditText) itemView.findViewById(R.id.edtRowExamResult_CorrectAnswer);
             edtCompleteTime = (EditText) itemView.findViewById(R.id.edtRowExamResult_CompleteTime);
             edtDoneDate = (EditText) itemView.findViewById(R.id.edtRowExamResult_DoneDate);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            final ProgressDialog openResultActProgressDialog = MyEssential.createProgressDialog(myContext,
+                    myContext.getResources().getString(R.string.text_progress_moving));
+            String examResultID = examResultList.get(getLayoutPosition()).getID();
+            Bundle iDBundle = new Bundle();
+            iDBundle.putString("examID", examID);
+            iDBundle.putString("examResultID", examResultID);
+            final Intent resultIntent = new Intent(myContext, ResultAct.class);
+            resultIntent.putExtra("ID", iDBundle);
+            openResultActProgressDialog.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    openResultActProgressDialog.dismiss();
+                    myContext.startActivity(resultIntent);
+                }
+            }, 2000);
+
         }
     }
+
 }

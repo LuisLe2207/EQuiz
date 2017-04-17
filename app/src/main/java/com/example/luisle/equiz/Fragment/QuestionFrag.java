@@ -33,6 +33,7 @@ import static com.example.luisle.equiz.MyFramework.DatabaseLib.getQuestion;
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveQuestion;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_CHOICE;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MIN_CHOICE;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowModify;
 import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
@@ -112,23 +113,37 @@ public class QuestionFrag extends DialogFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 333:
-                String title = edtQuestionTitle.getText().toString().trim();
-                String questionType = "";
-                if (validateBeforeSave(choiceList, answerList, title)) {
-                    if (answerList.size() == 1) {
-                        questionType = "Single";
-                    } else {
-                        questionType = "Multiple";
-                    }
-                    Question newQuestion = new Question("", title, questionType, choiceList, answerList);
-                    if (TextUtils.isEmpty(questionID)) {
-                        saveQuestion(getContext(), eQuizRef, newQuestion, "");
-                    } else {
-                        saveQuestion(getContext(), eQuizRef, newQuestion, questionID);
-                    }
+                if (allowModify) {
+                    String title = edtQuestionTitle.getText().toString().trim();
+                    String questionType = "";
+                    if (validateBeforeSave(choiceList, answerList, title)) {
+                        if (answerList.size() == 1) {
+                            questionType = "Single";
+                        } else {
+                            questionType = "Multiple";
+                        }
+                        Question newQuestion = new Question("", title, questionType, choiceList, answerList);
+                        if (TextUtils.isEmpty(questionID)) {
+                            saveQuestion(getContext(), eQuizRef, newQuestion, "");
+                        } else {
+                            saveQuestion(getContext(), eQuizRef, newQuestion, questionID);
+                        }
 
-                    choiceID = 1;
+                        choiceID = 1;
+                    }
+                } else {
+                    String action = "";
+                    if (TextUtils.isEmpty(questionID)) {
+                        action = getContext().getResources().getString(R.string.toolbar_add_question);
+                    } else {
+                        action = getContext().getResources().getString(R.string.toolbar_modify_question);
+                    }
+                    showToast(getContext(),
+                                      getContext().getResources().getString(R.string.alert_you_must_create_push_notification)
+                                    + " "
+                                    + action);
                 }
+
                 break;
             case android.R.id.home:
                 dismiss();
