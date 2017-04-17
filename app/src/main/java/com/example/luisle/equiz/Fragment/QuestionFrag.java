@@ -33,7 +33,7 @@ import static com.example.luisle.equiz.MyFramework.DatabaseLib.getQuestion;
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveQuestion;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_CHOICE;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MIN_CHOICE;
-import static com.example.luisle.equiz.MyFramework.MyEssential.allowModify;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
 import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
@@ -113,35 +113,18 @@ public class QuestionFrag extends DialogFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 333:
-                if (allowModify) {
-                    String title = edtQuestionTitle.getText().toString().trim();
-                    String questionType = "";
-                    if (validateBeforeSave(choiceList, answerList, title)) {
-                        if (answerList.size() == 1) {
-                            questionType = "Single";
-                        } else {
-                            questionType = "Multiple";
-                        }
-                        Question newQuestion = new Question("", title, questionType, choiceList, answerList);
-                        if (TextUtils.isEmpty(questionID)) {
-                            saveQuestion(getContext(), eQuizRef, newQuestion, "");
-                        } else {
-                            saveQuestion(getContext(), eQuizRef, newQuestion, questionID);
-                        }
-
-                        choiceID = 1;
-                    }
+                if (TextUtils.isEmpty(questionID)) {
+                    submitAction();
                 } else {
-                    String action = "";
-                    if (TextUtils.isEmpty(questionID)) {
-                        action = getContext().getResources().getString(R.string.toolbar_add_question);
+                    if (allowMaintain) {
+                        submitAction();
                     } else {
-                        action = getContext().getResources().getString(R.string.toolbar_modify_question);
+                        String action = getContext().getResources().getString(R.string.text_modify);
+                        showToast(getContext(),
+                                getContext().getResources().getString(R.string.alert_you_must_create_push_notification)
+                                        + " "
+                                        + action);
                     }
-                    showToast(getContext(),
-                                      getContext().getResources().getString(R.string.alert_you_must_create_push_notification)
-                                    + " "
-                                    + action);
                 }
 
                 break;
@@ -196,6 +179,26 @@ public class QuestionFrag extends DialogFragment {
         rcvQuestion.setAdapter(questionChoiceAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rcvQuestion.setLayoutManager(linearLayoutManager);
+    }
+
+    private void submitAction() {
+        String title = edtQuestionTitle.getText().toString().trim();
+        String questionType = "";
+        if (validateBeforeSave(choiceList, answerList, title)) {
+            if (answerList.size() == 1) {
+                questionType = "Single";
+            } else {
+                questionType = "Multiple";
+            }
+            Question newQuestion = new Question("", title, questionType, choiceList, answerList);
+            if (TextUtils.isEmpty(questionID)) {
+                saveQuestion(getContext(), eQuizRef, newQuestion, "");
+            } else {
+                saveQuestion(getContext(), eQuizRef, newQuestion, questionID);
+            }
+
+            choiceID = 1;
+        }
     }
 
     private void addChoice() {

@@ -21,10 +21,8 @@ import com.example.luisle.equiz.R;
 import java.util.ArrayList;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.getQuestions;
-import static com.example.luisle.equiz.MyFramework.MyEssential.allowModify;
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
-import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
  * Created by LuisLe on 3/26/2017.
@@ -76,21 +74,13 @@ public class AdminQuestionFrag extends Fragment {
         fabQuestionAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (allowModify) {
-                    dialogOnScreen = true;
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    QuestionFrag questionFrag = QuestionFrag.newInstance("");
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    hideLayout();
-                    transaction.add(android.R.id.content, questionFrag).addToBackStack(null).commit();
-                } else {
-                    showToast(getContext(),
-                                      getContext().getResources().getString(R.string.alert_you_must_create_push_notification)
-                                    + " "
-                                    + getContext().getResources().getString(R.string.text_create));
-                }
-
+                dialogOnScreen = true;
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                QuestionFrag questionFrag = QuestionFrag.newInstance("");
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                hideLayout();
+                transaction.add(android.R.id.content, questionFrag).addToBackStack(null).commit();
             }
         });
     }

@@ -55,7 +55,7 @@ public class ExamResultListAdapter extends RecyclerView.Adapter<ExamResultListAd
                 TimeUnit.MILLISECONDS.toSeconds(examResult.getCompleteTime()) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(examResult.getCompleteTime()))));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(Long.valueOf(examResult.getID()));
         holder.edtDoneDate.setText(dateFormat.format(calendar.getTime()));

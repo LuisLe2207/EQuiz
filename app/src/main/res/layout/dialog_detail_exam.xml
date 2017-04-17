@@ -23,7 +23,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -31,8 +31,8 @@
 
         <TextView
             style="@style/TextView_Custom"
-            android:text="@string/text_exam_title"
-            />
+            android:text="@string/text_exam_title" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -40,26 +40,24 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@mipmap/ic_title"
-                android:scaleType="centerInside"
-                android:background="#205963"
                 android:layout_marginTop="5dp"
-                />
+                android:background="#205963"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_title" />
 
             <EditText
                 android:id="@+id/edtDialogDetailExam_Title"
                 style="@style/EditText_Custom"
-                android:inputType="none"
-                android:paddingLeft="5dp"
                 android:enabled="false"
-                />
+                android:inputType="none"
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
         <TextView
             style="@style/TextView_Custom"
-            android:text="@string/text_exam_duration"
             android:layout_marginTop="5dp"
-            />
+            android:text="@string/text_exam_duration" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -67,27 +65,25 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@mipmap/ic_duration"
-                android:scaleType="centerInside"
-                android:background="#205963"
                 android:layout_marginTop="5dp"
-                />
+                android:background="#205963"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_duration" />
 
             <EditText
                 android:id="@+id/edtDialogDetailExam_Duration"
                 style="@style/EditText_Custom"
-                android:inputType="none"
-                android:paddingLeft="5dp"
                 android:enabled="false"
-                />
+                android:inputType="none"
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
 
         <TextView
             style="@style/TextView_Custom"
-            android:text="@string/text_exam_num_of_question"
             android:layout_marginTop="5dp"
-            />
+            android:text="@string/text_exam_num_of_question" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -95,26 +91,24 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@mipmap/ic_question_mark"
-                android:scaleType="centerInside"
-                android:background="#205963"
                 android:layout_marginTop="5dp"
-                />
+                android:background="#205963"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_question_mark" />
 
             <EditText
                 android:id="@+id/edtDialogDetailExam_NumberOFQuestion"
                 style="@style/EditText_Custom"
-                android:inputType="none"
-                android:paddingLeft="5dp"
                 android:enabled="false"
-                />
+                android:inputType="none"
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
         <TextView
             style="@style/TextView_Custom"
-            android:text="@string/text_exam_created_date"
             android:layout_marginTop="5dp"
-            />
+            android:text="@string/text_exam_created_date" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -122,31 +116,28 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@mipmap/ic_calendar"
-                android:scaleType="centerInside"
-                android:background="#205963"
                 android:layout_marginTop="5dp"
-                />
+                android:background="#205963"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_calendar" />
 
             <EditText
                 android:id="@+id/edtDialogDetailExam_CreatedDate"
                 style="@style/EditText_Custom"
-                android:inputType="none"
-                android:paddingLeft="5dp"
                 android:enabled="false"
-                />
+                android:inputType="none"
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
 
         <TextView
             android:id="@+id/txtDialogDetailExam_NumberOfComment"
-            android:layout_gravity="center"
             style="@style/TextView_Custom"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="@string/text_exam_comment"
-            android:textSize="15sp"
             android:lines="1"
-            />
+            android:text="@string/text_exam_comment"
+            android:textSize="15sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -157,20 +148,18 @@
                 android:id="@+id/pgBarFragExamDetail_LoadingComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                />
+                android:layout_centerInParent="true" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rcvComment"
-                android:layout_marginTop="5dp"
-                android:padding="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:padding="5dp">
 
             </android.support.v7.widget.RecyclerView>
 
         </RelativeLayout>
-
 
 
     </LinearLayout>

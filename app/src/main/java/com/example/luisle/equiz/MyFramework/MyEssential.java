@@ -1,7 +1,9 @@
 package com.example.luisle.equiz.MyFramework;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +12,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.luisle.equiz.R;
@@ -22,6 +27,8 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -59,11 +66,11 @@ public class MyEssential {
     // endregion
 
     public static boolean isAdmin = false;
-    public static boolean allowModify = false;
     public static boolean isDelete = false;
     public static boolean dialogOnScreen = false;
     public static boolean inAddExamDialog = false;
     public static boolean inHomeFrag = false;
+    public static boolean allowMaintain = false;
 
     // endregion
 
@@ -167,9 +174,10 @@ public class MyEssential {
         }
     }
 
-    private static void pushNotification(String title, String message) {
+    public static void pushNotification(String userID, String title, String message) {
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
+                .add("UserID", userID)
                 .add("Title",title)
                 .add("Message", message)
                 .build();
@@ -184,6 +192,44 @@ public class MyEssential {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void openDateDialog(Context context, final EditText editText) {
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                // i là trả về năm, i1 trả về tháng, i2 trả về ngày
+
+                calendar.set(i,i1,i2);
+                editText.setText(simpleDateFormat.format(calendar.getTime()));
+            }
+        }
+                ,calendar.get(Calendar.YEAR)
+                ,calendar.get(Calendar.MONTH)
+                ,calendar.get(Calendar.DATE));
+
+        datePickerDialog.show();
+    }
+
+    public static void openTimeDialog(Context context, final EditText editText) {
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm ");
+        final Calendar calendar = Calendar.getInstance();
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+                // i trả về giờ, i1 trả về phút
+                // để 3 số 0 đầu tương đương với việc không truyền vào 3 tham số giờ phút giây
+                calendar.set(0,0,0,i,i1);
+                editText.setText(simpleDateFormat.format(calendar.getTime()));
+
+            }
+        }
+                ,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+        timePickerDialog.show();
     }
 
     // endregion

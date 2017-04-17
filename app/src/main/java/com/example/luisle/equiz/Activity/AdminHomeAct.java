@@ -1,6 +1,8 @@
 package com.example.luisle.equiz.Activity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -9,29 +11,55 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.AdminExamFrag;
 import com.example.luisle.equiz.Fragment.AdminQuestionFrag;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import static com.example.luisle.equiz.MyFramework.MyEssential.createDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.openDateDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.openTimeDialog;
+import static com.example.luisle.equiz.MyFramework.MyEssential.pushNotification;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class AdminHomeAct extends AppCompatActivity {
 
 
-    private Fragment fragment = null;
+    private EditText edtStartDate, edtEndDate, edtStartTime, edtEndTime;
+    private Spinner spnNotificationTpe;
+    private Button btnPush;
     private BottomNavigationView navigation;
     private Toolbar toolbar;
+
+    private Fragment fragment = null;
     private String fragmentTag = "ExamListFrag";
+    private String userID;
+    private Calendar calendar;
 
     private boolean doubleBackToExitPressedOnce = false;
+
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +70,13 @@ public class AdminHomeAct extends AppCompatActivity {
         eQuizDatabase = FirebaseDatabase.getInstance();
         // Init DatabaseRef
         eQuizRef = eQuizDatabase.getReference();
-        // Get current user
+        // Get current date time
+        calendar = Calendar.getInstance();
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            userID = firebaseUser.getUid();
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbarActHomeAdmin);
         setSupportActionBar(toolbar);
@@ -60,8 +94,11 @@ public class AdminHomeAct extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(1, 111, 1, getResources().getString(R.string.menu_about));
-        menu.add(1, 222, 2, getResources().getString(R.string.menu_logout));
+        MenuItem pushNotificationItem =  menu.add(1, 111, 1, getResources().getString(R.string.menu_push_notification));
+        pushNotificationItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        pushNotificationItem.setIcon(R.mipmap.ic_add_notification);
+        menu.add(1, 222, 2, getResources().getString(R.string.menu_about));
+        menu.add(1, 444, 3, getResources().getString(R.string.menu_logout));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -69,10 +106,13 @@ public class AdminHomeAct extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 111:
+                createPushNotification();
+                break;
+            case 222:
 //                DoiMatKhauFragment doiMatKhauFragment = new DoiMatKhauFragment();
 //                doiMatKhauFragment.show(getSupportFragmentManager(), "DoiMatKhau");
                 break;
-            case 222:
+            case 444:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(AdminHomeAct.this, LoginAct.class));
                 break;
@@ -131,8 +171,144 @@ public class AdminHomeAct extends AppCompatActivity {
 
     };
 
+    private void createPushNotification() {
+        Dialog notificationDialog = createDialog(AdminHomeAct.this,
+                R.layout.dialog_push_notification,
+                getResources().getString(R.string.text_notification));
+
+        edtStartDate = (EditText) notificationDialog.findViewById(R.id.edtDialogPushNoti_StartDate);
+        edtEndDate = (EditText) notificationDialog.findViewById(R.id.edtDialogPushNoti_EndDate);
+        edtStartTime = (EditText) notificationDialog.findViewById(R.id.edtDialogPushNoti_StartTime);
+        edtEndTime = (EditText) notificationDialog.findViewById(R.id.edtDialogPushNoti_EndTime);
+        spnNotificationTpe = (Spinner) notificationDialog.findViewById(R.id.spnDialogPushNoti_NotificationType);
+        btnPush = (Button) notificationDialog.findViewById(R.id.btnDialogPushNoti_Push);
+
+        // Set click for each Edit text
+        edtStartDate.setOnClickListener(showDateDialog(edtStartDate));
+        edtEndDate.setOnClickListener(showDateDialog(edtEndDate));
+        edtStartTime.setOnClickListener(showTimeDialog(edtStartTime));
+        edtEndTime.setOnClickListener(showTimeDialog(edtEndTime));
+
+        // Set Spinner value
+        final ArrayList<String> notificationTypeList = new ArrayList<>();
+        notificationTypeList.add(getResources().getString(R.string.notification_type_maintain));
+        notificationTypeList.add(getResources().getString(R.string.notification_type_finish));
+        ArrayAdapter spinnerAdapter = new ArrayAdapter(AdminHomeAct.this, android.R.layout.simple_spinner_dropdown_item, notificationTypeList);
+        spnNotificationTpe.setAdapter(spinnerAdapter);
+
+        final String[] type = new String[1];
+        spnNotificationTpe.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                type[0] = notificationTypeList.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        btnPush.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String startDate = edtStartDate.getText().toString().trim();
+                String endDate = edtEndDate.getText().toString().trim();
+                String startTime = edtStartTime.getText().toString().trim();
+                String endTime = edtEndTime.getText().toString().trim();
+                try {
+                    if (validateInput(type[0], startDate, endDate, startTime, endTime)) {
+                        String message = "";
+                        switch (type[0]) {
+                            case "Maintain":
+                                message = getResources().getString(R.string.notification_message_maintain)
+                                        + " " + startDate + " " + startTime + " "
+                                        + getResources().getString(R.string.notification_to)
+                                        + " " + endDate + " " + endTime;
+                                break;
+                            case "Finish":
+                                message = getResources().getString(R.string.notification_message_finish);
+                                break;
+                        }
+                        final String finalMessage = message;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new sendNoti().execute(userID, type[0], finalMessage);
+                            }
+                        });
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        notificationDialog.show();
+    }
+
+    private boolean validateInput(String type, String startDate, String endDate, String startTime, String endTime) throws ParseException {
+        boolean result = false;
+
+        if (TextUtils.isEmpty(type)) {
+            result = false;
+            showToast(getApplicationContext(),
+                    getResources().getString(R.string.error_empty_noti_type));
+        }
+
+        if (startDate.isEmpty() || endDate.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
+            result =false;
+            showToast(getApplicationContext(),
+                    getResources().getString(R.string.error_empty_noti_time));
+        } else {
+            String startDateTime = startDate + " " + startTime;
+            String endDateTime = endDate + " " + endTime;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date sDate = dateFormat.parse(startDateTime);
+            Date eDate = dateFormat.parse(endDateTime);
+
+            if (sDate.getTime() > eDate.getTime()) {
+                showToast(getApplicationContext(),
+                        getResources().getString(R.string.error_invalid_noti_time));
+                result = false;
+            } else {
+                result = true;
+            }
+
+        }
+
+        return result;
+    }
+
+    View.OnClickListener showDateDialog(final EditText editText) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDateDialog(AdminHomeAct.this, editText);
+            }
+        };
+    }
+
+    View.OnClickListener showTimeDialog(final EditText editText) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openTimeDialog(AdminHomeAct.this, editText);
+            }
+        };
+    }
+
     public BottomNavigationView getBottomNavigationView() {
         return navigation;
+    }
+
+    private class sendNoti extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            pushNotification(strings[0], strings[1], strings[2]);
+            return null;
+        }
     }
 
 }
