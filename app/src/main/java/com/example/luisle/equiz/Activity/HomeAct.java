@@ -1,7 +1,6 @@
 package com.example.luisle.equiz.Activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -17,6 +16,7 @@ import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.DetailExamFrag;
 import com.example.luisle.equiz.Fragment.HomeFrag;
 import com.example.luisle.equiz.Fragment.UserStatisticsFrag;
+import com.example.luisle.equiz.MyFramework.RegisterUserToken;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,15 +25,15 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
-import static com.example.luisle.equiz.MyFramework.MyEssential.registerToken;
+import static com.example.luisle.equiz.MyFramework.MyEssential.firebaseUser;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 
 public class HomeAct extends AppCompatActivity {
 
     private Fragment fragment = null;
     private BottomNavigationView navigation;
-
 
     // Act Variables
     private boolean doubleBackToExitPressedOnce = false;
@@ -48,6 +48,11 @@ public class HomeAct extends AppCompatActivity {
         eQuizDatabase = FirebaseDatabase.getInstance();
         // Init DatabaseRef
         eQuizRef = eQuizDatabase.getReference();
+        // Get user id
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            userID = firebaseUser.getUid();
+        }
         // Send token to PHP server
         FirebaseMessaging.getInstance().subscribeToTopic("Notification");
         FirebaseInstanceId.getInstance().getToken();
@@ -55,7 +60,7 @@ public class HomeAct extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new sendToken().execute(FirebaseInstanceId.getInstance().getToken());
+                new RegisterUserToken().execute(userID, FirebaseInstanceId.getInstance().getToken());
             }
         });
 
@@ -158,18 +163,4 @@ public class HomeAct extends AppCompatActivity {
         return navigation;
     }
 
-
-    private class sendToken extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            registerToken(strings[0]);
-            return "Complete";
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            showToast(getApplicationContext(), s);
-        }
-    }
 }

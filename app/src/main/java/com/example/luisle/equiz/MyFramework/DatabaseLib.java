@@ -57,6 +57,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDia
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 /**
  * Created by LuisLe on 2/11/2017.
@@ -328,7 +329,7 @@ public class DatabaseLib {
 
     public static void saveExam(final Context context,
                                 final DatabaseReference dataRef,
-                                Exam newExam,
+                                final Exam newExam,
                                 String id) {
         final ProgressDialog saveExamProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_save));
@@ -351,6 +352,15 @@ public class DatabaseLib {
                         public void run() {
                             saveExamProgressDialog.dismiss();
                             showToast(context, context.getResources().getString(R.string.save_exam_sucess));
+                        }
+                    }, 2000);
+                    Handler mainHandler = new Handler(context.getMainLooper());
+                    mainHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            new PushNotifications(context).execute(userID,
+                                    context.getResources().getString(R.string.notification_new_exam),
+                                    newExam.getTitle() + " " + context.getResources().getString(R.string.notification_new_exam_message));
                         }
                     }, 2000);
 

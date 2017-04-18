@@ -30,8 +30,6 @@ import com.example.luisle.equiz.Model.ExamResult;
 import com.example.luisle.equiz.Model.Question;
 import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,11 +51,11 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDia
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class MainAct extends AppCompatActivity {
 
     private String examID;
-    private String userID;
     private Exam exam;
     private int examDuration;
     private long completeTime = 0;
@@ -75,8 +73,6 @@ public class MainAct extends AppCompatActivity {
 
     private ProgressDialog progressDialogRetrievingData;
     private Dialog rateCommentDialog;
-
-    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +123,6 @@ public class MainAct extends AppCompatActivity {
     }
 
     private void init() {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         questionList = new ArrayList<>();
         questionResultList = new ArrayList<>();
         unChooseList = new ArrayList<>();
@@ -148,7 +143,6 @@ public class MainAct extends AppCompatActivity {
                                 public void run() {
                                     createActionBar();
                                     examDuration = exam.getDuration() * 60000;
-                                    userID = firebaseUser.getUid();
                                     questionPagerAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), MainAct.this, examID, exam.getNumberOfQuestion());
                                     viewPgActMain_Question.setAdapter(questionPagerAdapter);
                                     setDuration();

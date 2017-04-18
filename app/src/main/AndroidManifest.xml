@@ -27,7 +27,6 @@
         <activity android:name=".Activity.RegisterAct" />
         <activity android:name=".Activity.HomeAct" />
         <activity android:name=".Activity.AdminHomeAct" />
-        <activity android:name=".Activity.CommentAct"></activity>
         <activity android:name=".Activity.ResultAct">
         </activity>
 

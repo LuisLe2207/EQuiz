@@ -15,8 +15,6 @@ import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
 import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -27,6 +25,7 @@ import static com.example.luisle.equiz.MyFramework.DatabaseLib.getDoneExam;
 import static com.example.luisle.equiz.MyFramework.MyEssential.RESULT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.inHomeFrag;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 /**
  * Created by LuisLe on 4/13/2017.
@@ -34,7 +33,6 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.inHomeFrag;
 
 public class UserStatisticsFrag extends Fragment {
 
-    private String userID;
     private ExamListAdapter examListAdapter;
     private ArrayList<Exam> examList;
     private ArrayList<String> examIDList;
@@ -42,7 +40,6 @@ public class UserStatisticsFrag extends Fragment {
     private RecyclerView rcvExam;
     private ProgressBar pgBarLoading;
 
-    private FirebaseUser firebaseUser;
 
     public static UserStatisticsFrag newInstance() {
         UserStatisticsFrag fragment = new UserStatisticsFrag();
@@ -54,11 +51,6 @@ public class UserStatisticsFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_user_statistics, container, false);
         inHomeFrag = false;
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            userID = firebaseUser.getUid();
-        }
 
         mappingLayout(view);
         init();

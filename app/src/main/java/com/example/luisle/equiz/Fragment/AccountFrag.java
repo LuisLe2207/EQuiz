@@ -23,8 +23,6 @@ import com.example.luisle.equiz.Model.User;
 import com.example.luisle.equiz.MyFramework.MyEssential;
 import com.example.luisle.equiz.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -53,6 +51,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDia
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQUizStorageRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizStorage;
+import static com.example.luisle.equiz.MyFramework.MyEssential.firebaseUser;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 /**
@@ -78,8 +77,6 @@ public class AccountFrag extends Fragment{
     private EditText edtDialog_ChangeEmail_Email, edtDialog_ChangeEmail_Pass, edtDialog_ChangeEmail_NewEmail;
     private EditText edtDialog_ChangePassword_Email, edtDialog_ChangePassword_Pass, edtDialog_ChangePassword_NewPass;
 
-    // Firebase Variables
-    private FirebaseUser firebaseUser;
 
     // Fragment variables
     private User user;
@@ -112,8 +109,6 @@ public class AccountFrag extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_account, container, false);
 
-        // Get Firebase User
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         // Init Firebase Storage
         eQuizStorage = FirebaseStorage.getInstance("gs://equiz-59c1f.appspot.com");
         // Init Firebase StorageRef

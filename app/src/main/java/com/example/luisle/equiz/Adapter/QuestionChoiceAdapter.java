@@ -30,8 +30,6 @@ public class QuestionChoiceAdapter extends RecyclerView.Adapter<QuestionChoiceAd
     private Context myContext;
     private LayoutInflater layoutInflater;
 
-    private int oldSize;
-
     public QuestionChoiceAdapter(Context myContext, List<Choice> choiceList, List<Integer> answerList) {
         this.myContext = myContext;
         this.choiceList = choiceList;

@@ -18,6 +18,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.luisle.equiz.R;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,8 +43,8 @@ import okhttp3.RequestBody;
 public class MyEssential {
 
     // region APP CONSTANTS
-    public static String SERVER_SEND_TOKEN_URL = "http://192.168.1.3:8080/equiz/register.php";
-    public static String SERVER_PUSH_NOTIFICATION = "http://192.168.1.3:8080/equiz/push.php";
+    public static String SERVER_SEND_TOKEN_URL = "http://192.168.1.5:8080/equiz/register.php";
+    public static String SERVER_PUSH_NOTIFICATION = "http://192.168.1.5:8080/equiz/push.php";
     // region Activities Codes
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_IMAGE_GALLERY = 2;
@@ -71,6 +72,7 @@ public class MyEssential {
     public static boolean inAddExamDialog = false;
     public static boolean inHomeFrag = false;
     public static boolean allowMaintain = false;
+    public static String userID;
 
     // endregion
 
@@ -79,6 +81,7 @@ public class MyEssential {
     public static DatabaseReference eQuizRef;
     public static FirebaseStorage eQuizStorage;
     public static StorageReference eQUizStorageRef;
+    public static FirebaseUser firebaseUser;
     // endregion
 
     // region Global Function
@@ -155,10 +158,11 @@ public class MyEssential {
         return stream.toByteArray();
     }
 
-    public static void registerToken(String token) {
+    public static void registerToken(String userID, String token) {
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
+                .add("UserID", userID)
                 .add("Token",token)
                 .build();
 

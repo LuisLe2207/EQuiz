@@ -1,24 +1,25 @@
 <?php
 	
-	//require "connect.php";
+	include "connect.php";
 
-	$servername = "localhost";
-	$dbName = "equiz";
-	$conn = "mysql:host=$servername;dbname=$dbName";
-	$options = array(
-		// Use save vietnamese in db
-		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-		// Throw pdo error 
-		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-		);
-
-	if (isset($_REQUEST["Token"])) {
+	if (isset($_REQUEST["Token"]) || isset($_REQUEST["UserID"])) {
 		$token = $_REQUEST["Token"];
-		echo $token;
+		$userID = $_REQUEST["UserID"];
 		try {
-			$db = new PDO($conn, 'root', '', $options);
-			$query = "INSERT INTO users (token) values (:token) on DUPLICATE KEY UPDATE token = :token";
+			$selectQuery = "SELECT * from users where userID = :userID";
+			$stmt = $db->prepare($selectQuery);
+			$stmt->bindParam(':userID', $userID);
+			$stmt->setFetchMode(PDO::FETCH_ASSOC);
+			$stmt->execute();
+			$query = "";
+			if ($stmt->fetchAll()) {
+				$query = "UPDATE users SET token = :token where userID = :userID";
+			} else {
+				$query = "INSERT INTO users (userID, token) values (:userID, :token) on DUPLICATE KEY UPDATE userID = :userID, token = :token";
+			}
+			echo $query;
 			$stmt = $db->prepare($query);
+			$stmt->bindParam(':userID', $userID);
 			$stmt->bindParam(':token', $token);
 			$stmt->execute();
 		} catch (PDOException $e) {

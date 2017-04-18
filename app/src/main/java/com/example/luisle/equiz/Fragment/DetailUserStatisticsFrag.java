@@ -27,8 +27,6 @@ import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.Adapter.ExamResultListAdapter;
 import com.example.luisle.equiz.Model.ExamResult;
 import com.example.luisle.equiz.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -39,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import static com.example.luisle.equiz.MyFramework.MyEssential.RESULT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 /**
  * Created by LuisLe on 4/13/2017.
@@ -47,7 +46,6 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 public class DetailUserStatisticsFrag extends DialogFragment {
 
     private String examID;
-    private String userID;
     private ArrayList<ExamResult> examResultList;
     private ExamResultListAdapter examResultListAdapter;
 
@@ -55,7 +53,6 @@ public class DetailUserStatisticsFrag extends DialogFragment {
     private ProgressBar pgBarLoading;
     private RecyclerView rcvDoneTimes;
 
-    private FirebaseUser firebaseUser;
 
     public static DetailUserStatisticsFrag newInstance(String examID) {
         DetailUserStatisticsFrag fragment = new DetailUserStatisticsFrag();
@@ -70,10 +67,6 @@ public class DetailUserStatisticsFrag extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_detail_user_statistics, container, false);
         examID = getArguments().getString("ID");
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            userID = firebaseUser.getUid();
-        }
         createActionBar(view);
         mappingLayout(view);
         init();

@@ -22,8 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
-import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
+import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class LoginAct extends AppCompatActivity {
 
@@ -52,6 +53,7 @@ public class LoginAct extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    userID = user.getUid();
                     if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
                         isAdmin = false;
                         startActivity(new Intent(LoginAct.this, HomeAct.class));

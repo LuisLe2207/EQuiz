@@ -63,6 +63,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
 
     @Override
     public void onBindViewHolder(QuestionListAdapter.QuestionListViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         // Get exam in exam list via position
         final Question question = questionsList.get(position);
 
@@ -83,6 +84,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
                         examQuestionList.add(question.getID());
+
                     } else {
                         if (examQuestionList.contains(question.getID())) {
                             examQuestionList.remove(examQuestionList.indexOf(question.getID()));

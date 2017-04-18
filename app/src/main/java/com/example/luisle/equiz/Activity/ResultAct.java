@@ -17,8 +17,6 @@ import com.example.luisle.equiz.Adapter.QuestionResultGridAdapter;
 import com.example.luisle.equiz.Model.ExamResult;
 import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,6 +31,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDia
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class ResultAct extends AppCompatActivity {
 
@@ -43,12 +42,10 @@ public class ResultAct extends AppCompatActivity {
     private QuestionResultGridAdapter questionResultGridAdapter;
 
     private String examID;
-    private String userID;
     private String examResultID = "";
     private ExamResult examResult;
     private boolean doubleBackToExitPressedOnce = false;
 
-    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,10 +121,6 @@ public class ResultAct extends AppCompatActivity {
         Bundle resultBundle = getIntent().getBundleExtra("ID");
         examID = resultBundle.getString("examID");
         examResultID = resultBundle.getString("examResultID");
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            userID = firebaseUser.getUid();
-        }
 
         if (examID != null && !examID.isEmpty()) {
             getResults();

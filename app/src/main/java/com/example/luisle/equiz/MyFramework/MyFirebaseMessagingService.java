@@ -4,12 +4,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
 
 import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import static com.example.luisle.equiz.MyFramework.MyEssential.isAdmin;
 
 /**
  * Created by LuisLe on 4/16/2017.
@@ -19,7 +20,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        if (!TextUtils.equals(remoteMessage.getData().get("userID"), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
+//        if (!TextUtils.equals(remoteMessage.getData().get("userID"), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
+//            showNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"));
+//        }
+        if(!isAdmin) {
             showNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"));
         }
     }
@@ -35,7 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setSmallIcon(R.mipmap.ic_notification)
                 .setContentIntent(pendingIntent);
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

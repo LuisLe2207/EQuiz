@@ -2,7 +2,6 @@ package com.example.luisle.equiz.Activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -24,9 +23,9 @@ import android.widget.Spinner;
 import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.AdminExamFrag;
 import com.example.luisle.equiz.Fragment.AdminQuestionFrag;
+import com.example.luisle.equiz.MyFramework.PushNotifications;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
@@ -35,13 +34,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
+import static com.example.luisle.equiz.MyFramework.MyEssential.firebaseUser;
 import static com.example.luisle.equiz.MyFramework.MyEssential.openDateDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.openTimeDialog;
-import static com.example.luisle.equiz.MyFramework.MyEssential.pushNotification;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class AdminHomeAct extends AppCompatActivity {
 
@@ -54,12 +55,10 @@ public class AdminHomeAct extends AppCompatActivity {
 
     private Fragment fragment = null;
     private String fragmentTag = "ExamListFrag";
-    private String userID;
     private Calendar calendar;
 
     private boolean doubleBackToExitPressedOnce = false;
 
-    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +233,8 @@ public class AdminHomeAct extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                new sendNoti().execute(userID, type[0], finalMessage);
+                                new PushNotifications(AdminHomeAct.this).execute(userID, type[0], finalMessage);
+                                allowMaintain = true;
                             }
                         });
                     }
@@ -300,15 +300,6 @@ public class AdminHomeAct extends AppCompatActivity {
 
     public BottomNavigationView getBottomNavigationView() {
         return navigation;
-    }
-
-    private class sendNoti extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            pushNotification(strings[0], strings[1], strings[2]);
-            return null;
-        }
     }
 
 }

@@ -141,6 +141,7 @@
     <string name="warning_15_seconds_left">You have 15 seconds left</string>
     <string name="alert_exam_will_be_submit">Your exam will be submit after few seconds</string>
     <string name="alert_you_must_create_push_notification">You must create a push notification before </string>
+    <string name="push_notification_success">Push notification successfully</string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>
@@ -175,6 +176,8 @@
     <string name="notification_message_finish">
         Thank you for been waiting!
         \nServer maintain completely! You can access EQuiz app from now!</string>
+    <string name="notification_new_exam">New Exam</string>
+    <string name="notification_new_exam_message">was added. You can do it from now!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
