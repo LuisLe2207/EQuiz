@@ -31,14 +31,19 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
 
 public class AdminExamFrag extends Fragment{
 
+    // Fragment Palette Layout
     private RecyclerView rcvExam;
     private ProgressBar pgBarLoading;
     private FloatingActionButton fabExamAdd;
+
+    // Fragment Variables
     private ExamListAdapter examListAdapter;
     private ArrayList<Exam> examList;
 
-
-    // TODO: Rename and change types and number of parameters
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static AdminExamFrag newInstance() {
         AdminExamFrag fragment = new AdminExamFrag();
         return fragment;
@@ -48,7 +53,39 @@ public class AdminExamFrag extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_exam_admin, container, false);
-        mappingLayout(view);
+        mappingPaletteLayout(view);
+        init();
+        openAddExamFrag();
+        return view;
+    }
+
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
+        rcvExam = (RecyclerView) view.findViewById(R.id.rcvExamAdmin);
+        pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragExamAdmin_Loading);
+        fabExamAdd = (FloatingActionButton) view.findViewById(R.id.fabFragExamAdd);
+    }
+
+    /**
+     * Init Fragment Variables
+     */
+    private void init() {
+        // Set visibility for fragment palette
+        pgBarLoading.setVisibility(View.VISIBLE);
+        rcvExam.setVisibility(View.INVISIBLE);
+        examList = new ArrayList<>();
+        examListAdapter = new ExamListAdapter(getContext(), examList);
+        getExams(eQuizRef, rcvExam, pgBarLoading, examList, examListAdapter);
+        rcvExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    /**
+     * Open Add Exam Fragment
+     */
+    private void openAddExamFrag() {
         fabExamAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,23 +99,6 @@ public class AdminExamFrag extends Fragment{
                 transaction.replace(android.R.id.content, examFrag).addToBackStack(null).commit();
             }
         });
-        init();
-        return view;
-    }
-
-    private void mappingLayout(View view) {
-        rcvExam = (RecyclerView) view.findViewById(R.id.rcvExamAdmin);
-        pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragExamAdmin_Loading);
-        fabExamAdd = (FloatingActionButton) view.findViewById(R.id.fabFragExamAdd);
-    }
-
-    private void init() {
-        pgBarLoading.setVisibility(View.VISIBLE);
-        rcvExam.setVisibility(View.INVISIBLE);
-        examList = new ArrayList<>();
-        examListAdapter = new ExamListAdapter(getContext(), examList);
-        getExams(eQuizRef, rcvExam, pgBarLoading, examList, examListAdapter);
-        rcvExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     public void hideLayout() {

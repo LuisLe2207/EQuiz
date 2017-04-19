@@ -33,14 +33,19 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class UserStatisticsFrag extends Fragment {
 
+    // Fragment Palette Layout
+    private RecyclerView rcvExam;
+    private ProgressBar pgBarLoading;
+
+    // Fragment Variables
     private ExamListAdapter examListAdapter;
     private ArrayList<Exam> examList;
     private ArrayList<String> examIDList;
 
-    private RecyclerView rcvExam;
-    private ProgressBar pgBarLoading;
-
-
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static UserStatisticsFrag newInstance() {
         UserStatisticsFrag fragment = new UserStatisticsFrag();
         return fragment;
@@ -52,23 +57,38 @@ public class UserStatisticsFrag extends Fragment {
         View view = inflater.inflate(R.layout.frag_user_statistics, container, false);
         inHomeFrag = false;
 
-        mappingLayout(view);
-        init();
+        mappingPaletteLayout(view);
+        initVariables();
+        initData();
 
         return view;
     }
 
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         rcvExam = (RecyclerView) view.findViewById(R.id.rcvFragUserStatistics_Exam);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragUserStatistics_Loading);
     }
 
-    private void init() {
-        pgBarLoading.setVisibility(View.VISIBLE);
-        rcvExam.setVisibility(View.INVISIBLE);
+    /**
+     * Init variables
+     */
+    private void initVariables() {
         examIDList = new ArrayList<>();
         examList = new ArrayList<>();
         examListAdapter = new ExamListAdapter(getContext(), examList);
+    }
+
+    /**
+     * Init Fragment Data
+     */
+    private void initData() {
+        pgBarLoading.setVisibility(View.VISIBLE);
+        rcvExam.setVisibility(View.INVISIBLE);
+
         getDoneExamsID();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -81,6 +101,9 @@ public class UserStatisticsFrag extends Fragment {
         rcvExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
+    /**
+     * Get DoneExamID from backend server with userID
+     */
     private void getDoneExamsID() {
         eQuizRef.child(RESULT_CHILD).child(userID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -95,6 +118,10 @@ public class UserStatisticsFrag extends Fragment {
         });
     }
 
+    /**
+     * Set exam id list from dataSnapshot after get it from backend server
+     * @param dataSnapshot contain exam data
+     */
     private void setExamIDList(DataSnapshot dataSnapshot) {
         for (DataSnapshot doneExamIDSnapshot: dataSnapshot.getChildren()) {
             examIDList.add(doneExamIDSnapshot.getKey());

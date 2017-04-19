@@ -44,7 +44,10 @@ import at.grabner.circleprogress.TextMode;
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveResult;
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.submitComment;
 import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.MAINTAIN_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
+import static com.example.luisle.equiz.MyFramework.MyEssential.checkMaintainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createAlertDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
@@ -53,8 +56,18 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
+
 public class MainAct extends AppCompatActivity {
 
+    // region VARIABLES
+
+    // Act Palette Layout
+    private ViewPager viewPgActMain_Question;
+    private FloatingActionButton fabMainQuestionList;
+    private QuestionPagerAdapter questionPagerAdapter;
+    private CircleProgressView cpgViewDuration;
+
+    // Act Variables
     private String examID;
     private Exam exam;
     private int examDuration;
@@ -65,30 +78,26 @@ public class MainAct extends AppCompatActivity {
     private ArrayList<Integer> unChooseList;
     private CountDownTimer examDutaionCountDown;
 
-
-    private ViewPager viewPgActMain_Question;
-    private FloatingActionButton fabMainQuestionList;
-    private QuestionPagerAdapter questionPagerAdapter;
-    private CircleProgressView cpgViewDuration;
-
+    // Act Dialog Layout
     private ProgressDialog progressDialogRetrievingData;
     private Dialog rateCommentDialog;
+
+    // endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
 
-        // Init FirebaseDatabase
-        eQuizDatabase = FirebaseDatabase.getInstance();
-        // Init DatabaseRef
-        eQuizRef = eQuizDatabase.getReference();
-        // Get current user
-
-        examID = getIntent().getStringExtra("ID");
-
-        mappingLayout();
-        init();
+        mappingPaletteLayout();
+        initVariables();
+        initData();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkMaintainStatus(MainAct.this);
+            }
+        }, 4000);
     }
 
     @Override
@@ -116,21 +125,52 @@ public class MainAct extends AppCompatActivity {
         quitExam();
     }
 
-    private void mappingLayout() {
+    /**
+     *  Mapping Palette Layout
+     */
+    private void mappingPaletteLayout() {
         viewPgActMain_Question = (ViewPager) findViewById(R.id.viewPgActMain_Question);
         fabMainQuestionList = (FloatingActionButton) findViewById(R.id.fabMainQuestionList);
         cpgViewDuration = (CircleProgressView) findViewById(R.id.cpgViewActMain_Duration);
     }
 
-    private void init() {
+    /**
+     * Init variables
+     */
+    private void initVariables() {
+        // Get FirebaseDatabase
+        eQuizDatabase = FirebaseDatabase.getInstance();
+        // Get DatabaseRef
+        eQuizRef = eQuizDatabase.getReference();
+        // Get exam ID from Intent put extra
+        examID = getIntent().getStringExtra("ID");
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getMaintainStatus();
+            }
+        }, 2000);
+    }
+
+    /**
+     *  Init Act Data
+     */
+    private void initData() {
+        // Init Array List
         questionList = new ArrayList<>();
         questionResultList = new ArrayList<>();
         unChooseList = new ArrayList<>();
+        // Check exam id not null and not empty
         if (examID != null && !examID.isEmpty()) {
+            // Get Exam
             getExam(examID);
+            // Get Question List
             getQuestions();
+            // Declare comment dialog
             rateCommentDialog = createDialog(MainAct.this, R.layout.dialog_rate_comment, "Rate & Comment");
             rateCommentDialog.setCanceledOnTouchOutside(false);
+            // Declare progress dialog
             progressDialogRetrievingData  = createProgressDialog(MainAct.this, getResources().getString(R.string.text_progress_retrieving));
             if (exam == null) {
                 progressDialogRetrievingData.show();
@@ -142,10 +182,14 @@ public class MainAct extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     createActionBar();
+                                    // Get exam duration
                                     examDuration = exam.getDuration() * 60000;
+                                    // Set question viewpager adapter
                                     questionPagerAdapter = new QuestionPagerAdapter(getSupportFragmentManager(), MainAct.this, examID, exam.getNumberOfQuestion());
                                     viewPgActMain_Question.setAdapter(questionPagerAdapter);
+                                    // Set exam duration
                                     setDuration();
+                                    // Start countdown
                                     examDutaionCountDown.start();
                                 }
                             }, 500);
@@ -157,6 +201,9 @@ public class MainAct extends AppCompatActivity {
         }
     }
 
+    /**
+     *  Create action bar layout
+     */
     private void createActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle(exam.getTitle());
@@ -171,11 +218,14 @@ public class MainAct extends AppCompatActivity {
         }
     }
 
+    // Submit exam
     private void submitExam() {
+        // Declare alert dialog
         AlertDialog.Builder submitAlertDialog = createAlertDialog(MainAct.this, getResources().getString(R.string.text_submit_exam));
         submitAlertDialog.setPositiveButton(getResources().getString(R.string.text_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                // Stop count down
                 examDutaionCountDown.cancel();
                 // Set result list
                 if (setResultList()) {
@@ -201,11 +251,16 @@ public class MainAct extends AppCompatActivity {
         submitAlertDialog.show();
     }
 
+    /**
+     *  Quit doing exam
+     */
     private void quitExam() {
+        // Declare alert dialog
         final AlertDialog.Builder quitAlertDialog = createAlertDialog(MainAct.this, getResources().getString(R.string.text_quit_exam));
         quitAlertDialog.setPositiveButton(getResources().getString(R.string.text_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                // Stop count down
                 examDutaionCountDown.cancel();
                 final ProgressDialog quitProgressDialog = createProgressDialog(MainAct.this, getResources().getString(R.string.text_progress_quit));
                 quitProgressDialog.show();
@@ -228,9 +283,14 @@ public class MainAct extends AppCompatActivity {
         quitAlertDialog.show();
     }
 
+    /**
+     *  Set exam duration
+     */
     private void setDuration() {
+        // Set exam duration value for circle progress bar
         cpgViewDuration.setMaxValue(examDuration);
         cpgViewDuration.setValue(examDuration);
+        // Declare a count down
         examDutaionCountDown = new CountDownTimer(examDuration, 1000) {
             @Override
             public void onTick(long l) {
@@ -281,27 +341,46 @@ public class MainAct extends AppCompatActivity {
         };
     }
 
+    /**
+     *  Add user choice to result list
+     * @return boolean Allow to submit exam
+     */
     private boolean setResultList() {
+        // Declare flag variables to check
         boolean allowSubmit = false;
         boolean hasChoose = false;
+        // Declare fragment to store current viewpager fragment
         QuestionPagerFrag questionPagerFrag = null;
+        // Init array list
         ArrayList<Integer> answerList = new ArrayList<>();
         ArrayList<Integer> userAnswerList = new ArrayList<>();
+
+        // Start a loop through question viewpager adapter
         for (int i = 0; i < questionPagerAdapter.getCount(); i ++) {
             // Get fragment in viewpager by tag
             questionPagerFrag = (QuestionPagerFrag) getSupportFragmentManager()
                     .findFragmentByTag("android:switcher:"
                             + R.id.viewPgActMain_Question + ":"
                             + questionPagerAdapter.getItemId(i));
+            // Check if fragment is null ~ have not init yet
             if (questionPagerFrag == null) {
                 allowSubmit = false;
+                /**
+                  * Check this question is in unchooseList or not
+                  * If not, add it
+                 */
                 if (!unChooseList.contains(i)) {
                     unChooseList.add(i);
                 }
             } else {
+                // Check user has answer this question or not
                 if (questionPagerFrag.getUserAnswerChoice().isEmpty()) {
                     allowSubmit = false;
                     hasChoose = false;
+                    /**
+                     * Check this question is in unchooseList or not
+                     * If not, add it
+                     */
                     if (!unChooseList.contains(i)) {
                         unChooseList.add(i);
                     }
@@ -331,6 +410,7 @@ public class MainAct extends AppCompatActivity {
                             break;
                         case "Multiple":
                             boolean check = false;
+                            // Check userAnswerList size and examAnswerList size
                             if (userAnswerList.size() < answerList.size()) {
                                 check = false;
                             } else if (userAnswerList.size() > answerList.size()) {
@@ -363,9 +443,12 @@ public class MainAct extends AppCompatActivity {
             }
         }
         if (!hasChoose) {
+            // If still have time, not allow users to submit exam
             if (!isTimeOut) {
                 showToast(getApplicationContext(), getResources().getString(R.string.warning_not_choose_answer));
             } else {
+                // If time out
+                // Add unchoose question to questionResultList
                 for (Integer i : unChooseList) {
                     questionResultList.add(new QuestionResult(questionList.get(i).getID(), null, false));
                 }
@@ -376,14 +459,19 @@ public class MainAct extends AppCompatActivity {
         return allowSubmit;
     }
 
-
+    /**
+     * Create rate and comment dialog
+     * @param dialog Comment dialog
+     */
     private void rateAndComment(Dialog dialog) {
         // mapping Dialog layout
         final RatingBar rateBarStart = (RatingBar) dialog.findViewById(R.id.rateBarDialogRateComment_Stars);
         final EditText edtComment = (EditText) dialog.findViewById(R.id.edtDialogRateComment_Comment);
         Button btnNext = (Button) dialog.findViewById(R.id.btnDialogRateComment_Next);
         Button btnSkip = (Button) dialog.findViewById(R.id.btnDialogRateComment_Skip);
+        // Declare exam rate start
         final Float[] rateStar = new Float[1];
+        // Set exam rate start value
         rateBarStart.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
@@ -391,6 +479,7 @@ public class MainAct extends AppCompatActivity {
                 Log.d("Rating", String.valueOf(rateStar[0]));
             }
         });
+        // Set click listener for next button
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -417,7 +506,7 @@ public class MainAct extends AppCompatActivity {
                 }
             }
         });
-
+        // Set click listener for skip button
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -438,7 +527,10 @@ public class MainAct extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Get exam from backend server with examID
+     * @param examID string
+     */
     public void getExam(String examID) {
         eQuizRef.child(EXAM_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -453,10 +545,17 @@ public class MainAct extends AppCompatActivity {
         });
     }
 
+    /**
+     * Set exam variables from dataSnapshot after get it from backend server
+     * @param dataSnapshot contain exam data
+     */
     private void setExam(DataSnapshot dataSnapshot) {
         exam = dataSnapshot.getValue(Exam.class);
     }
 
+    /**
+     * Get question list from backend server
+     */
     private void getQuestions() {
         eQuizRef.child(QUESTION_CHILD).addValueEventListener(new ValueEventListener() {
             @Override
@@ -471,6 +570,10 @@ public class MainAct extends AppCompatActivity {
         });
     }
 
+    /**
+     * Set question list values from dataSnapshot after get it from backend server
+     * @param dataSnapshot contain questions data
+     */
     private void setQuestionList(DataSnapshot dataSnapshot) {
         for (DataSnapshot questionSnapshot: dataSnapshot.getChildren()) {
             Question question = questionSnapshot.getValue(Question.class);
@@ -478,5 +581,22 @@ public class MainAct extends AppCompatActivity {
                 questionList.add(question);
             }
         }
+    }
+
+    /**
+     * Get maintain status from backend server
+     */
+    private void getMaintainStatus() {
+        eQuizRef.child(MAINTAIN_CHILD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                allowMaintain = (boolean) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

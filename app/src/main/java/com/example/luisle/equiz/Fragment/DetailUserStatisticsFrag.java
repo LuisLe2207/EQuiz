@@ -45,15 +45,21 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class DetailUserStatisticsFrag extends DialogFragment {
 
-    private String examID;
-    private ArrayList<ExamResult> examResultList;
-    private ExamResultListAdapter examResultListAdapter;
-
+    // Fragment Palette Layout
     private EditText edtExamTitle, edtBestCompleteTime;
     private ProgressBar pgBarLoading;
     private RecyclerView rcvDoneTimes;
 
+    // Fragment Variables
+    private String examID;
+    private ArrayList<ExamResult> examResultList;
+    private ExamResultListAdapter examResultListAdapter;
 
+
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static DetailUserStatisticsFrag newInstance(String examID) {
         DetailUserStatisticsFrag fragment = new DetailUserStatisticsFrag();
         Bundle args = new Bundle();
@@ -66,10 +72,10 @@ public class DetailUserStatisticsFrag extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_detail_user_statistics, container, false);
-        examID = getArguments().getString("ID");
         createActionBar(view);
-        mappingLayout(view);
-        init();
+        mappingPaletteLayout(view);
+        initVariables();
+        initData();
         return view;
     }
 
@@ -103,17 +109,32 @@ public class DetailUserStatisticsFrag extends DialogFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void mappingLayout(View view) {
+
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         edtExamTitle = (EditText) view.findViewById(R.id.edtDialogDetailUserStatistics_Title);
         edtBestCompleteTime = (EditText) view.findViewById(R.id.edtDialogDetailUserStatistics_BestCompleteTime);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragUserStatisticsDetail_Loading);
         rcvDoneTimes = (RecyclerView) view.findViewById(R.id.rcvDoneTimes);
     }
 
-    private void init() {
+    /**
+     * Init variables
+     */
+    private void initVariables() {
+        examID = getArguments().getString("ID");
+        examResultList = new ArrayList<>();
+    }
+
+    /**
+     * Init Fragment Data
+     */
+    private void initData() {
         pgBarLoading.setVisibility(View.VISIBLE);
         rcvDoneTimes.setVisibility(View.INVISIBLE);
-        examResultList = new ArrayList<>();
         if (examID != null && !examID.isEmpty()) {
             getExamResult(examID);
             final ProgressDialog loadExamResultProgressDialog = createProgressDialog(getContext()
@@ -135,6 +156,10 @@ public class DetailUserStatisticsFrag extends DialogFragment {
         }
     }
 
+    /**
+     * Create ActionBar
+     * @param view layout
+     */
     private void createActionBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogDetailUserStatistics);
         toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_detail));
@@ -150,6 +175,9 @@ public class DetailUserStatisticsFrag extends DialogFragment {
         setHasOptionsMenu(true);
     }
 
+    /**
+     * Set Exam Detail Data for editText
+     */
     private void setDoneExamDetail() {
         edtExamTitle.setText(examResultList.get(0).getExamTitle());
         edtBestCompleteTime.setText("" + String.format("%d:%d",
@@ -158,7 +186,10 @@ public class DetailUserStatisticsFrag extends DialogFragment {
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(examResultList.get(0).getCompleteTime()))));
     }
 
-
+    /**
+     * Get exam result data with examID from backend server
+     * @param examID string
+     */
     private void getExamResult(String examID) {
         eQuizRef.child(RESULT_CHILD).child(userID).child(examID).orderByChild("completeTime").addValueEventListener(new ValueEventListener() {
             @Override
@@ -173,6 +204,10 @@ public class DetailUserStatisticsFrag extends DialogFragment {
         });
     }
 
+    /**
+     * Set exam result list from dataSnapshot after get it from backend server
+     * @param dataSnapshot contain exam data
+     */
     private void setExamResults(DataSnapshot dataSnapshot) {
         for (DataSnapshot examResultSnapshot : dataSnapshot.getChildren()) {
             ExamResult examResult = examResultSnapshot.getValue(ExamResult.class);

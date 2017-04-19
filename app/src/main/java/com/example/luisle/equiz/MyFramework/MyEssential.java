@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,9 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.luisle.equiz.Activity.LoginAct;
 import com.example.luisle.equiz.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -43,8 +46,9 @@ import okhttp3.RequestBody;
 public class MyEssential {
 
     // region APP CONSTANTS
-    public static String SERVER_SEND_TOKEN_URL = "http://192.168.1.5:8080/equiz/register.php";
-    public static String SERVER_PUSH_NOTIFICATION = "http://192.168.1.5:8080/equiz/push.php";
+    public static String SERVER_SEND_TOKEN_URL = "http://192.168.1.6:8080/equiz/register.php";
+    public static String SERVER_PUSH_NOTIFICATION = "http://192.168.1.6:8080/equiz/push.php";
+    public static String SERVER_CHANGE_RULES = "http://192.168.1.6:8080/equiz/change_rules.php";
     // region Activities Codes
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_IMAGE_GALLERY = 2;
@@ -63,6 +67,8 @@ public class MyEssential {
     public static final String EXAM_CHILD = "EXAM_CHILD";
     public static final String RESULT_CHILD = "RESULT_CHILD";
     public static final String COMMENT_CHILD = "COMMENT_CHILD";
+    public static final String NOTIFICATION_CHILD = "NOTIFICATION_CHILD";
+    public static final String MAINTAIN_CHILD = "MAINTAIN_CHILD";
     public static final String USER_AVATAR = "User_Avatar/";
     // endregion
 
@@ -98,6 +104,12 @@ public class MyEssential {
         ).show();
     }
 
+    /**
+     * Create ProgressDialog
+     * @param context Activity
+     * @param message String
+     * @return progressDialog
+     */
     public static ProgressDialog createProgressDialog(Context context, String message) {
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setIndeterminate(true);
@@ -106,6 +118,12 @@ public class MyEssential {
         return progressDialog;
     }
 
+    /**
+     * Create ProgressDialog
+     * @param context Activity
+     * @param message String
+     * @return alertDialog
+     */
     public static AlertDialog.Builder createAlertDialog(Context context, String message) {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setMessage(message);
@@ -114,6 +132,13 @@ public class MyEssential {
         return alertDialog;
     }
 
+    /**
+     * Create Dialog
+     * @param context Activity
+     * @param layout int
+     * @param title String
+     * @return dialog
+     */
     public static Dialog createDialog(Context context, Integer layout, String title) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(layout);
@@ -121,6 +146,10 @@ public class MyEssential {
         return dialog;
     }
 
+    /**
+     * Create Dialog contain Camera and Gallery choice
+     * @param activity activity
+     */
     public static void openAvatarActionDialog(final AppCompatActivity activity) {
         Dialog avatarActionDialog = new Dialog(activity);
         avatarActionDialog.setContentView(R.layout.dialog_choose_avatar_action);
@@ -147,7 +176,33 @@ public class MyEssential {
         avatarActionDialog.show();
     }
 
+    public static void checkMaintainStatus(final Context context) {
+        if (allowMaintain) {
+            showToast(context, context.getResources().getString(R.string.alert_app_in_maintain));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    FirebaseAuth.getInstance().signOut();
+                    final ProgressDialog signOutProgressDialog = createProgressDialog(context,
+                            context.getString(R.string.text_progress_sign_out));
+                    signOutProgressDialog.show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            signOutProgressDialog.dismiss();
+                            context.startActivity(new Intent(context, LoginAct.class));
+                        }
+                    }, 2000);
+                }
+            }, 8000);
+        }
+    }
 
+    /**
+     * Convert ImageView to Byte
+     * @param userAvatar
+     * @return byte array
+     */
     public static byte[] convertImageViewToByte(RoundedImageView userAvatar){
 
         RoundedDrawable drawable = (RoundedDrawable) userAvatar.getDrawable();
@@ -158,6 +213,11 @@ public class MyEssential {
         return stream.toByteArray();
     }
 
+    /**
+     * Send user token to PHP server
+     * @param userID string
+     * @param token string
+     */
     public static void registerToken(String userID, String token) {
 
         OkHttpClient client = new OkHttpClient();
@@ -178,10 +238,14 @@ public class MyEssential {
         }
     }
 
-    public static void pushNotification(String userID, String title, String message) {
+    /**
+     * send data to PHP to push notification
+     * @param title string
+     * @param message string
+     */
+    public static void pushNotification(String title, String message) {
         OkHttpClient client = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
-                .add("UserID", userID)
                 .add("Title",title)
                 .add("Message", message)
                 .build();
@@ -198,6 +262,30 @@ public class MyEssential {
         }
     }
 
+    public static void changeBackEndRules(String adminID, String type) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add("AdminID", adminID)
+                .add("Type", type)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(SERVER_CHANGE_RULES)
+                .post(body)
+                .build();
+
+        try {
+            client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Open Date dialog
+     * @param context Activity
+     * @param editText Layout
+     */
     public static void openDateDialog(Context context, final EditText editText) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         final Calendar calendar = Calendar.getInstance();
@@ -217,6 +305,11 @@ public class MyEssential {
         datePickerDialog.show();
     }
 
+    /**
+     * Open Time dialog
+     * @param context Activity
+     * @param editText Layout
+     */
     public static void openTimeDialog(Context context, final EditText editText) {
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm ");
         final Calendar calendar = Calendar.getInstance();

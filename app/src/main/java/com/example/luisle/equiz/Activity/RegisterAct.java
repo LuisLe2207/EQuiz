@@ -41,46 +41,29 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class RegisterAct extends AppCompatActivity {
 
-    // Firebase
+    // region VARIBALES
+
+    // Act Firebase Variables
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    // Layout
+    // Act Palette Layout
     private RoundedImageView imgAvatar;
     private EditText edtFullName, edtEmail, edtPass, edtCPass, edtMobile;
     private Button btnRegister;
 
-    // Act variables
+    // Act Dialog Layout
     private ProgressDialog registerProgressDialog;
+
+    // endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_register);
 
-        // Ini FirebaseAuth
-        mAuth = FirebaseAuth.getInstance();
-        // Ini AuthStateListener
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    startActivity(new Intent(RegisterAct.this, HomeAct.class));
-                }
-            }
-        };
-        // Init FirebaseDatabase
-        eQuizDatabase = FirebaseDatabase.getInstance();
-        // Init DatabaseRef
-        eQuizRef = eQuizDatabase.getReference();
-        // Init Firebase Storage
-        eQuizStorage = FirebaseStorage.getInstance("gs://equiz-59c1f.appspot.com");
-        // Init Firebase StorageRef
-        eQUizStorageRef = eQuizStorage.getReference();
-
-        mappingLayout();
+        initVariables();
+        mappingPaletteLayout();
         onRegister();
         chooseAvatarAction();
     }
@@ -107,9 +90,9 @@ public class RegisterAct extends AppCompatActivity {
     }
 
     /**
-     * Map layout
+     * Mapping palette layout
      */
-    private void mappingLayout() {
+    private void mappingPaletteLayout() {
         imgAvatar = (RoundedImageView) findViewById(R.id.imgRegAct_Avatar);
         edtFullName = (EditText) findViewById(R.id.edtRegAct_FullName);
         edtEmail = (EditText) findViewById(R.id.edtRegAct_Email);
@@ -117,6 +100,31 @@ public class RegisterAct extends AppCompatActivity {
         edtCPass = (EditText) findViewById(R.id.edtRegAct_CPass);
         edtMobile = (EditText) findViewById(R.id.edtRegAct_Moblie);
         btnRegister = (Button) findViewById(R.id.btnRegAct_Register);
+    }
+
+    private void initVariables() {
+        // Get FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
+        // Add AuthStateListener
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    startActivity(new Intent(RegisterAct.this, HomeAct.class));
+                }
+            }
+        };
+        // Get FirebaseDatabase
+        eQuizDatabase = FirebaseDatabase.getInstance();
+        // Get DatabaseRef
+        eQuizRef = eQuizDatabase.getReference();
+        // Get Firebase Storage
+        eQuizStorage = FirebaseStorage.getInstance("gs://equiz-59c1f.appspot.com");
+        // Get Firebase StorageRef
+        eQUizStorageRef = eQuizStorage.getReference();
+
     }
 
     /**
@@ -215,6 +223,7 @@ public class RegisterAct extends AppCompatActivity {
      * @return boolean
      */
     private boolean inputValidate(String name, String email, String pass, String cpass) {
+        // Check empty
         if (TextUtils.isEmpty(name) && TextUtils.isEmpty(email) && TextUtils.isEmpty(pass) && TextUtils.isEmpty(cpass)) {
             if (TextUtils.isEmpty(name)) {
                 edtFullName.setError(getResources().getString(R.string.error_name_not_fill));
@@ -230,20 +239,21 @@ public class RegisterAct extends AppCompatActivity {
             }
             return false;
         } else {
-
+            // Check email pattern
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 showToast(
                         getApplicationContext(),
                         getResources().getString(R.string.error_email_format)
                 );
             }
-
+            // Check pass and confirm pass are the same
             if (!TextUtils.equals(pass, cpass)) {
                 showToast(
                         getApplicationContext(),
                         getResources().getString(R.string.error_pass_cpass_not_equal));
                 return false;
             }
+            // Check pass length
             if (pass.length() < 6 || pass.length() > 15) {
                 if (pass.length() < 6) {
                     showToast(

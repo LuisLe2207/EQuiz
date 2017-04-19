@@ -50,7 +50,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
  */
 
 public class ExamFrag extends DialogFragment {
-    // Layout
+    // Fragment Palette Layout
     private EditText edtExamTitle;
     private RadioGroup rdGrpDuration;
     private RecyclerView rcvQuestion;
@@ -64,6 +64,10 @@ public class ExamFrag extends DialogFragment {
     private String examID;
     private Integer examDuration = 3;
 
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static ExamFrag newInstance(String examID) {
         ExamFrag fragment = new ExamFrag();
         Bundle args = new Bundle();
@@ -78,13 +82,11 @@ public class ExamFrag extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_add_exam, container, false);
 
-        mappingLayout(view);
+        mappingPaletteLayout(view);
         createActionBar(view);
         setExamDuration();
-        if (getArguments() != null) {
-            examID = getArguments().getString("ID");
-        }
-        init();
+        initVariables();
+        initData();
 
         return view;
     }
@@ -141,19 +143,35 @@ public class ExamFrag extends DialogFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         edtExamTitle = (EditText) view.findViewById(R.id.edtDialog_AddExam_Title);
         rdGrpDuration = (RadioGroup) view.findViewById(R.id.rdGrpDialog_AddExam_Duration);
         rcvQuestion = (RecyclerView) view.findViewById(R.id.rcvDialogAddExam_Question);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarDialogAddExam_LoadingQuestion);
     }
 
-    private void init() {
-        pgBarLoading.setVisibility(View.VISIBLE);
-        rcvQuestion.setVisibility(View.INVISIBLE);
+    /**
+     * Init variables
+     */
+    private void initVariables() {
+        if (getArguments() != null) {
+            examID = getArguments().getString("ID");
+        }
         questionList = new ArrayList<>();
         examQuestionList = new ArrayList<>();
         questionListAdapter = new QuestionListAdapter(getContext(), questionList, examQuestionList, false);
+    }
+
+    /**
+     * Init Fragment Data
+     */
+    private void initData() {
+        pgBarLoading.setVisibility(View.VISIBLE);
+        rcvQuestion.setVisibility(View.INVISIBLE);
         getQuestions(eQuizRef, rcvQuestion, pgBarLoading, questionList, questionListAdapter);
         if (!TextUtils.isEmpty(examID)) {
             getExam(eQuizRef, examID, examQuestionList, edtExamTitle, questionListAdapter);
@@ -161,6 +179,10 @@ public class ExamFrag extends DialogFragment {
         rcvQuestion.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
+    /**
+     * Create ActionBar
+     * @param view layout
+     */
     private void createActionBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddExam);
         if (TextUtils.isEmpty(examID)) {
@@ -181,6 +203,9 @@ public class ExamFrag extends DialogFragment {
         setHasOptionsMenu(true);
     }
 
+    /**
+     * submit new Exam or modified Exam
+     */
     private void submitAction() {
         String examTitle = edtExamTitle.getText().toString().trim();
         if (validateBeforeSave(examTitle, examQuestionList)) {
@@ -193,6 +218,9 @@ public class ExamFrag extends DialogFragment {
         }
     }
 
+    /**
+     * Set ExamDuration
+     */
     private void setExamDuration() {
         rdGrpDuration.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -215,12 +243,19 @@ public class ExamFrag extends DialogFragment {
         });
     }
 
+    /**
+     * Validate user input
+     * @param title String
+     * @param examQuestionList ArrayList
+     * @return boolean
+     */
     private boolean validateBeforeSave(String title, ArrayList<String> examQuestionList) {
+        // Check empty title
         if (TextUtils.isEmpty(title)) {
             edtExamTitle.setError(getResources().getString(R.string.error_title_not_fill));
             return false;
         }
-
+        // Check size of examQuestionList
         if (examQuestionList.size() < MIN_QUESTTION || examQuestionList.size() > MAX_QUESTION) {
             if (examQuestionList.size() < MIN_QUESTTION) {
                 showToast(getContext(), getResources().getString(R.string.error_min_question_length));

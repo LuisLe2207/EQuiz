@@ -64,8 +64,10 @@
     <string name="text_progress_retrieving">Retrieving data &#8230;</string>
     <string name="text_progress_quit">Quiting &#8230;</string>
     <string name="text_progress_skip">Skipping &#8230;</string>
+    <string name="text_progress_finish_maintain">Finishing maintain &#8230;</string>
     <string name="text_progress_moving">Moving to result screen &#8230;</string>
     <string name="text_do_exam">Do you want to do this exam? </string>
+    <string name="text_progress_sign_out">Signing out &#8230;</string>
     <string name="text_yes">Yes</string>
     <string name="text_no">No</string>
     <string name="text_quit_exam">Do you want to quit doing this exam?</string>
@@ -111,6 +113,7 @@
     <string name="error_invalid_noti_time">
         End date must be equal or larger than start date!
         \nEnd time must be larger than start time if on the same date!
+        \nStart time must be larger than current time!
         \nPlease try again!
     </string>
 
@@ -142,6 +145,16 @@
     <string name="alert_exam_will_be_submit">Your exam will be submit after few seconds</string>
     <string name="alert_you_must_create_push_notification">You must create a push notification before </string>
     <string name="push_notification_success">Push notification successfully</string>
+    <string name="finish_maintain">"Maintain Server complete. You can create new push notification"</string>
+    <string name="alert_app_in_maintain">
+        App is under maintaining, Please abort your action and logout out!
+        \nApp will be automatic logout after 10 seconds
+        \nThank you!
+    </string>
+    <string name="alert_app_in_maintain_Login">
+        App is under maintaining, Please try again later!
+        \nThank you!
+    </string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>

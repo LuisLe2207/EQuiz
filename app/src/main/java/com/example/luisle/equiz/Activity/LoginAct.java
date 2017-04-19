@@ -28,11 +28,11 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class LoginAct extends AppCompatActivity {
 
-    // Firebase
+    // Act Firebase Variables
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    // Layout
+    // Act Palette Layout
     private EditText edtEmail, edtPass;
     private Button btnLogin, btnForgotPass, btnRegister;
 
@@ -44,29 +44,9 @@ public class LoginAct extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_login);
-        // Initilize Firebase FirebaseAuth
-        mAuth = FirebaseAuth.getInstance();
-        isNew  = getIntent().getBooleanExtra("New", false);
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    userID = user.getUid();
-                    if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
-                        isAdmin = false;
-                        startActivity(new Intent(LoginAct.this, HomeAct.class));
-                    } else {
-                        isAdmin = true;
-                        startActivity(new Intent(LoginAct.this, AdminHomeAct.class));
-                    }
 
-                }
-
-            }
-        };
-        mappingLayout();
+        initVariables();
+        mappingPaletteLayout();
         onLogin();
         onForgotPass();
         onRegister();
@@ -88,9 +68,40 @@ public class LoginAct extends AppCompatActivity {
     }
 
     /**
+     * Init variables
+     */
+    private void initVariables() {
+        // Get Firebase FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
+        // Check user has just register?
+        isNew  = getIntent().getBooleanExtra("New", false);
+        // Set Auth Listener
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    userID = user.getUid();
+                    // Check logged in user is admin?
+                    if (!TextUtils.equals(user.getUid(), "IdqIxA6Bg0diKdoiRFzISpR2Z662")) {
+                        isAdmin = false;
+                        startActivity(new Intent(LoginAct.this, HomeAct.class));
+                    } else {
+                        isAdmin = true;
+                        startActivity(new Intent(LoginAct.this, AdminHomeAct.class));
+                    }
+
+                }
+
+            }
+        };
+    }
+
+    /**
      * Map layout
      */
-    private void mappingLayout() {
+    private void mappingPaletteLayout() {
         edtEmail = (EditText) findViewById(R.id.edtLoginAct_Email);
         edtPass = (EditText) findViewById(R.id.edtLoginAct_Pass);
         btnLogin = (Button) findViewById(R.id.btnLoginAct_Login);
@@ -150,15 +161,21 @@ public class LoginAct extends AppCompatActivity {
         btnForgotPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Delcare dialog
                 final Dialog resetPasswordDialog = new Dialog(LoginAct.this);
                 resetPasswordDialog.setContentView(R.layout.dialog_reset_password);
                 resetPasswordDialog.setTitle("Reset Password");
+                // Mapping Dialog Layout
                 Button btnResetPassword = (Button) resetPasswordDialog.findViewById(R.id.btnDialog_ResetPassword_Reset);
                 final EditText edtDialog_ResetPassword_Email = (EditText) resetPasswordDialog.findViewById(R.id.edtDialog_ResetPassword_Email);
+
+                // Set on click for button
                 btnResetPassword.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Get user email
                         String email = edtDialog_ResetPassword_Email.getText().toString().trim();
+                        // Check input validation
                         if (TextUtils.isEmpty(email)) {
                             if (TextUtils.isEmpty(email)) {
                                 edtDialog_ResetPassword_Email.setError(getResources().getString(R.string.error_email_not_fill));
@@ -239,6 +256,7 @@ public class LoginAct extends AppCompatActivity {
      * @return boolean
      */
     private boolean inputValidate(String email, String pass) {
+        // Check email and password is empty?
         if (TextUtils.isEmpty(email) && TextUtils.isEmpty(pass)) {
             if (TextUtils.isEmpty(email)) {
                 edtEmail.setError(getResources().getString(R.string.error_email_not_fill));
@@ -248,7 +266,7 @@ public class LoginAct extends AppCompatActivity {
             }
             return false;
         }
-
+        // Check email pattern is valid?
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             MyEssential.showToast(
                     getApplicationContext(),
@@ -256,7 +274,7 @@ public class LoginAct extends AppCompatActivity {
             );
             return false;
         }
-
+        // Check password length
         if (pass.length() < 6 || pass.length() > 15) {
             if (pass.length() < 6) {
                 MyEssential.showToast(

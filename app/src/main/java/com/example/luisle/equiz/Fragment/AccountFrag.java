@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,17 +61,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class AccountFrag extends Fragment{
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    //Fragment Layout
+    //Fragment Palette Layout
     private EditText edtAccFrag_FullName, edtAccFragEmail, edtAccFrag_Moblie;
     private Button btnAccFrag_ChangeEmail, btnAccFrag_ChangePassword, btnAccFrag_Save;
     private RoundedImageView imgAccFrag_Avatar;
@@ -86,20 +77,11 @@ public class AccountFrag extends Fragment{
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CategoryFrag.
+     * Create new instance of Fragment
+     * @return Fragment
      */
-    // TODO: Rename and change types and number of parameters
-    public static AccountFrag newInstance(String param1, String param2) {
+    public static AccountFrag newInstance() {
         AccountFrag fragment = new AccountFrag();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -114,7 +96,7 @@ public class AccountFrag extends Fragment{
         // Init Firebase StorageRef
         eQUizStorageRef = eQuizStorage.getReference();
 
-        mappingLayout(view);
+        mappingPaletteLayout(view);
         getUserProfile();
         openChangeEmailDialog();
         openChangePasswordDialog();
@@ -129,6 +111,7 @@ public class AccountFrag extends Fragment{
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imgAccFrag_Avatar.setImageBitmap(imageBitmap);
+            Log.d("Hello", "hello");
         }
 
         if(requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK && data != null){
@@ -143,7 +126,11 @@ public class AccountFrag extends Fragment{
         }
     }
 
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         edtAccFrag_FullName = (EditText) view.findViewById(R.id.edtAccFrag_FullName);
         edtAccFragEmail = (EditText) view.findViewById(R.id.edtAccFrag_Email);
         edtAccFrag_Moblie = (EditText) view.findViewById(R.id.edtAccFrag_Moblie);
@@ -153,6 +140,9 @@ public class AccountFrag extends Fragment{
         imgAccFrag_Avatar = (RoundedImageView) view.findViewById(R.id.imgAccFrag_Avatar);
     }
 
+    /**
+     * Get userProfile
+     */
     private void getUserProfile() {
         if (firebaseUser != null) {
             edtAccFrag_FullName.setText(firebaseUser.getDisplayName());
@@ -180,6 +170,9 @@ public class AccountFrag extends Fragment{
         });
     }
 
+    /**
+     * Open Choose Avatar Dialog
+     */
     private void chooseAvatarAction() {
         imgAccFrag_Avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,13 +182,18 @@ public class AccountFrag extends Fragment{
         });
     }
 
+    /**
+     * Open Change Email Dialog
+     */
     private void openChangeEmailDialog() {
         btnAccFrag_ChangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Declare and create dialog
                 Dialog changeEmailDialog = createDialog(getContext(),
                         R.layout.dialog_change_email,
                         getContext().getResources().getString(R.string.text_change_email));
+                // Mapping dialog layout
                 Button btnChangeEmail = (Button) changeEmailDialog.findViewById(R.id.btnDialog_ChangeEmail_Save);
                 edtDialog_ChangeEmail_Email = (EditText) changeEmailDialog.findViewById(R.id.edtDialog_ChangeEmail_Email);
                 edtDialog_ChangeEmail_Pass = (EditText) changeEmailDialog.findViewById(R.id.edtDialog_ChangeEmail_Pass);
@@ -216,13 +214,18 @@ public class AccountFrag extends Fragment{
         });
     }
 
+    /**
+     * Open Change Password Dialog
+     */
     private void openChangePasswordDialog() {
+        // Declare and create dialog
         btnAccFrag_ChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Dialog changePasswordDialog = createDialog(getContext(),
                         R.layout.dialog_change_password,
                         getContext().getResources().getString(R.string.text_change_password));
+                // Mapping dialog layout
                 Button btnChangePassword = (Button) changePasswordDialog.findViewById(R.id.btnDialog_ChangePassword_Save);
                 edtDialog_ChangePassword_Email = (EditText) changePasswordDialog.findViewById(R.id.edtDialog_ChangePassword_Email);
                 edtDialog_ChangePassword_Pass = (EditText) changePasswordDialog.findViewById(R.id.edtDialog_ChangePassword_Pass);
@@ -243,6 +246,9 @@ public class AccountFrag extends Fragment{
         });
     }
 
+    /**
+     * Save user changes
+     */
     private void saveChanges() {
         btnAccFrag_Save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,6 +261,7 @@ public class AccountFrag extends Fragment{
                                                                     getResources().getString(R.string.text_progress_save));
 
                     saveProgressDialog.show();
+                    // Declare StorageRef
                     final StorageReference userAvatarRef = eQUizStorageRef.child(USER_AVATAR + user.getID());
                     UploadTask uploadTask = userAvatarRef.putBytes(convertImageViewToByte(imgAccFrag_Avatar));
                     uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -288,8 +295,18 @@ public class AccountFrag extends Fragment{
         });
     }
 
+    /**
+     * Validate user input
+     * @param email String
+     * @param password String
+     * @param changeValue String
+     * @param action String validate for email or password dialog
+     * @return
+     */
     public boolean validateInput(String email, String password, String changeValue, String action) {
+        // Email Dialog
         if (TextUtils.equals(action, "email")) {
+            // Check empty
             if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(changeValue)) {
                 if (TextUtils.isEmpty(email)) {
                     edtDialog_ChangeEmail_Email.setError(getResources().getString(R.string.error_email_not_fill));
@@ -302,6 +319,7 @@ public class AccountFrag extends Fragment{
                 }
                 return false;
             } else {
+                // Check email pattern
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     showToast(
                             getContext(),
@@ -309,7 +327,8 @@ public class AccountFrag extends Fragment{
                     );
                 }
             }
-        } else {
+        } else { // Password Dialog
+            // Check Email
             if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(changeValue)) {
                 if (TextUtils.isEmpty(email)) {
                     edtDialog_ChangePassword_Email.setError(getResources().getString(R.string.error_email_not_fill));
@@ -322,12 +341,14 @@ public class AccountFrag extends Fragment{
                 }
                 return false;
             } else {
+                // Check email pattern
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     showToast(
                             getContext(),
                             getResources().getString(R.string.error_email_format)
                     );
                 }
+                // Check password length
                 if (password.length() < 6 || password.length() > 15) {
                     if (password.length() < 6) {
                         showToast(

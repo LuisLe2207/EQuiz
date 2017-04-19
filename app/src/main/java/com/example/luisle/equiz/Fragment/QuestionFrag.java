@@ -47,7 +47,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class QuestionFrag extends DialogFragment {
 
-    // Layout
+    // Fragment Palette Layout
     EditText edtQuestionTitle, edtQuestionChoice;
     Button btnAddChoice;
     RecyclerView rcvQuestion;
@@ -58,6 +58,10 @@ public class QuestionFrag extends DialogFragment {
     private QuestionChoiceAdapter questionChoiceAdapter;
     private String questionID;
 
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static QuestionFrag newInstance(String questionID) {
         QuestionFrag fragment = new QuestionFrag();
         Bundle args = new Bundle();
@@ -72,14 +76,10 @@ public class QuestionFrag extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_add_question, container, false);
 
-        mappingLayout(view);
+        mappingPaletteLayout(view);
         createActionBar(view);
-
-        if (getArguments() != null) {
-            questionID = getArguments().getString("ID");
-        }
-
-        init();
+        initVariables();
+        initData();
         addChoice();
 
 
@@ -142,13 +142,21 @@ public class QuestionFrag extends DialogFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         edtQuestionTitle = (EditText) view.findViewById(R.id.edtDialog_AddQuestion_Title);
         edtQuestionChoice = (EditText) view.findViewById(R.id.edtDialog_AddQuestion_Choice);
         btnAddChoice = (Button) view.findViewById(R.id.btnDialog_AddQuestion_AddChoice);
         rcvQuestion = (RecyclerView) view.findViewById(R.id.rcvDialogAddQuestion);
     }
 
+    /**
+     * Create ActionBar
+     * @param view layout
+     */
     private void createActionBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddQuestion);
         if (TextUtils.isEmpty(questionID)) {
@@ -169,10 +177,23 @@ public class QuestionFrag extends DialogFragment {
         setHasOptionsMenu(true);
     }
 
-    private void init() {
+    /**
+     * Init variables
+     */
+    private void initVariables() {
+        if (getArguments() != null) {
+            questionID = getArguments().getString("ID");
+        }
         choiceList = new ArrayList<>();
         answerList = new ArrayList<>();
         questionChoiceAdapter = new QuestionChoiceAdapter(getContext(), choiceList, answerList);
+    }
+
+    /**
+     * Init Fragment Data
+     */
+    private void initData() {
+
         if (!TextUtils.isEmpty(questionID)) {
             getQuestion(eQuizRef, questionID, choiceList, answerList, edtQuestionTitle, questionChoiceAdapter);
         }
@@ -181,6 +202,9 @@ public class QuestionFrag extends DialogFragment {
         rcvQuestion.setLayoutManager(linearLayoutManager);
     }
 
+    /**
+     * submit new Question or modified Question
+     */
     private void submitAction() {
         String title = edtQuestionTitle.getText().toString().trim();
         String questionType = "";
@@ -201,6 +225,9 @@ public class QuestionFrag extends DialogFragment {
         }
     }
 
+    /**
+     * Add choice list
+     */
     private void addChoice() {
         btnAddChoice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,7 +255,15 @@ public class QuestionFrag extends DialogFragment {
         });
     }
 
+    /**
+     * Validate user inout
+     * @param choiceList arrayList
+     * @param answerList arrayList
+     * @param title String
+     * @return boolean
+     */
     private boolean validateBeforeSave(ArrayList<Choice> choiceList, ArrayList<Integer> answerList, String title) {
+
         if (choiceList.isEmpty() || choiceList.size() < MIN_CHOICE) {
             showToast(getContext(), getResources().getString(R.string.error_min_choice_length));
             return false;

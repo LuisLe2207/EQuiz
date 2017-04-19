@@ -26,40 +26,49 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.luisle.equiz.MyFramework.MyEssential.MAINTAIN_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.RESULT_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.checkMaintainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
 
 public class ResultAct extends AppCompatActivity {
 
+    // region VARIABLES
+
+    // Act Palette Layout
     private RecyclerView rcvResult;
     private EditText edtExamTitle, edtCompleteTime, edtCorrectAnswer;
 
-    private ArrayList<QuestionResult> questionResultList;
-    private QuestionResultGridAdapter questionResultGridAdapter;
-
+    // Act Variables
     private String examID;
     private String examResultID = "";
     private ExamResult examResult;
     private boolean doubleBackToExitPressedOnce = false;
+    private ArrayList<QuestionResult> questionResultList;
+    private QuestionResultGridAdapter questionResultGridAdapter;
 
+    // endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_result);
 
-        // Init FirebaseDatabase
-        eQuizDatabase = FirebaseDatabase.getInstance();
-        // Init DatabaseRef
-        eQuizRef = eQuizDatabase.getReference();
-        // Get current user
-
+        initVariables();
         mappingLayout();
-        init();
+        createActionBar();
+        initData();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkMaintainStatus(ResultAct.this);
+            }
+        }, 4000);
     }
 
     @Override
@@ -101,6 +110,23 @@ public class ResultAct extends AppCompatActivity {
 
     }
 
+    private void initVariables() {
+        // Get FirebaseDatabase
+        eQuizDatabase = FirebaseDatabase.getInstance();
+        // Get DatabaseRef
+        eQuizRef = eQuizDatabase.getReference();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getMaintainStatus();
+            }
+        }, 2000);
+    }
+
+    /**
+     *  Create action bar layout
+     */
     private void createActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActResult);
         toolbar.setTitle(getResources().getString(R.string.toolbar_result));
@@ -115,14 +141,18 @@ public class ResultAct extends AppCompatActivity {
         }
     }
 
-    private void init() {
-        createActionBar();
+    // Init act first data
+    private void initData() {
+        // Init array list
         questionResultList = new ArrayList<>();
+        // Get data from intent extra
         Bundle resultBundle = getIntent().getBundleExtra("ID");
         examID = resultBundle.getString("examID");
         examResultID = resultBundle.getString("examResultID");
 
+        // Check examID is valid
         if (examID != null && !examID.isEmpty()) {
+            // Set data
             getResults();
             final ProgressDialog collectingDataProgressDialog = createProgressDialog(ResultAct.this,
                     getResources().getString(R.string.text_progress_collecting_result));
@@ -137,6 +167,9 @@ public class ResultAct extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set exam result data
+     */
     private void setExamResult() {
         edtExamTitle.setText(examResult.getExamTitle());
         edtCompleteTime.setText("" + String.format("%d:%d",
@@ -168,6 +201,7 @@ public class ResultAct extends AppCompatActivity {
     private void getResults() {
         Query query = null;
         if (examResultID.isEmpty()) {
+            // Get last value
             query = eQuizRef.child(RESULT_CHILD).child(userID).child(examID)
                     .limitToLast(1);
         } else {
@@ -195,6 +229,23 @@ public class ResultAct extends AppCompatActivity {
         } else {
             examResult = dataSnapshot.getValue(ExamResult.class);
         }
+    }
+
+    /**
+     * Get maintain status from backend server
+     */
+    private void getMaintainStatus() {
+        eQuizRef.child(MAINTAIN_CHILD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                allowMaintain = (boolean) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

@@ -21,6 +21,7 @@ import com.example.luisle.equiz.Model.Choice;
 import com.example.luisle.equiz.Model.Comment;
 import com.example.luisle.equiz.Model.Exam;
 import com.example.luisle.equiz.Model.ExamResult;
+import com.example.luisle.equiz.Model.Notification;
 import com.example.luisle.equiz.Model.Question;
 import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.Model.User;
@@ -47,6 +48,8 @@ import java.util.Calendar;
 
 import static com.example.luisle.equiz.MyFramework.MyEssential.COMMENT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.EXAM_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.MAINTAIN_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.NOTIFICATION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.RESULT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USERS_CHILD;
@@ -55,9 +58,9 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
 import static com.example.luisle.equiz.MyFramework.MyEssential.convertImageViewToByte;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
+import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
-import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 /**
  * Created by LuisLe on 2/11/2017.
@@ -70,7 +73,7 @@ public class DatabaseLib {
     /**
      *
      * @param dataRef FirebaseRef
-     * @param user User model
+     * @param user User model User
      */
     public static void saveUser(
             final DatabaseReference dataRef,
@@ -95,6 +98,11 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Set user profile
+     * @param firebaseUser firebaseUser
+     * @param user model
+     */
     public static void setProfile(FirebaseUser firebaseUser, User user) {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(user.getFullName())
@@ -102,6 +110,14 @@ public class DatabaseLib {
         firebaseUser.updateProfile(profileUpdates);
     }
 
+    /**
+     * Change user Email
+     * @param context Activity
+     * @param firebaseUser firebaseUser
+     * @param oldEmail string
+     * @param password string
+     * @param newEmail string
+     */
     public static void changeEmail(final Context context, final FirebaseUser firebaseUser, String oldEmail, String password, final String newEmail) {
         final ProgressDialog emailProgressDialog = createProgressDialog(
                                                     context,
@@ -160,6 +176,14 @@ public class DatabaseLib {
                 });
     }
 
+    /**
+     * Change User password
+     * @param context Activity
+     * @param firebaseUser firbaseUser
+     * @param email string
+     * @param password string
+     * @param newPassword string
+     */
     public static void changePassword(final Context context, final FirebaseUser firebaseUser, String email, String password, final String newPassword) {
         final ProgressDialog passwordProgressDialog = createProgressDialog(
                                                     context,
@@ -220,6 +244,14 @@ public class DatabaseLib {
     // endregion
 
     // region Question Firebase
+
+    /**
+     * Save question to backend
+     * @param context Activity
+     * @param dataRef DatabaseReference
+     * @param newQuestion model Question
+     * @param id String
+     */
     public static void saveQuestion(final Context context, final DatabaseReference dataRef, Question newQuestion, String id) {
         final ProgressDialog saveQuestionProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_save));
@@ -259,6 +291,14 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Get list of question from backend
+     * @param dataRef DataReferences
+     * @param rcv RecyclerView
+     * @param pgb ProgressBar
+     * @param questionList ArrayList
+     * @param adapter QuestionListAdapter
+     */
     public static void getQuestions(
             final DatabaseReference dataRef,
             final RecyclerView rcv,
@@ -300,6 +340,15 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Get specific question and get choice and answer list of it
+     * @param dataRef DataReference
+     * @param id String
+     * @param choiceList ArrayList
+     * @param answerList ArrayList
+     * @param edtTitle EditText
+     * @param adapter QuestionChoiceAdapter
+     */
     public static void getQuestion(final DatabaseReference dataRef, String id,
                                    final ArrayList<Choice> choiceList,
                                    final ArrayList<Integer> answerList,
@@ -327,6 +376,13 @@ public class DatabaseLib {
 
     // region Exam Firebase
 
+    /**
+     * Save Exam to backend
+     * @param context Activity
+     * @param dataRef DataReference
+     * @param newExam Model Exam
+     * @param id String
+     */
     public static void saveExam(final Context context,
                                 final DatabaseReference dataRef,
                                 final Exam newExam,
@@ -358,8 +414,7 @@ public class DatabaseLib {
                     mainHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            new PushNotifications(context).execute(userID,
-                                    context.getResources().getString(R.string.notification_new_exam),
+                            new PushNotifications(context).execute(context.getResources().getString(R.string.notification_new_exam),
                                     newExam.getTitle() + " " + context.getResources().getString(R.string.notification_new_exam_message));
                         }
                     }, 2000);
@@ -379,37 +434,63 @@ public class DatabaseLib {
 
     }
 
+    /**
+     * Get list of exams from backend
+     * @param dataRef DataReference
+     * @param rcv RecyclerView
+     * @param pgb ProgressBar
+     * @param examList ArrayList
+     * @param adapter ExamListAdapter
+     */
     public static void getExams(final DatabaseReference dataRef,
                                 final RecyclerView rcv,
                                 final ProgressBar pgb,
                                 final ArrayList<Exam> examList,
                                 final ExamListAdapter adapter) {
-        dataRef.child(EXAM_CHILD).addChildEventListener(new ChildEventListener() {
+//        dataRef.child(EXAM_CHILD).addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                Exam exam = dataSnapshot.getValue(Exam.class);
+//                examList.add(exam);
+//                adapter.notifyDataSetChanged();
+//                rcv.setAdapter(adapter);
+//                if (!dialogOnScreen) {
+//                    pgb.setVisibility(View.INVISIBLE);
+//                    rcv.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                Log.d("Exam", s);
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        dataRef.child(EXAM_CHILD).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Exam exam = dataSnapshot.getValue(Exam.class);
-                examList.add(exam);
-                adapter.notifyDataSetChanged();
-                rcv.setAdapter(adapter);
-                if (!dialogOnScreen) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                examList.clear();
+                for (DataSnapshot examSnapshots: dataSnapshot.getChildren()) {
+                    Exam exam = examSnapshots.getValue(Exam.class);
+                    examList.add(exam);
+                    adapter.notifyDataSetChanged();
+                    rcv.setAdapter(adapter);
                     pgb.setVisibility(View.INVISIBLE);
-                    rcv.setVisibility(View.VISIBLE);
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -417,8 +498,23 @@ public class DatabaseLib {
 
             }
         });
+        if (!dialogOnScreen) {
+            if (examList.isEmpty()) {
+                pgb.setVisibility(View.VISIBLE);
+            }
+
+            rcv.setVisibility(View.VISIBLE);
+        }
     }
 
+    /**
+     * Get specific exam
+     * @param dataRef DataReference
+     * @param examID String
+     * @param examQuestionList ArrayList
+     * @param edtTitle Edittext
+     * @param adapter QuestionListAdapter
+     */
     public static void getExam(final DatabaseReference dataRef,
                                final String examID,
                                final ArrayList<String> examQuestionList,
@@ -444,6 +540,15 @@ public class DatabaseLib {
     // endregion
 
     // region RESULT
+
+    /**
+     * Save result to backend server
+     * @param context Activity
+     * @param dataRef DataReference
+     * @param userID String
+     * @param examID String
+     * @param examResult model ExamResult
+     */
     public static void saveResult(final Context context, DatabaseReference dataRef, String userID,final String examID, ExamResult examResult) {
         final ProgressDialog saveResultProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_submit));
@@ -472,9 +577,6 @@ public class DatabaseLib {
                         public void run() {
                             saveResultProgressDialog.dismiss();
                             showToast(context, context.getResources().getString(R.string.save_result_success));
-//                            Intent commentIntent = new Intent(context, CommentAct.class);
-//                            commentIntent.putExtra("ID", examID);
-//                            context.startActivity(commentIntent);
                         }
                     }, 2000);
                 } else {
@@ -494,6 +596,13 @@ public class DatabaseLib {
 
     // region COMMENT
 
+    /**
+     * Save comment to backend server
+     * @param context Activity
+     * @param dataRef DataReference
+     * @param examID String
+     * @param comment model Comment
+     */
     public static void submitComment(final Context context, DatabaseReference dataRef, final String examID, Comment comment) {
         final ProgressDialog saveCommentProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_submit));
@@ -538,6 +647,16 @@ public class DatabaseLib {
     // endregion
 
     // region User Statistics
+
+    /**
+     * Get specific Done Exam
+     * @param dataRef DataReference
+     * @param examID String
+     * @param rcv RecyclerView
+     * @param pgb ProgressBar
+     * @param examList ArrayList
+     * @param adapter ExamListAdapter
+     */
     public static void getDoneExam(final DatabaseReference dataRef,
                                    final String examID,
                                    final RecyclerView rcv,
@@ -565,4 +684,54 @@ public class DatabaseLib {
     }
     // endregion
 
+
+    // region Notification
+
+    /**
+     * Save new notification to backend server
+     * @param dataRef DatabaseReference
+     * @param notification model Notification
+     */
+    public static void saveNotification(final DatabaseReference dataRef,
+                                        final Notification notification) {
+        dataRef.child(NOTIFICATION_CHILD).setValue(notification, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+            }
+        });
+    }
+
+    /**
+     * Remove Notification from backend server
+     * @param context Activity
+     * @param dataRef DatabaseReference
+     */
+    public static void removeDoneNotification(final Context context, final DatabaseReference dataRef) {
+        final ProgressDialog removeDoneNotiProgressDialog = createProgressDialog(context,
+                context.getResources().getString(R.string.text_progress_finish_maintain));
+        removeDoneNotiProgressDialog.show();
+        dataRef.child(NOTIFICATION_CHILD).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            removeDoneNotiProgressDialog.dismiss();
+                            showToast(context, context.getResources().getString(R.string.finish_maintain));
+                        }
+                    }, 2000);
+                }
+            }
+        });
+    }
+
+    // endregion
+
+    // region Maintain
+    public static void setMaitainStatus(final DatabaseReference dataRef, boolean status) {
+        eQuizRef.child(MAINTAIN_CHILD).setValue(status);
+    }
+    // endregion
 }

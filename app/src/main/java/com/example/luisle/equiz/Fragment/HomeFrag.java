@@ -27,12 +27,18 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.inHomeFrag;
 
 public class HomeFrag extends Fragment {
 
+    // Fragment Palette Layout
     private RecyclerView rcvFragHomeExam;
     private ProgressBar pgBarLoading;
+
+    // Fragment Variables
     private ExamListAdapter examListAdapter;
     private ArrayList<Exam> examList;
 
-
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static HomeFrag newInstance() {
         HomeFrag homeFrag = new HomeFrag();
         return homeFrag;
@@ -43,21 +49,35 @@ public class HomeFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_home, container, false);
         inHomeFrag = true;
-        mappingLayout(view);
-        init();
+        mappingPaletteLayout(view);
+        initVariables();
+        initData();
         return view;
     }
 
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         rcvFragHomeExam = (RecyclerView) view.findViewById(R.id.rcvFragHomeExam);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragHome_Loading);
     }
 
-    private void init() {
-        pgBarLoading.setVisibility(View.VISIBLE);
-        rcvFragHomeExam.setVisibility(View.INVISIBLE);
+    /**
+     * Init variables
+     */
+    private void initVariables() {
         examList = new ArrayList<>();
         examListAdapter = new ExamListAdapter(getContext(), examList);
+    }
+
+    /**
+     * Init Fragment Data
+     */
+    private void initData() {
+        pgBarLoading.setVisibility(View.VISIBLE);
+        rcvFragHomeExam.setVisibility(View.INVISIBLE);
         getExams(eQuizRef, rcvFragHomeExam, pgBarLoading, examList, examListAdapter);
         rcvFragHomeExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }

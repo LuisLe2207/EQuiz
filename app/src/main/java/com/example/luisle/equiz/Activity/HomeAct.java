@@ -19,10 +19,16 @@ import com.example.luisle.equiz.Fragment.UserStatisticsFrag;
 import com.example.luisle.equiz.MyFramework.RegisterUserToken;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import static com.example.luisle.equiz.MyFramework.MyEssential.MAINTAIN_CHILD;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
+import static com.example.luisle.equiz.MyFramework.MyEssential.checkMaintainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.firebaseUser;
@@ -32,8 +38,11 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 public class HomeAct extends AppCompatActivity {
 
-    private Fragment fragment = null;
+    // Act Palette Layout
     private BottomNavigationView navigation;
+
+    // Act fragment layout
+    private Fragment fragment = null;
 
     // Act Variables
     private boolean doubleBackToExitPressedOnce = false;
@@ -44,40 +53,10 @@ public class HomeAct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_home);
 
-        // Init FirebaseDatabase
-        eQuizDatabase = FirebaseDatabase.getInstance();
-        // Init DatabaseRef
-        eQuizRef = eQuizDatabase.getReference();
-        // Get user id
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            userID = firebaseUser.getUid();
-        }
-        // Send token to PHP server
-        FirebaseMessaging.getInstance().subscribeToTopic("Notification");
-        FirebaseInstanceId.getInstance().getToken();
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new RegisterUserToken().execute(userID, FirebaseInstanceId.getInstance().getToken());
-            }
-        });
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHome);
-        setSupportActionBar(toolbar);
-
-
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        DetailExamFrag detailExamFrag = (DetailExamFrag) getSupportFragmentManager().findFragmentByTag("DetailExamFrag");
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (detailExamFrag != null) {
-            transaction.remove(detailExamFrag);
-        }
-        transaction.replace(R.id.frameLayoutActHome, HomeFrag.newInstance(), fragmentTag);
-        transaction.commit();
+        initVariables();
+        sendUserTokenToServer();
+        createActionBar();
+        initFragmentLayout();
     }
 
     @Override
@@ -129,6 +108,92 @@ public class HomeAct extends AppCompatActivity {
         }, 2000);
     }
 
+    /**
+     * Init variables
+     */
+    private void initVariables() {
+        // Get FirebaseDatabase
+        eQuizDatabase = FirebaseDatabase.getInstance();
+        // Get DatabaseRef
+        eQuizRef = eQuizDatabase.getReference();
+        // Get firebase user and Get user id
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            userID = firebaseUser.getUid();
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               getMaintainStatus();
+            }
+        }, 2000);
+    }
+
+    /**
+     *  Send user token to server and register it
+     */
+    private void sendUserTokenToServer() {
+        // Send token to PHP server
+        FirebaseMessaging.getInstance().subscribeToTopic("Notification");
+        FirebaseInstanceId.getInstance().getToken();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new RegisterUserToken().execute(userID, FirebaseInstanceId.getInstance().getToken());
+            }
+        });
+    }
+    /**
+     *  Create action bar layout
+     */
+    private void createActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarActHome);
+        setSupportActionBar(toolbar);
+
+
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    /**
+     * Init first page fragment of bottom navigation bar
+     */
+    private void initFragmentLayout() {
+        DetailExamFrag detailExamFrag = (DetailExamFrag) getSupportFragmentManager().findFragmentByTag("DetailExamFrag");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (detailExamFrag != null) {
+            transaction.remove(detailExamFrag);
+        }
+        transaction.replace(R.id.frameLayoutActHome, HomeFrag.newInstance(), fragmentTag);
+        transaction.commit();
+    }
+
+    /**
+     * Get maintain status from backend server
+     */
+    private void getMaintainStatus() {
+        eQuizRef.child(MAINTAIN_CHILD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                allowMaintain = (boolean) dataSnapshot.getValue();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkMaintainStatus(HomeAct.this);
+                    }
+                }, 3000);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    // Set switch bottom navigation view
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -147,7 +212,7 @@ public class HomeAct extends AppCompatActivity {
                     break;
                 case R.id.navigation_account:
                     getSupportFragmentManager().popBackStackImmediate();
-                    fragment = AccountFrag.newInstance("Hello", "Hello");
+                    fragment = AccountFrag.newInstance();
                     fragmentTag = "AccountFrag";
                     break;
             }
@@ -159,6 +224,7 @@ public class HomeAct extends AppCompatActivity {
 
     };
 
+    // Get navigation view for Fragment
     public BottomNavigationView getBottomNavigationView() {
         return navigation;
     }

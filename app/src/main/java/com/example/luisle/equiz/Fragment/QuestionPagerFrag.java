@@ -35,17 +35,20 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class QuestionPagerFrag extends Fragment {
 
-
+    // Fragment Palette Layout
     private TextView txtPageQuestion_QuestionTh, txtPageQuestion_Title;
     private LinearLayout linearLayoutPageQuestion_Choice;
 
+    // Fragment Variables
     private ArrayList<Question> questionList;
     private ArrayList<Integer> userAnswerChoice;
-
-
     private String examID;
     private Integer position;
 
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static QuestionPagerFrag newInstance(String examID, Integer position) {
         QuestionPagerFrag fragment = new QuestionPagerFrag();
         Bundle args = new Bundle();
@@ -61,12 +64,10 @@ public class QuestionPagerFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.page_question, container, false);
 
-        if (getArguments() != null) {
-            examID = getArguments().getString("ID");
-            position = getArguments().getInt("Position");
-        }
-        mappingLayout(view);
-        init();
+
+        mappingPaletteLayout(view);
+        initVariables();
+        initData();
         return view;
     }
 
@@ -76,18 +77,37 @@ public class QuestionPagerFrag extends Fragment {
         userAnswerChoice = new ArrayList<>();
     }
 
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         txtPageQuestion_QuestionTh = (TextView) view.findViewById(R.id.txtPageQuestion_QuestionTh);
         txtPageQuestion_Title = (TextView) view.findViewById(R.id.txtPageQuestion_Title);
         linearLayoutPageQuestion_Choice = (LinearLayout) view.findViewById(R.id.linearLayoutPageQuestion_Choice);
     }
 
-
-    private void init() {
+    /**
+     * Init variables
+     */
+    private void initVariables() {
+        if (getArguments() != null) {
+            examID = getArguments().getString("ID");
+            position = getArguments().getInt("Position");
+        }
         questionList = new ArrayList<>();
+    }
+
+    /**
+     * Init Fragment Data
+     */
+    private void initData() {
         getQuestions();
     }
 
+    /**
+     * Get questions data from exam child with examID from backend server and set it to questionList
+     */
     private void getQuestions() {
         final ArrayList<String> questionIDList = new ArrayList<>();
         eQuizRef.child(EXAM_CHILD).child(examID).child("questionList").addValueEventListener(new ValueEventListener() {
@@ -122,10 +142,18 @@ public class QuestionPagerFrag extends Fragment {
         });
     }
 
+    /**
+     * Create choice layout: Radion button or Checkbox depends on question type is Single or Multiple
+     * @param questionList arrayList
+     */
     private  void createChoiceLayout(ArrayList<Question> questionList) {
-        txtPageQuestion_QuestionTh.append(" " + (position + 1)) ;
+        // Set questionTH
+        txtPageQuestion_QuestionTh.append(" " + (position + 1));
+        // Set question title
         txtPageQuestion_Title.setText(questionList.get(position).getTitle());
+        // Get question type
         String questionType = questionList.get(position).getQuestionType();
+        // Get choice list of question
         final ArrayList<Choice> choiceList = new ArrayList<>();
         choiceList.addAll(questionList.get(position).getChoiceList());
         switch (questionType) {
@@ -135,7 +163,8 @@ public class QuestionPagerFrag extends Fragment {
                     RadioButton rbChoice = new RadioButton(getContext());
                     rbChoice.setText(choiceList.get(i).getContent());
                     rbChoice.setId(choiceList.get(i).getID());
-                    if (! userAnswerChoice.isEmpty() && userAnswerChoice.contains(rbChoice.getId())) {
+                    // This is use as holder to save user choice status
+                    if (!userAnswerChoice.isEmpty() && userAnswerChoice.contains(rbChoice.getId())) {
                         rbChoice.setChecked(true);
                     }
                     rdgChoice.addView(rbChoice);
@@ -148,6 +177,7 @@ public class QuestionPagerFrag extends Fragment {
                     CheckBox ckbChoice = new CheckBox(getContext());
                     ckbChoice.setId(choiceList.get(i).getID());
                     ckbChoice.setText(choiceList.get(i).getContent());
+                    // This is use as holder to save user choice status
                     if (!userAnswerChoice.isEmpty() && userAnswerChoice.contains(ckbChoice.getId())) {
                         ckbChoice.setChecked(true);
                     }
@@ -158,6 +188,11 @@ public class QuestionPagerFrag extends Fragment {
         }
     }
 
+    /**
+     * Choose answer listener for Multiple Question
+     * @param checkBox layout
+     * @return CheckChangeListener
+     */
     CompoundButton.OnCheckedChangeListener chooseAnswer(final CheckBox checkBox) {
         return new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -189,6 +224,11 @@ public class QuestionPagerFrag extends Fragment {
         };
     }
 
+    /**
+     * Choose answer listener for Single Question
+     * @param radioGroup layout
+     * @return CheckChangeListener
+     */
     RadioGroup.OnCheckedChangeListener chooseAnswer(final RadioGroup radioGroup) {
         return new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -201,6 +241,7 @@ public class QuestionPagerFrag extends Fragment {
         };
     }
 
+    // return userAnswerList for MainAct
     public ArrayList<Integer> getUserAnswerChoice() {
         return userAnswerChoice;
     }

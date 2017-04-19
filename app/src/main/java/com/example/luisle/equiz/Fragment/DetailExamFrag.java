@@ -50,18 +50,23 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 
 public class DetailExamFrag extends DialogFragment {
 
+    // Fragment Palette Layout
+    private EditText edtTitle, edtDuration, edtNumberOFQuestion, edtCreatedDate;
+    private TextView txtNumberOfComment;
+    private RecyclerView rcvComment;
+    private ProgressBar pgBarLoading;
 
+    // Fragment Variables
     private String examID;
     private Exam exam;
     private ArrayList<Comment> commentList;
     private CommentListAdapter commentListAdapter;
 
-    private EditText edtTitle, edtDuration, edtNumberOFQuestion, edtCreatedDate;
-    private TextView txtNumberOfComment;
 
-    private RecyclerView rcvComment;
-    private ProgressBar pgBarLoading;
-
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static DetailExamFrag newInstance(String examID) {
         DetailExamFrag fragment = new DetailExamFrag();
         Bundle args = new Bundle();
@@ -74,12 +79,10 @@ public class DetailExamFrag extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_detail_exam, container, false);
+        mappingPaletteLayout(view);
         createActionBar(view);
-        mappingLayout(view);
-        if (getArguments() != null) {
-            examID = getArguments().getString("ID");
-        }
-        init();
+        initVariables();
+        initData();
         return view;
     }
 
@@ -116,7 +119,11 @@ public class DetailExamFrag extends DialogFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         edtTitle = (EditText) view.findViewById(R.id.edtDialogDetailExam_Title);
         edtDuration = (EditText) view.findViewById(R.id.edtDialogDetailExam_Duration);
         edtNumberOFQuestion = (EditText) view.findViewById(R.id.edtDialogDetailExam_NumberOFQuestion);
@@ -126,10 +133,22 @@ public class DetailExamFrag extends DialogFragment {
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragExamDetail_LoadingComment);
     }
 
-    private void init() {
+    /**
+     * Init variables
+     */
+    private void initVariables() {
+        if (getArguments() != null) {
+            examID = getArguments().getString("ID");
+        }
+        commentList = new ArrayList<>();
+    }
+
+    /**
+     * Init Fragment Data
+     */
+    private void initData() {
         pgBarLoading.setVisibility(View.VISIBLE);
         rcvComment.setVisibility(View.INVISIBLE);
-        commentList = new ArrayList<>();
         if (examID != null && !examID.isEmpty()) {
             getExam(examID);
             getComment(examID);
@@ -162,6 +181,10 @@ public class DetailExamFrag extends DialogFragment {
         }
     }
 
+    /**
+     * Create ActionBar
+     * @param view layout
+     */
     private void createActionBar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogDetailExam);
         toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_detail));
@@ -177,6 +200,9 @@ public class DetailExamFrag extends DialogFragment {
         setHasOptionsMenu(true);
     }
 
+    /**
+     * Set Exam Data to editText
+     */
     private void setExamDetail() {
         edtTitle.append(exam.getTitle());
         edtDuration.append(exam.getDuration() + "'");
@@ -184,6 +210,9 @@ public class DetailExamFrag extends DialogFragment {
         edtCreatedDate.append(exam.getDateCreated());
     }
 
+    /**
+     * Set Comment List Title
+     */
     private void setCommentList() {
         if (commentList.isEmpty()) {
             txtNumberOfComment.setText(getContext().getResources().getString(R.string.text_exam_no_comment));
@@ -194,9 +223,14 @@ public class DetailExamFrag extends DialogFragment {
         }
     }
 
+    /**
+     * Create doExam Alert Dialog
+     */
     private void doExam() {
+        // Declare alert dialog
         final AlertDialog.Builder doExamAlertDialog = new AlertDialog.Builder(getActivity());
         doExamAlertDialog.setMessage(getContext().getResources().getString(R.string.text_do_exam));
+        // User agree
         doExamAlertDialog.setPositiveButton(getContext().getResources().getString(R.string.text_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -205,6 +239,7 @@ public class DetailExamFrag extends DialogFragment {
                 startActivity(mainAct);
             }
         });
+        // user disagree
         doExamAlertDialog.setNegativeButton(getContext().getResources().getString(R.string.text_no), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -217,6 +252,10 @@ public class DetailExamFrag extends DialogFragment {
         doExamAlertDialog.show();
     }
 
+    /**
+     * Get exam data with examID from backend server
+     * @param examID string
+     */
     public void getExam(String examID) {
         eQuizRef.child(EXAM_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -231,10 +270,18 @@ public class DetailExamFrag extends DialogFragment {
         });
     }
 
+    /**
+     * Set exam variables from dataSnapshot after get it from backend server
+     * @param dataSnapshot contain exam data
+     */
     private void setExam(DataSnapshot dataSnapshot) {
         exam = dataSnapshot.getValue(Exam.class);
     }
 
+    /**
+     * Get comment data with examID from backend server
+     * @param examID string
+     */
     private void getComment(String examID) {
         eQuizRef.child(COMMENT_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -249,6 +296,10 @@ public class DetailExamFrag extends DialogFragment {
         });
     }
 
+    /**
+     * Set comment List from dataSnapshot after get it from backend server
+     * @param dataSnapshot contain comments data
+     */
     private void setComments(DataSnapshot dataSnapshot) {
         for (DataSnapshot commentSnapshot : dataSnapshot.getChildren()) {
             Comment comment = commentSnapshot.getValue(Comment.class);

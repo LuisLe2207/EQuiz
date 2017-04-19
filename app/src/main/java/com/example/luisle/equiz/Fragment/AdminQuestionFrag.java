@@ -30,14 +30,20 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 
 public class AdminQuestionFrag extends Fragment {
 
+    // Fragment Palette Layout
     private RecyclerView rcvQuestion;
     private ProgressBar pgBarLoading;
     private FloatingActionButton fabQuestionAdd;
+
+    // Fragment Variables
     private QuestionListAdapter questionListAdapter;
     private ArrayList<Question> questionList;
 
 
-    // TODO: Rename and change types and number of parameters
+    /**
+     * Create new instance of Fragment
+     * @return Fragment
+     */
     public static AdminQuestionFrag newInstance() {
         AdminQuestionFrag fragment = new AdminQuestionFrag();
         return fragment;
@@ -47,14 +53,17 @@ public class AdminQuestionFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_question_admin, container, false);
-        mappingLayout(view);
+        mappingPaletteLayout(view);
         init();
-        openAddQuestionDialog();
+        openAddQuestionFrag();
         return view;
     }
 
-
+    /**
+     * Init Fragment Variables
+     */
     private void init() {
+        // Set visibility for fragment palette
         rcvQuestion.setVisibility(View.INVISIBLE);
         pgBarLoading.setVisibility(View.VISIBLE);
         questionList = new ArrayList<>();
@@ -63,14 +72,20 @@ public class AdminQuestionFrag extends Fragment {
         rcvQuestion.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-
-    private void mappingLayout(View view) {
+    /**
+     * Mapping Fragment Palette Layout
+     * @param view layout
+     */
+    private void mappingPaletteLayout(View view) {
         rcvQuestion = (RecyclerView) view.findViewById(R.id.rcvQuestionAdmin);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragQuestionAdmin_Loading);
         fabQuestionAdd = (FloatingActionButton) view.findViewById(R.id.fabFragQuestionAdd);
     }
 
-    private void openAddQuestionDialog() {
+    /**
+     * Open Add Question Fragment
+     */
+    private void openAddQuestionFrag() {
         fabQuestionAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
