@@ -51,9 +51,8 @@ public class PushNotifications extends AsyncTask<String, String, String> {
                 Notification newNotification =
                         new Notification(strings[1], sDateTime.getTime(), eDateTime.getTime(), true);
                 saveNotification(eQuizRef, newNotification);
-                // Set allowMaintain var to true => allow user to modify exams and questions
-                allowMaintain = true;
-                setMaitainStatus(eQuizRef, allowMaintain);
+//                allowMaintain = true;
+//                setMaitainStatus(eQuizRef, allowMaintain);
                 break;
             case "Finish":
                 // Change backend rule

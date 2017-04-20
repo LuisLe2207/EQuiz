@@ -54,6 +54,8 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.QUESTION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.RESULT_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USERS_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.USER_AVATAR;
+import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
+import static com.example.luisle.equiz.MyFramework.MyEssential.checkMaintainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.choiceID;
 import static com.example.luisle.equiz.MyFramework.MyEssential.convertImageViewToByte;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
@@ -720,6 +722,15 @@ public class DatabaseLib {
                         public void run() {
                             removeDoneNotiProgressDialog.dismiss();
                             showToast(context, context.getResources().getString(R.string.finish_maintain));
+                            Handler mainHandler = new Handler(context.getMainLooper());
+                            mainHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showToast(context, "Hello");
+                                    new PushNotifications(context).execute("Finish",
+                                            context.getResources().getString(R.string.notification_message_finish));
+                                }
+                            }, 1000);
                         }
                     }, 2000);
                 }
@@ -731,7 +742,30 @@ public class DatabaseLib {
 
     // region Maintain
     public static void setMaitainStatus(final DatabaseReference dataRef, boolean status) {
-        eQuizRef.child(MAINTAIN_CHILD).setValue(status);
+        dataRef.child(MAINTAIN_CHILD).setValue(status);
+    }
+
+    /**
+     * Get maintain status from backend server
+     */
+    public static void getMaintainStatus(final Context context) {
+        eQuizRef.child(MAINTAIN_CHILD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                allowMaintain = (boolean) dataSnapshot.getValue();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkMaintainStatus(context);
+                    }
+                }, 3000);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
     // endregion
 }

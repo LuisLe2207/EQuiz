@@ -26,15 +26,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.luisle.equiz.MyFramework.MyEssential.MAINTAIN_CHILD;
+import static com.example.luisle.equiz.MyFramework.DatabaseLib.getMaintainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.RESULT_CHILD;
-import static com.example.luisle.equiz.MyFramework.MyEssential.checkMaintainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
-import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
 
 public class ResultAct extends AppCompatActivity {
 
@@ -63,12 +61,6 @@ public class ResultAct extends AppCompatActivity {
         mappingLayout();
         createActionBar();
         initData();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                checkMaintainStatus(ResultAct.this);
-            }
-        }, 4000);
     }
 
     @Override
@@ -119,7 +111,7 @@ public class ResultAct extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getMaintainStatus();
+                getMaintainStatus(ResultAct.this);
             }
         }, 2000);
     }
@@ -229,23 +221,6 @@ public class ResultAct extends AppCompatActivity {
         } else {
             examResult = dataSnapshot.getValue(ExamResult.class);
         }
-    }
-
-    /**
-     * Get maintain status from backend server
-     */
-    private void getMaintainStatus() {
-        eQuizRef.child(MAINTAIN_CHILD).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                allowMaintain = (boolean) dataSnapshot.getValue();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
 }

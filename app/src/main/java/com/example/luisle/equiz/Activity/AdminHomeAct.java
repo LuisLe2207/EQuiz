@@ -25,6 +25,7 @@ import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.AdminExamFrag;
 import com.example.luisle.equiz.Fragment.AdminQuestionFrag;
 import com.example.luisle.equiz.Model.Notification;
+import com.example.luisle.equiz.MyFramework.MyService;
 import com.example.luisle.equiz.MyFramework.PushNotifications;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.removeDoneNotification;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAINTAIN_CHILD;
@@ -91,7 +91,6 @@ public class AdminHomeAct extends AppCompatActivity {
         MenuItem pushNotificationItem =  menu.add(1, 111, 1, getResources().getString(R.string.menu_push_notification));
         pushNotificationItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         pushNotificationItem.setIcon(R.mipmap.ic_add_notification);
-        menu.add(1, 555, 2, getResources().getString(R.string.notification_type_finish));
         menu.add(1, 222, 3, getResources().getString(R.string.menu_about));
         menu.add(1, 444, 4, getResources().getString(R.string.menu_logout));
         return super.onCreateOptionsMenu(menu);
@@ -126,17 +125,41 @@ public class AdminHomeAct extends AppCompatActivity {
                 break;
             case 555:
                 // remove done notification and push finish notification
-                runOnUiThread(new Runnable() {
+                removeDoneNotification(AdminHomeAct.this, eQuizRef);
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        new PushNotifications(AdminHomeAct.this).execute("Finish",
-                                getResources().getString(R.string.notification_message_finish));
-                        removeDoneNotification(AdminHomeAct.this, eQuizRef);
+                        try {
+                            Thread.sleep(5000);
+                            Intent maintainServiceIntent = new Intent(AdminHomeAct.this, MyService.class);
+                            stopService(maintainServiceIntent);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                });
+                }).start();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (allowMaintain) {
+                    MenuItem finishItem = menu.findItem(555);
+                    if (finishItem == null) {
+                        menu.add(1, 555, 2, getResources().getString(R.string.notification_type_finish));
+                    }
+                } else {
+                    menu.removeItem(555);
+                }
+            }
+        }, 1500);
+
+        return true;
     }
 
     @Override
@@ -297,10 +320,28 @@ public class AdminHomeAct extends AppCompatActivity {
                         // Push notification
                         runOnUiThread(new Runnable() {
                             @Override
-                            public void run() {
-                                new PushNotifications(AdminHomeAct.this).execute(type[0], finalMessage, startDateTime, endDateTime);
+                            public void run() {new PushNotifications(AdminHomeAct.this).execute(type[0], finalMessage, startDateTime, endDateTime);
+
                             }
                         });
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(10000);
+                                    if (notification != null) {
+                                        Intent maintainServiceIntent = new Intent(AdminHomeAct.this, MyService.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putLong("NotificationStartDateTime", notification.getStartDateTime());
+                                        bundle.putLong("NotificationEndDateTime", notification.getEndDateTime());
+                                        maintainServiceIntent.putExtra("Data",bundle);
+                                        startService(maintainServiceIntent);
+                                    }
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
                         notificationDialog.dismiss();
                     }
                 } catch (ParseException e) {
@@ -342,25 +383,24 @@ public class AdminHomeAct extends AppCompatActivity {
             String endDateTime = endDate + " " + endTime;
             // Parse startDatetime and endDateTime to Date
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            Date sDateTime = dateFormat.parse(startDateTime);
-            Date eDateTime = dateFormat.parse(endDateTime);
+            Long sDateTime = dateFormat.parse(startDateTime).getTime();
+            Long eDateTime = dateFormat.parse(endDateTime).getTime();
             // Get current time in millisecond
             Calendar calendar = Calendar.getInstance();
             long cDateTime = calendar.getTimeInMillis();
 
             // Start DateTime > End DateTime
-            if (sDateTime.getTime() > eDateTime.getTime()) {
+            if (eDateTime - sDateTime < 0) {
                 showToast(getApplicationContext(),
                         getResources().getString(R.string.error_invalid_noti_time));
             }
             // Start DateTime < Current DateTime
-            if (sDateTime.getTime() < cDateTime) {
+            if (sDateTime < cDateTime) {
                 showToast(getApplicationContext(),
                         getResources().getString(R.string.error_invalid_noti_time));
             } else {
                 result = true;
             }
-
         }
 
         return result;

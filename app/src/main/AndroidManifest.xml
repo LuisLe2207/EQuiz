@@ -44,6 +44,9 @@
             </intent-filter>
         </service>
 
+        <service android:name=".MyFramework.MyService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

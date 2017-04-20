@@ -19,16 +19,11 @@ import com.example.luisle.equiz.Fragment.UserStatisticsFrag;
 import com.example.luisle.equiz.MyFramework.RegisterUserToken;
 import com.example.luisle.equiz.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import static com.example.luisle.equiz.MyFramework.MyEssential.MAINTAIN_CHILD;
-import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
-import static com.example.luisle.equiz.MyFramework.MyEssential.checkMaintainStatus;
+import static com.example.luisle.equiz.MyFramework.DatabaseLib.getMaintainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.firebaseUser;
@@ -125,7 +120,7 @@ public class HomeAct extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               getMaintainStatus();
+               getMaintainStatus(HomeAct.this);
             }
         }, 2000);
     }
@@ -168,29 +163,6 @@ public class HomeAct extends AppCompatActivity {
         }
         transaction.replace(R.id.frameLayoutActHome, HomeFrag.newInstance(), fragmentTag);
         transaction.commit();
-    }
-
-    /**
-     * Get maintain status from backend server
-     */
-    private void getMaintainStatus() {
-        eQuizRef.child(MAINTAIN_CHILD).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                allowMaintain = (boolean) dataSnapshot.getValue();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkMaintainStatus(HomeAct.this);
-                    }
-                }, 3000);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     // Set switch bottom navigation view
