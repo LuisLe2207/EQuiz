@@ -103,11 +103,10 @@ public class AdminHomeAct extends AppCompatActivity {
                 if (notification == null) {
                     createPushNotification();
                 } else {
-                    showToast(getApplicationContext(), "You already have push notification to inform maintain time. Please finish it before create a new one");
+                    showToast(getApplicationContext(), getResources().getString(R.string.already_push_noti));
                 }
                 break;
             case 222:
-                showToast(getApplicationContext(), notification.getMessage());
                 break;
             case 444:
                 FirebaseAuth.getInstance().signOut();
@@ -126,6 +125,7 @@ public class AdminHomeAct extends AppCompatActivity {
             case 555:
                 // remove done notification and push finish notification
                 removeDoneNotification(AdminHomeAct.this, eQuizRef);
+                // Stop background service
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -157,7 +157,7 @@ public class AdminHomeAct extends AppCompatActivity {
                     menu.removeItem(555);
                 }
             }
-        }, 1500);
+        }, 1000);
 
         return true;
     }
@@ -324,6 +324,7 @@ public class AdminHomeAct extends AppCompatActivity {
 
                             }
                         });
+                        // Start check service
                         new Thread(new Runnable() {
                             @Override
                             public void run() {

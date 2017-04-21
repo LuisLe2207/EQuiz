@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.example.luisle.equiz.Activity.HomeAct;
+import com.example.luisle.equiz.Activity.LoginAct;
 import com.example.luisle.equiz.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -30,10 +30,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void showNotification(String title, String message) {
 
-        Intent i = new Intent(this, HomeAct.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        Intent intent = new Intent(this, LoginAct.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setAutoCancel(true)

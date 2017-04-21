@@ -20,8 +20,10 @@ import java.util.Calendar;
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.setMaitainStatus;
 import static com.example.luisle.equiz.MyFramework.MyEssential.NOTIFICATION_CHILD;
 import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
+import static com.example.luisle.equiz.MyFramework.MyEssential.changeBackEndRules;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
+import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 /**
  * Created by LuisLe on 4/20/2017.
@@ -58,7 +60,10 @@ public class MyService extends Service {
                     if (cDateTime > sDateTime - 5000) {
                         isStartMaintain = true;
                         allowMaintain = true;
+                        // Set maintain status
                         setMaitainStatus(eQuizRef, allowMaintain);
+                        // Change backend rule
+                        changeBackEndRules(userID, "Maintain");
                     }
                     Calendar newCalendar = Calendar.getInstance();
                     cDateTime = newCalendar.getTimeInMillis();
@@ -74,7 +79,6 @@ public class MyService extends Service {
                         @Override
                         public void onFinish() {
                             removeDoneNotification(eQuizRef);
-                            //stopSelf(service_id);
                         }
                     };
                     countDownTimer.start();

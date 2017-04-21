@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.example.luisle.equiz.Adapter.QuestionResultGridAdapter;
+import com.example.luisle.equiz.Adapter.GridAdapter;
 import com.example.luisle.equiz.Model.ExamResult;
 import com.example.luisle.equiz.Model.QuestionResult;
 import com.example.luisle.equiz.R;
@@ -48,7 +48,7 @@ public class ResultAct extends AppCompatActivity {
     private ExamResult examResult;
     private boolean doubleBackToExitPressedOnce = false;
     private ArrayList<QuestionResult> questionResultList;
-    private QuestionResultGridAdapter questionResultGridAdapter;
+    private GridAdapter gridAdapter;
 
     // endregion
 
@@ -171,9 +171,9 @@ public class ResultAct extends AppCompatActivity {
         edtCorrectAnswer.setText(String.valueOf(examResult.getCorrectAnswer()));
         questionResultList.addAll(examResult.getQuestionResults());
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        questionResultGridAdapter = new QuestionResultGridAdapter(ResultAct.this, questionResultList, manager);
+        gridAdapter = new GridAdapter(ResultAct.this, questionResultList, null, null, manager, "Result");
         rcvResult.setLayoutManager(manager);
-        rcvResult.setAdapter(questionResultGridAdapter);
+        rcvResult.setAdapter(gridAdapter);
     }
 
 

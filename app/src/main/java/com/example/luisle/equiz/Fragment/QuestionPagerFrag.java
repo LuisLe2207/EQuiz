@@ -1,5 +1,6 @@
 package com.example.luisle.equiz.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -44,6 +45,10 @@ public class QuestionPagerFrag extends Fragment {
     private ArrayList<Integer> userAnswerChoice;
     private String examID;
     private Integer position;
+    private boolean hasUpdate;
+
+    // Interface
+    private getAnswerCount getAnswerCount;
 
     /**
      * Create new instance of Fragment
@@ -63,8 +68,6 @@ public class QuestionPagerFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.page_question, container, false);
-
-
         mappingPaletteLayout(view);
         initVariables();
         initData();
@@ -75,6 +78,14 @@ public class QuestionPagerFrag extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userAnswerChoice = new ArrayList<>();
+        hasUpdate = false;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getAnswerCount = (getAnswerCount) context;
+
     }
 
     /**
@@ -206,7 +217,7 @@ public class QuestionPagerFrag extends Fragment {
                         showToast(getContext(), getContext().getResources().getString(R.string.error_max_answer_length));
                         checkBox.setChecked(false);
                     }
-                    //showToast(getContext(), String.valueOf(userAnswerChoice.size()));
+
                 }
                 else {
                     if (userAnswerChoice.size() == 1) {
@@ -217,8 +228,11 @@ public class QuestionPagerFrag extends Fragment {
                             userAnswerChoice.remove(userAnswerChoice.indexOf(checkBox.getId()));
                         }
                     }
-
-                    //showToast(getContext(), String.valueOf(userAnswerChoice.size()));
+                }
+                if (!hasUpdate) {
+                    getAnswerCount.onUpdate();
+                    getAnswerCount.getPosition(position);
+                    hasUpdate = true;
                 }
             }
         };
@@ -237,6 +251,11 @@ public class QuestionPagerFrag extends Fragment {
                 userAnswerChoice.clear();
                 userAnswerChoice.add(rbChoiceID);
                 //showToast(getContext(), String.valueOf(userAnswerChoice.size()));
+                if (!hasUpdate) {
+                    getAnswerCount.onUpdate();
+                    getAnswerCount.getPosition(position);
+                    hasUpdate = true;
+                }
             }
         };
     }
@@ -244,6 +263,11 @@ public class QuestionPagerFrag extends Fragment {
     // return userAnswerList for MainAct
     public ArrayList<Integer> getUserAnswerChoice() {
         return userAnswerChoice;
+    }
+
+    public interface getAnswerCount {
+        void onUpdate();
+        void getPosition(Integer position);
     }
 
 }

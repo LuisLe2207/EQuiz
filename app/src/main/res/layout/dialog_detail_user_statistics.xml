@@ -87,7 +87,6 @@
             android:layout_gravity="center"
             style="@style/TextView_Custom"
             android:layout_marginTop="10dp"
-            android:text="@string/text_exam_done"
             android:textSize="15sp"
             android:lines="1"
             />

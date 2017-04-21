@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.Adapter.ExamResultListAdapter;
@@ -47,6 +48,7 @@ public class DetailUserStatisticsFrag extends DialogFragment {
 
     // Fragment Palette Layout
     private EditText edtExamTitle, edtBestCompleteTime;
+    private TextView txtNumberOfDone;
     private ProgressBar pgBarLoading;
     private RecyclerView rcvDoneTimes;
 
@@ -91,8 +93,6 @@ public class DetailUserStatisticsFrag extends DialogFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_start));
-        createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -117,6 +117,7 @@ public class DetailUserStatisticsFrag extends DialogFragment {
     private void mappingPaletteLayout(View view) {
         edtExamTitle = (EditText) view.findViewById(R.id.edtDialogDetailUserStatistics_Title);
         edtBestCompleteTime = (EditText) view.findViewById(R.id.edtDialogDetailUserStatistics_BestCompleteTime);
+        txtNumberOfDone = (TextView) view.findViewById(R.id.txtDialogDetailExam_NumberOfDone);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragUserStatisticsDetail_Loading);
         rcvDoneTimes = (RecyclerView) view.findViewById(R.id.rcvDoneTimes);
     }
@@ -134,6 +135,7 @@ public class DetailUserStatisticsFrag extends DialogFragment {
      */
     private void initData() {
         pgBarLoading.setVisibility(View.VISIBLE);
+        txtNumberOfDone.setVisibility(View.INVISIBLE);
         rcvDoneTimes.setVisibility(View.INVISIBLE);
         if (examID != null && !examID.isEmpty()) {
             getExamResult(examID);
@@ -184,6 +186,12 @@ public class DetailUserStatisticsFrag extends DialogFragment {
                 TimeUnit.MILLISECONDS.toMinutes(examResultList.get(0).getCompleteTime()),
                 TimeUnit.MILLISECONDS.toSeconds(examResultList.get(0).getCompleteTime()) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(examResultList.get(0).getCompleteTime()))));
+        txtNumberOfDone.setVisibility(View.VISIBLE);
+        txtNumberOfDone.setText(
+                          getContext().getResources().getString(R.string.text_exam_done)
+                        + examResultList.size()
+                        + " "
+                        + getContext().getResources().getString(R.string.text_exam_times));
     }
 
     /**

@@ -35,8 +35,6 @@ public class PushNotifications extends AsyncTask<String, String, String> {
         pushNotification(strings[0], strings[1]);
         switch (strings[0]) {
             case "Maintain":
-                // Change backend rule
-                changeBackEndRules(userID, "Maintain");
                 // Parse startDatetime and endDateTime to Date
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 Date sDateTime = null;

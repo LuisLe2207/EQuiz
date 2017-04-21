@@ -82,6 +82,7 @@
     <string name="text_start_time">Start time</string>
     <string name="text_end_time">End time</string>
     <string name="text_push">Push</string>
+    <string name="text_list_of_questions">List of questions</string>
 
 
     <!--Hint String-->
@@ -127,7 +128,7 @@
     <string name="register_success">Register Successfully</string>
     <string name="register_failed">Register Failed!\nPlease try again!</string>
     <string name="update_profile_success">Update user profile successfully</string>
-    <string name="reset_password_success">Reset password successfully./n Please check your email for reset password link!</string>
+    <string name="reset_password_success">Reset password successfully.\n Please check your email for reset password link!</string>
     <string name="reset_password_failed">Reset password Failed!\nPlease try again!</string>
     <string name="save_question_sucess">Save question successfully</string>
     <string name="save_question_failed">Save question failed!\nPlease try again!</string>
@@ -145,7 +146,7 @@
     <string name="alert_exam_will_be_submit">Your exam will be submit after few seconds</string>
     <string name="alert_you_must_create_push_notification">You must create a push notification before </string>
     <string name="push_notification_success">Push notification successfully</string>
-    <string name="finish_maintain">"Maintain Server complete. You can create new push notification"</string>
+    <string name="finish_maintain">\"Maintain App complete. You can create new push notification\"</string>
     <string name="alert_app_in_maintain">
         App is under maintaining, Please abort your action and logout out!
         \nApp will be automatic logout after 10 seconds
@@ -155,6 +156,8 @@
         App is under maintaining, Please try again later!
         \nThank you!
     </string>
+    <string name="already_push_noti">You already have push notification to inform maintain time.
+    \nPlease finish it before create a new one</string>
 
     <!--Navigation String-->
     <string name="nav_home">Home</string>
@@ -184,11 +187,11 @@
     <!--Notifications-->
     <string name="notification_type_maintain">Maintain</string>
     <string name="notification_type_finish">Finish</string>
-    <string name="notification_message_maintain">Server will be maintain from</string>
+    <string name="notification_message_maintain">App will be maintain from</string>
     <string name="notification_to">to</string>
     <string name="notification_message_finish">
         Thank you for been waiting!
-        \nServer maintain completely! You can access EQuiz app from now!</string>
+        \nApp maintain completely! You can access EQuiz app from now!</string>
     <string name="notification_new_exam">New Exam</string>
     <string name="notification_new_exam_message">was added. You can do it from now!</string>
     <string name="notification_remind">EQuiz app is under maintaining</string>

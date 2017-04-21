@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,7 +23,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
+import com.example.luisle.equiz.Adapter.GridAdapter;
 import com.example.luisle.equiz.Adapter.QuestionPagerAdapter;
 import com.example.luisle.equiz.Fragment.QuestionPagerFrag;
 import com.example.luisle.equiz.Model.Comment;
@@ -55,11 +59,12 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 
 
-public class MainAct extends AppCompatActivity {
+public class MainAct extends AppCompatActivity implements QuestionPagerFrag.getAnswerCount, GridAdapter.getQuestionPosition {
 
     // region VARIABLES
 
     // Act Palette Layout
+    private TextView txtAnswerPerTotal;
     private ViewPager viewPgActMain_Question;
     private FloatingActionButton fabMainQuestionList;
     private QuestionPagerAdapter questionPagerAdapter;
@@ -69,16 +74,19 @@ public class MainAct extends AppCompatActivity {
     private String examID;
     private Exam exam;
     private int examDuration;
+    private int answerCount = 0;
     private long completeTime = 0;
     private boolean isTimeOut = false;
     private ArrayList<Question> questionList;
     private ArrayList<QuestionResult> questionResultList;
     private ArrayList<Integer> unChooseList;
+    private ArrayList<Integer> chooseList;
     private CountDownTimer examDutaionCountDown;
 
     // Act Dialog Layout
     private ProgressDialog progressDialogRetrievingData;
     private Dialog rateCommentDialog;
+    private Dialog questionGridDialog;
 
     // endregion
 
@@ -90,6 +98,7 @@ public class MainAct extends AppCompatActivity {
         mappingPaletteLayout();
         initVariables();
         initData();
+        openQuestionGridDialog();
     }
 
     @Override
@@ -121,6 +130,7 @@ public class MainAct extends AppCompatActivity {
      *  Mapping Palette Layout
      */
     private void mappingPaletteLayout() {
+        txtAnswerPerTotal = (TextView) findViewById(R.id.txtActMain_AnswerPerTotal);
         viewPgActMain_Question = (ViewPager) findViewById(R.id.viewPgActMain_Question);
         fabMainQuestionList = (FloatingActionButton) findViewById(R.id.fabMainQuestionList);
         cpgViewDuration = (CircleProgressView) findViewById(R.id.cpgViewActMain_Duration);
@@ -136,6 +146,11 @@ public class MainAct extends AppCompatActivity {
         eQuizRef = eQuizDatabase.getReference();
         // Get exam ID from Intent put extra
         examID = getIntent().getStringExtra("ID");
+        // Init Array List
+        questionList = new ArrayList<>();
+        questionResultList = new ArrayList<>();
+        unChooseList = new ArrayList<>();
+        chooseList = new ArrayList<>();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -149,10 +164,6 @@ public class MainAct extends AppCompatActivity {
      *  Init Act Data
      */
     private void initData() {
-        // Init Array List
-        questionList = new ArrayList<>();
-        questionResultList = new ArrayList<>();
-        unChooseList = new ArrayList<>();
         // Check exam id not null and not empty
         if (examID != null && !examID.isEmpty()) {
             // Get Exam
@@ -183,6 +194,8 @@ public class MainAct extends AppCompatActivity {
                                     setDuration();
                                     // Start countdown
                                     examDutaionCountDown.start();
+                                    // Set text for answer per total
+                                    txtAnswerPerTotal.setText(answerCount + "/" + exam.getNumberOfQuestion());
                                 }
                             }, 500);
                         }
@@ -452,6 +465,26 @@ public class MainAct extends AppCompatActivity {
     }
 
     /**
+     * Open Question Grid Dialog
+     */
+    private void openQuestionGridDialog() {
+        fabMainQuestionList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Create dialog
+                questionGridDialog = createDialog(MainAct.this, R.layout.dialog_grid_question, getResources().getString(R.string.text_list_of_questions));
+                RecyclerView rcvQuestionGrid = (RecyclerView) questionGridDialog.findViewById(R.id.rcvDialogGridQuestion_Questions);
+                final StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                GridAdapter gridAdapter = new GridAdapter(MainAct.this, null, chooseList, questionList, manager, "Question");
+                rcvQuestionGrid.setLayoutManager(manager);
+                gridAdapter.notifyDataSetChanged();
+                rcvQuestionGrid.setAdapter(gridAdapter);
+                questionGridDialog.show();
+            }
+        });
+    }
+
+    /**
      * Create rate and comment dialog
      * @param dialog Comment dialog
      */
@@ -575,4 +608,24 @@ public class MainAct extends AppCompatActivity {
         }
     }
 
+    /**
+     * Update Answer Count to display
+     */
+    @Override
+    public void onUpdate() {
+        answerCount++;
+        // Set text for answer per total
+        txtAnswerPerTotal.setText(answerCount + "/" + exam.getNumberOfQuestion());
+    }
+
+    @Override
+    public void getPosition(Integer position) {
+        chooseList.add(position);
+    }
+
+    @Override
+    public void getQuestionPosition(Integer position) {
+        viewPgActMain_Question.setCurrentItem(position);
+        questionGridDialog.dismiss();
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.luisle.equiz.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.getMaintainStatus;
+import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.firebaseUser;
@@ -70,7 +72,16 @@ public class HomeAct extends AppCompatActivity {
                 break;
             case 222:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(HomeAct.this, LoginAct.class));
+                final ProgressDialog signOutProgressDialog = createProgressDialog(HomeAct.this,
+                        getResources().getString(R.string.text_progress_sign_out));
+                signOutProgressDialog.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        signOutProgressDialog.dismiss();
+                        startActivity(new Intent(HomeAct.this, LoginAct.class));
+                    }
+                }, 2000);
                 break;
         }
         return super.onOptionsItemSelected(item);
