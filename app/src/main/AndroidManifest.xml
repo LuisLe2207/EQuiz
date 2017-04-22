@@ -16,19 +16,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/EQuizTheme">
-        <activity android:name=".Activity.MainAct" />
-        <activity android:name=".Activity.LoginAct">
+        <activity android:name=".Activity.MainAct" android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.LoginAct" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.RegisterAct" />
-        <activity android:name=".Activity.HomeAct" />
-        <activity android:name=".Activity.AdminHomeAct" />
-        <activity android:name=".Activity.ResultAct">
-        </activity>
+        <activity android:name=".Activity.RegisterAct" android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.HomeAct" android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.AdminHomeAct" android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.ResultAct" android:screenOrientation="portrait"/>
 
         <service
             android:name=".MyFramework.MyFirebaseMessagingService">
