@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
@@ -34,6 +35,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.userID;
 public class UserStatisticsFrag extends Fragment {
 
     // Fragment Palette Layout
+    private TextView txtNoDoneExam;
     private RecyclerView rcvExam;
     private ProgressBar pgBarLoading;
 
@@ -71,6 +73,7 @@ public class UserStatisticsFrag extends Fragment {
     private void mappingPaletteLayout(View view) {
         rcvExam = (RecyclerView) view.findViewById(R.id.rcvFragUserStatistics_Exam);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragUserStatistics_Loading);
+        txtNoDoneExam = (TextView) view.findViewById(R.id.txtFragUserStatistics_NoExam);
     }
 
     /**
@@ -88,14 +91,21 @@ public class UserStatisticsFrag extends Fragment {
     private void initData() {
         pgBarLoading.setVisibility(View.VISIBLE);
         rcvExam.setVisibility(View.INVISIBLE);
+        txtNoDoneExam.setVisibility(View.INVISIBLE);
 
         getDoneExamsID();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               for (String examID : examIDList) {
-                   getDoneExam(eQuizRef, examID, rcvExam, pgBarLoading, examList, examListAdapter);
-               }
+                if (examIDList.isEmpty()) {
+                    pgBarLoading.setVisibility(View.INVISIBLE);
+                    txtNoDoneExam.setVisibility(View.VISIBLE);
+                    txtNoDoneExam.setText(getContext().getResources().getString(R.string.text_no_statistic));
+                } else {
+                    for (String examID : examIDList) {
+                        getDoneExam(eQuizRef, examID, rcvExam, pgBarLoading, examList, examListAdapter);
+                    }
+                }
             }
         }, 1000);
         rcvExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

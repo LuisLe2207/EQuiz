@@ -46,9 +46,9 @@ import okhttp3.RequestBody;
 public class MyEssential {
 
     // region APP CONSTANTS
-    public static String SERVER_SEND_TOKEN_URL = "http://192.168.1.6:8080/equiz/register.php";
-    public static String SERVER_PUSH_NOTIFICATION = "http://192.168.1.6:8080/equiz/push.php";
-    public static String SERVER_CHANGE_RULES = "http://192.168.1.6:8080/equiz/change_rules.php";
+    public static String SERVER_SEND_TOKEN_URL = "http://192.168.1.3:8080/equiz/register.php";
+    public static String SERVER_PUSH_NOTIFICATION = "http://192.168.1.3:8080/equiz/push.php";
+    public static String SERVER_CHANGE_RULES = "http://192.168.1.3:8080/equiz/change_rules.php";
     // region Activities Codes
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_IMAGE_GALLERY = 2;

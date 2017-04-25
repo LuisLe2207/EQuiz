@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.ResultAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
@@ -444,9 +445,11 @@ public class DatabaseLib {
      * @param examList ArrayList
      * @param adapter ExamListAdapter
      */
-    public static void getExams(final DatabaseReference dataRef,
+    public static void getExams(final Context myContext,
+                                final DatabaseReference dataRef,
                                 final RecyclerView rcv,
                                 final ProgressBar pgb,
+                                final TextView txt,
                                 final ArrayList<Exam> examList,
                                 final ExamListAdapter adapter) {
 //        dataRef.child(EXAM_CHILD).addChildEventListener(new ChildEventListener() {
@@ -492,6 +495,7 @@ public class DatabaseLib {
                     adapter.notifyDataSetChanged();
                     rcv.setAdapter(adapter);
                     pgb.setVisibility(View.INVISIBLE);
+                    txt.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -502,7 +506,14 @@ public class DatabaseLib {
         });
         if (!dialogOnScreen) {
             if (examList.isEmpty()) {
-                pgb.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pgb.setVisibility(View.INVISIBLE);
+                        txt.setVisibility(View.VISIBLE);
+                        txt.setText(myContext.getResources().getString(R.string.text_no_exam));
+                    }
+                }, 7000);
             }
 
             rcv.setVisibility(View.VISIBLE);
@@ -659,12 +670,12 @@ public class DatabaseLib {
      * @param examList ArrayList
      * @param adapter ExamListAdapter
      */
-    public static void getDoneExam(final DatabaseReference dataRef,
-                                   final String examID,
-                                   final RecyclerView rcv,
-                                   final ProgressBar pgb,
-                                   final ArrayList<Exam> examList,
-                                   final ExamListAdapter adapter) {
+    public static void getDoneExam( final DatabaseReference dataRef,
+                                    final String examID,
+                                    final RecyclerView rcv,
+                                    final ProgressBar pgb,
+                                    final ArrayList<Exam> examList,
+                                    final ExamListAdapter adapter) {
         dataRef.child(EXAM_CHILD).child(examID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

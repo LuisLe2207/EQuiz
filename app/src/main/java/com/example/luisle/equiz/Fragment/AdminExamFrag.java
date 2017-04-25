@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
@@ -32,6 +33,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
 public class AdminExamFrag extends Fragment{
 
     // Fragment Palette Layout
+    private TextView txtNoExam;
     private RecyclerView rcvExam;
     private ProgressBar pgBarLoading;
     private FloatingActionButton fabExamAdd;
@@ -67,6 +69,7 @@ public class AdminExamFrag extends Fragment{
         rcvExam = (RecyclerView) view.findViewById(R.id.rcvExamAdmin);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragExamAdmin_Loading);
         fabExamAdd = (FloatingActionButton) view.findViewById(R.id.fabFragExamAdd);
+        txtNoExam = (TextView) view.findViewById(R.id.txtFragExamAdmin_NoExam);
     }
 
     /**
@@ -78,7 +81,7 @@ public class AdminExamFrag extends Fragment{
         rcvExam.setVisibility(View.INVISIBLE);
         examList = new ArrayList<>();
         examListAdapter = new ExamListAdapter(getContext(), examList);
-        getExams(eQuizRef, rcvExam, pgBarLoading, examList, examListAdapter);
+        getExams(getContext(), eQuizRef, rcvExam, pgBarLoading, txtNoExam, examList, examListAdapter);
         rcvExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 

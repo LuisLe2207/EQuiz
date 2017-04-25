@@ -45,6 +45,8 @@
     <string name="text_exam_has_comment">This exam has  </string>
     <string name="text_exam_no_comment">There is no comment yet</string>
     <string name="text_exam_list_of_question">List of questions</string>
+    <string name="text_no_exam">There is no exam yet</string>
+    <string name="text_no_statistic">You have not done any exam yet</string>
 
     <!--Layout Dialog String-->
     <string name="text_current_email">Current Email</string>

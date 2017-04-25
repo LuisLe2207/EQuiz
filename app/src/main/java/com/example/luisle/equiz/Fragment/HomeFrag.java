@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.HomeAct;
 import com.example.luisle.equiz.Adapter.ExamListAdapter;
@@ -30,6 +31,7 @@ public class HomeFrag extends Fragment {
     // Fragment Palette Layout
     private RecyclerView rcvFragHomeExam;
     private ProgressBar pgBarLoading;
+    private TextView txtNoExam;
 
     // Fragment Variables
     private ExamListAdapter examListAdapter;
@@ -62,6 +64,7 @@ public class HomeFrag extends Fragment {
     private void mappingPaletteLayout(View view) {
         rcvFragHomeExam = (RecyclerView) view.findViewById(R.id.rcvFragHomeExam);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragHome_Loading);
+        txtNoExam = (TextView) view.findViewById(R.id.txtFragHome_NoExams);
     }
 
     /**
@@ -78,7 +81,8 @@ public class HomeFrag extends Fragment {
     private void initData() {
         pgBarLoading.setVisibility(View.VISIBLE);
         rcvFragHomeExam.setVisibility(View.INVISIBLE);
-        getExams(eQuizRef, rcvFragHomeExam, pgBarLoading, examList, examListAdapter);
+        txtNoExam.setVisibility(View.INVISIBLE);
+        getExams(getContext(), eQuizRef, rcvFragHomeExam, pgBarLoading, txtNoExam, examList, examListAdapter);
         rcvFragHomeExam.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
