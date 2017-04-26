@@ -46,6 +46,7 @@
     <string name="text_exam_no_comment">There is no comment yet</string>
     <string name="text_exam_list_of_question">List of questions</string>
     <string name="text_no_exam">There is no exam yet</string>
+    <string name="text_no_question">There is no question yet</string>
     <string name="text_no_statistic">You have not done any exam yet</string>
 
     <!--Layout Dialog String-->
@@ -85,6 +86,9 @@
     <string name="text_end_time">End time</string>
     <string name="text_push">Push</string>
     <string name="text_list_of_questions">List of questions</string>
+    <string name="text_about_name">Student name: </string>
+    <string name="text_about_id">Student ID: </string>
+    <string name="text_about">About</string>
 
 
     <!--Hint String-->

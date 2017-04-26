@@ -34,7 +34,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -303,37 +302,58 @@ public class DatabaseLib {
      * @param adapter QuestionListAdapter
      */
     public static void getQuestions(
+            final Context myContext,
             final DatabaseReference dataRef,
             final RecyclerView rcv,
             final ProgressBar pgb,
+            final TextView txt,
             final ArrayList<Question> questionList,
             final QuestionListAdapter adapter) {
-        dataRef.child(QUESTION_CHILD).addChildEventListener(new ChildEventListener() {
+//        dataRef.child(QUESTION_CHILD).addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                Question question = dataSnapshot.getValue(Question.class);
+//                questionList.add(question);
+//                adapter.notifyDataSetChanged();
+//                rcv.setAdapter(adapter);
+//                if (!dialogOnScreen || inAddExamDialog) {
+//                    pgb.setVisibility(View.INVISIBLE);
+//                    rcv.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        dataRef.child(QUESTION_CHILD).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Question question = dataSnapshot.getValue(Question.class);
-                questionList.add(question);
-                adapter.notifyDataSetChanged();
-                rcv.setAdapter(adapter);
-                if (!dialogOnScreen || inAddExamDialog) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                questionList.clear();
+                for (DataSnapshot questionSnapshot : dataSnapshot.getChildren()) {
+                    Question exam = questionSnapshot.getValue(Question.class);
+                    questionList.add(exam);
+                    adapter.notifyDataSetChanged();
+                    rcv.setAdapter(adapter);
                     pgb.setVisibility(View.INVISIBLE);
-                    rcv.setVisibility(View.VISIBLE);
+                    txt.setVisibility(View.INVISIBLE);
                 }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -341,6 +361,20 @@ public class DatabaseLib {
 
             }
         });
+        if (!dialogOnScreen || inAddExamDialog) {
+            if (questionList.isEmpty()) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pgb.setVisibility(View.INVISIBLE);
+                        txt.setVisibility(View.VISIBLE);
+                        txt.setText(myContext.getResources().getString(R.string.text_no_question));
+                    }
+                }, 7000);
+            }
+
+            rcv.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

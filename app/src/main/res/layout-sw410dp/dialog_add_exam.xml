@@ -121,6 +121,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <TextView
+                    android:id="@+id/txtDialogAddExam_NoQuestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"/>
+
                 <ProgressBar
                     android:id="@+id/pgBarDialogAddExam_LoadingQuestion"
                     android:layout_width="wrap_content"

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Adapter.QuestionListAdapter;
@@ -31,6 +32,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 public class AdminQuestionFrag extends Fragment {
 
     // Fragment Palette Layout
+    private TextView txtNoQuestion;
     private RecyclerView rcvQuestion;
     private ProgressBar pgBarLoading;
     private FloatingActionButton fabQuestionAdd;
@@ -68,7 +70,7 @@ public class AdminQuestionFrag extends Fragment {
         pgBarLoading.setVisibility(View.VISIBLE);
         questionList = new ArrayList<>();
         questionListAdapter = new QuestionListAdapter(getContext(), questionList, true);
-        getQuestions(eQuizRef, rcvQuestion, pgBarLoading, questionList, questionListAdapter);
+        getQuestions(getContext(), eQuizRef, rcvQuestion, pgBarLoading, txtNoQuestion, questionList, questionListAdapter);
         rcvQuestion.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
@@ -77,6 +79,7 @@ public class AdminQuestionFrag extends Fragment {
      * @param view layout
      */
     private void mappingPaletteLayout(View view) {
+        txtNoQuestion = (TextView) view.findViewById(R.id.txtFragQuestionAdmin_NoQuestion);
         rcvQuestion = (RecyclerView) view.findViewById(R.id.rcvQuestionAdmin);
         pgBarLoading = (ProgressBar) view.findViewById(R.id.pgBarFragQuestionAdmin_Loading);
         fabQuestionAdd = (FloatingActionButton) view.findViewById(R.id.fabFragQuestionAdd);

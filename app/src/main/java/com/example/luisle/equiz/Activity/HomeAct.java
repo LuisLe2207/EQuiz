@@ -1,5 +1,6 @@
 package com.example.luisle.equiz.Activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.DetailExamFrag;
@@ -23,8 +25,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import static com.example.luisle.equiz.MyFramework.DatabaseLib.getMaintainStatus;
+import static com.example.luisle.equiz.MyFramework.MyEssential.createDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizDatabase;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
@@ -67,8 +72,7 @@ public class HomeAct extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 111:
-//                DoiMatKhauFragment doiMatKhauFragment = new DoiMatKhauFragment();
-//                doiMatKhauFragment.show(getSupportFragmentManager(), "DoiMatKhau");
+                openAboutDialog();
                 break;
             case 222:
                 FirebaseAuth.getInstance().signOut();
@@ -174,6 +178,20 @@ public class HomeAct extends AppCompatActivity {
         }
         transaction.replace(R.id.frameLayoutActHome, HomeFrag.newInstance(), fragmentTag);
         transaction.commit();
+    }
+
+    /**
+     * Open About Dialog
+     */
+    private void openAboutDialog() {
+        Dialog dialog = createDialog(HomeAct.this, R.layout.dialog_about, getResources().getString(R.string.text_about));
+        final RoundedImageView imgAvatar = (RoundedImageView) dialog.findViewById(R.id.imgFragAbout_Avatar);
+        TextView txtName = (TextView) dialog.findViewById(R.id.txtDialogAbout_Name);
+        TextView txtID = (TextView) dialog.findViewById(R.id.txtDialogAbout_ID);
+        txtName.setText(getResources().getString(R.string.text_about_name) + " Lê Đăng Khoa");
+        txtID.setText(getResources().getString(R.string.text_about_id) + " K39.104.039");
+        Picasso.with(HomeAct.this).load(R.drawable.me).into(imgAvatar);
+        dialog.show();
     }
 
     // Set switch bottom navigation view

@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Fragment.AccountFrag;
 import com.example.luisle.equiz.Fragment.AdminExamFrag;
@@ -33,6 +34,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -107,6 +110,7 @@ public class AdminHomeAct extends AppCompatActivity {
                 }
                 break;
             case 222:
+                openAboutDialog();
                 break;
             case 444:
                 FirebaseAuth.getInstance().signOut();
@@ -449,6 +453,20 @@ public class AdminHomeAct extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * Open About Dialog
+     */
+    private void openAboutDialog() {
+        Dialog dialog = createDialog(AdminHomeAct.this, R.layout.dialog_about, getResources().getString(R.string.text_about));
+        final RoundedImageView imgAvatar = (RoundedImageView) dialog.findViewById(R.id.imgFragAbout_Avatar);
+        TextView txtName = (TextView) dialog.findViewById(R.id.txtDialogAbout_Name);
+        TextView txtID = (TextView) dialog.findViewById(R.id.txtDialogAbout_ID);
+        txtName.setText(getResources().getString(R.string.text_about_name) + " Lê Đăng Khoa");
+        txtID.setText(getResources().getString(R.string.text_about_id) + " K39.104.039");
+        Picasso.with(AdminHomeAct.this).load(R.drawable.me).into(imgAvatar);
+        dialog.show();
     }
 
     // Open Date dialog

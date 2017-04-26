@@ -23,6 +23,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.example.luisle.equiz.Activity.AdminHomeAct;
 import com.example.luisle.equiz.Adapter.QuestionListAdapter;
@@ -51,6 +52,7 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 
 public class ExamFrag extends DialogFragment {
     // Fragment Palette Layout
+    private TextView txtNoQuestion;
     private EditText edtExamTitle;
     private RadioGroup rdGrpDuration;
     private RecyclerView rcvQuestion;
@@ -148,6 +150,7 @@ public class ExamFrag extends DialogFragment {
      * @param view layout
      */
     private void mappingPaletteLayout(View view) {
+        txtNoQuestion = (TextView) view.findViewById(R.id.txtDialogAddExam_NoQuestion);
         edtExamTitle = (EditText) view.findViewById(R.id.edtDialog_AddExam_Title);
         rdGrpDuration = (RadioGroup) view.findViewById(R.id.rdGrpDialog_AddExam_Duration);
         rcvQuestion = (RecyclerView) view.findViewById(R.id.rcvDialogAddExam_Question);
@@ -172,7 +175,7 @@ public class ExamFrag extends DialogFragment {
     private void initData() {
         pgBarLoading.setVisibility(View.VISIBLE);
         rcvQuestion.setVisibility(View.INVISIBLE);
-        getQuestions(eQuizRef, rcvQuestion, pgBarLoading, questionList, questionListAdapter);
+        getQuestions(getContext(),eQuizRef, rcvQuestion, pgBarLoading, txtNoQuestion, questionList, questionListAdapter);
         if (!TextUtils.isEmpty(examID)) {
             getExam(eQuizRef, examID, examQuestionList, edtExamTitle, questionListAdapter);
         }
