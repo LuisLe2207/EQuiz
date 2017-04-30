@@ -543,7 +543,9 @@ public class MainAct extends AppCompatActivity implements QuestionPagerFrag.getA
                     public void run() {
                         skipProgressDialog.dismiss();
                         Intent resultIntent = new Intent(MainAct.this, ResultAct.class);
-                        resultIntent.putExtra("ID", examID);
+                        Bundle iDBundle = new Bundle();
+                        iDBundle.putString("examID", examID);
+                        iDBundle.putString("examResultID", "");
                         startActivity(resultIntent);
                     }
                 }, 2000);

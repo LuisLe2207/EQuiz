@@ -366,9 +366,11 @@ public class DatabaseLib {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        pgb.setVisibility(View.INVISIBLE);
-                        txt.setVisibility(View.VISIBLE);
-                        txt.setText(myContext.getResources().getString(R.string.text_no_question));
+                        if (questionList.isEmpty()) {
+                            pgb.setVisibility(View.INVISIBLE);
+                            txt.setVisibility(View.VISIBLE);
+                            txt.setText(myContext.getResources().getString(R.string.text_no_question));
+                        }
                     }
                 }, 7000);
             }
@@ -543,9 +545,11 @@ public class DatabaseLib {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        pgb.setVisibility(View.INVISIBLE);
-                        txt.setVisibility(View.VISIBLE);
-                        txt.setText(myContext.getResources().getString(R.string.text_no_exam));
+                        if (examList.isEmpty()) {
+                            pgb.setVisibility(View.INVISIBLE);
+                            txt.setVisibility(View.VISIBLE);
+                            txt.setText(myContext.getResources().getString(R.string.text_no_exam));
+                        }
                     }
                 }, 7000);
             }

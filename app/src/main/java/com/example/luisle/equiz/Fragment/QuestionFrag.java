@@ -48,9 +48,10 @@ import static com.example.luisle.equiz.MyFramework.MyEssential.showToast;
 public class QuestionFrag extends DialogFragment {
 
     // Fragment Palette Layout
-    EditText edtQuestionTitle, edtQuestionChoice;
-    Button btnAddChoice;
-    RecyclerView rcvQuestion;
+    private EditText edtQuestionTitle, edtQuestionChoice;
+    private Button btnAddChoice;
+    private RecyclerView rcvQuestion;
+    private Toolbar toolbar;
 
     // Fragment Variables
     private ArrayList<Choice> choiceList;
@@ -101,9 +102,11 @@ public class QuestionFrag extends DialogFragment {
         menu.clear();
         if (TextUtils.isEmpty(questionID)) {
             MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_create));
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_question));
             createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } else {
             MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_modify));
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_modify_question));
             createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
@@ -158,13 +161,7 @@ public class QuestionFrag extends DialogFragment {
      * @param view layout
      */
     private void createActionBar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddQuestion);
-        if (TextUtils.isEmpty(questionID)) {
-            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_question));
-        } else {
-            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_modify_question));
-        }
-
+        toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddQuestion);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 

@@ -1,7 +1,9 @@
 package com.example.luisle.equiz.Fragment;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +43,7 @@ import static com.example.luisle.equiz.MyFramework.DatabaseLib.saveExam;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MAX_QUESTION;
 import static com.example.luisle.equiz.MyFramework.MyEssential.MIN_QUESTTION;
 import static com.example.luisle.equiz.MyFramework.MyEssential.allowMaintain;
+import static com.example.luisle.equiz.MyFramework.MyEssential.createProgressDialog;
 import static com.example.luisle.equiz.MyFramework.MyEssential.dialogOnScreen;
 import static com.example.luisle.equiz.MyFramework.MyEssential.eQuizRef;
 import static com.example.luisle.equiz.MyFramework.MyEssential.inAddExamDialog;
@@ -57,6 +60,7 @@ public class ExamFrag extends DialogFragment {
     private RadioGroup rdGrpDuration;
     private RecyclerView rcvQuestion;
     private ProgressBar pgBarLoading;
+    private Toolbar toolbar;
 
 
     // Fragment Variables
@@ -82,13 +86,23 @@ public class ExamFrag extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_add_exam, container, false);
+        final View view = inflater.inflate(R.layout.dialog_add_exam, container, false);
 
         mappingPaletteLayout(view);
-        createActionBar(view);
-        setExamDuration();
-        initVariables();
-        initData();
+
+        final ProgressDialog loadDataProgressDialog = createProgressDialog(getContext(), getContext().getResources().getString(R.string.text_progress_retrieving));
+        loadDataProgressDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadDataProgressDialog.dismiss();
+                createActionBar(view);
+                setExamDuration();
+                initVariables();
+                initData();
+            }
+        }, 2000);
+
 
         return view;
     }
@@ -107,10 +121,12 @@ public class ExamFrag extends DialogFragment {
         menu.clear();
         if (TextUtils.isEmpty(examID)) {
             MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_create));
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_exam));
             createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } else {
             MenuItem createActionItem = menu.add(1,333,1, getResources().getString(R.string.text_modify));
             createActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_modify_exam));
         }
     }
 
@@ -187,12 +203,7 @@ public class ExamFrag extends DialogFragment {
      * @param view layout
      */
     private void createActionBar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddExam);
-        if (TextUtils.isEmpty(examID)) {
-            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_add_exam));
-        } else {
-            toolbar.setTitle(getContext().getResources().getString(R.string.toolbar_modify_exam));
-        }
+        toolbar = (Toolbar) view.findViewById(R.id.toolbarDialogAddExam);
 
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
