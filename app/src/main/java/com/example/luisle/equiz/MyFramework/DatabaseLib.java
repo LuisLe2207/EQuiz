@@ -425,7 +425,7 @@ public class DatabaseLib {
     public static void saveExam(final Context context,
                                 final DatabaseReference dataRef,
                                 final Exam newExam,
-                                String id) {
+                                final String id) {
         final ProgressDialog saveExamProgressDialog = createProgressDialog(context,
                 context.getResources().getString(R.string.text_progress_save));
         saveExamProgressDialog.show();
@@ -449,14 +449,16 @@ public class DatabaseLib {
                             showToast(context, context.getResources().getString(R.string.save_exam_sucess));
                         }
                     }, 2000);
-                    Handler mainHandler = new Handler(context.getMainLooper());
-                    mainHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            new PushNotifications(context).execute(context.getResources().getString(R.string.notification_new_exam),
-                                    newExam.getTitle() + " " + context.getResources().getString(R.string.notification_new_exam_message));
-                        }
-                    }, 2000);
+                    if (TextUtils.isEmpty(id)) {
+                        Handler mainHandler = new Handler(context.getMainLooper());
+                        mainHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                new PushNotifications(context).execute(context.getResources().getString(R.string.notification_new_exam),
+                                        newExam.getTitle() + " " + context.getResources().getString(R.string.notification_new_exam_message));
+                            }
+                        }, 2000);
+                    }
 
                 } else {
                     new Handler().postDelayed(new Runnable() {

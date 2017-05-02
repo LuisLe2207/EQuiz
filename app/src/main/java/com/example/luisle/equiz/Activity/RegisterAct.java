@@ -189,10 +189,8 @@ public class RegisterAct extends AppCompatActivity {
         );
         registerProgressDialog.dismiss();
         btnRegister.setEnabled(true);
-//        FirebaseAuth.getInstance().signOut();
-//        Intent loginActIntent = new Intent(RegisterAct.this, LoginAct.class);
-//        loginActIntent.putExtra("New", true);
-//        startActivity(loginActIntent);
+        Intent homeActIntent = new Intent(RegisterAct.this, HomeAct.class);
+        startActivity(homeActIntent);
     }
 
     private void onRegisterFailure() {
